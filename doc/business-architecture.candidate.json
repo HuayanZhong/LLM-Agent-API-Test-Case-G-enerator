@@ -56,7 +56,7 @@
       "id": "feature",
       "type": "external",
       "label": "被测对象：外部交付的已实现功能 / 组件",
-      "sublabel": "按接口位置、字段 / 类型 / 约束进行测试",
+      "sublabel": "按接口位置与字段 / 类型 / 约束开展测试",
       "tag": "输入",
       "icon": "briefcase",
       "pos": [
@@ -72,7 +72,7 @@
       "id": "people",
       "type": "external",
       "label": "开发 / 测试人员",
-      "sublabel": "提供线索、确认正常、审核结果（不进行人工整理）",
+      "sublabel": "提供测试线索、确认正常基线、审核测试结果（不进行人工整理）",
       "tag": "参与角色",
       "icon": "person",
       "pos": [
@@ -88,7 +88,7 @@
       "id": "gen",
       "type": "backend",
       "label": "测试用例与数据生成",
-      "sublabel": "按接口字段 / 约束生成正常、边界、异常值",
+      "sublabel": "按字段 / 约束生成正常、边界、异常值；页面采集",
       "tag": "流程起点 · 详见能力层",
       "icon": "start",
       "pos": [
@@ -120,7 +120,7 @@
       "id": "judge",
       "type": "backend",
       "label": "结果比对与判定",
-      "sublabel": "对照正常现场，识别差异",
+      "sublabel": "对照正常现场；必要时按记忆重放复现",
       "tag": "测试后判定",
       "icon": "decision",
       "pos": [
@@ -278,7 +278,7 @@
       "id": "reflow",
       "type": "backend",
       "label": "回流至 OKF / GraphRAG",
-      "sublabel": "知识回到总览与检索",
+      "sublabel": "知识回流至总览与检索",
       "tag": "闭环",
       "icon": "active",
       "pos": [
@@ -310,7 +310,7 @@
       "id": "p_scrape",
       "type": "backend",
       "label": "页面信息采集",
-      "sublabel": "在页面执行一遍，同步获取页面状态与真实请求",
+      "sublabel": "在页面完整执行一次，同步采集页面状态与真实请求",
       "tag": "信息补全",
       "icon": "active",
       "pos": [
