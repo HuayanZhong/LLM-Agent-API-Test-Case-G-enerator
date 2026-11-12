@@ -1,7 +1,10 @@
+# workspace 包范围：apps/* 与 packages/*
 packages:
   - apps/*
   - packages/*
 
+# 依赖版本统一在这里管理；包内用 "pkg": "catalog:分类名" 引用
+# pnpm 不接受空 catalog，未启用的分类保持注释，加入依赖时再启用
 catalogs:
   # 工具链：Turbo、TypeScript、ESLint、Prettier 等
   tooling:
@@ -23,6 +26,7 @@ catalogs:
   # testing:
   #   vitest: ^...
 
+# pnpm 供应链策略：安装 turbo 时自动加入的平台二进制放行项
 minimumReleaseAgeExclude:
   - '@turbo/darwin-64@2.11.11'
   - '@turbo/darwin-arm64@2.11.11'

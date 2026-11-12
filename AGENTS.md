@@ -1,0 +1,9 @@
+# AGENTS.md
+
+本仓库的 AI 协作入口。规则正文不在这里重复，统一指向：
+
+- 项目说明、命令与架构约束：[CLAUDE.md](CLAUDE.md)
+- 代码注释规则：[.claude/rules/code-comments.md](.claude/rules/code-comments.md)
+- 设计文档索引：[doc/README.md](doc/README.md)
+
+修改规则时改上面三处，不要在多份文件里各写一套。

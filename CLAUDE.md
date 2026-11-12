@@ -43,6 +43,10 @@ doc/             当前设计的事实来源
 - 数据：Supabase（Postgres、pgvector、Auth、Storage）经 MikroORM 访问；GraphRAG 用邻接表 + 递归 CTE 配合 pgvector；OKF 文档放 Storage。
 - 协同：A2A 负责任务派发与状态回传；Deep Agents 是可选增强，不进主架构。
 
+## 代码注释
+
+遵循 [.claude/rules/code-comments.md](.claude/rules/code-comments.md)：只注释关键决策、边界与外部依赖；每条短句，写「为什么」；默认偏多写关键点，但不要复述代码。跨工具入口见 [AGENTS.md](AGENTS.md)。
+
 ## JSON Schema 约定
 
 - 优先使用依赖包自带的本地 schema，例如 `turbo.json` 的 `./node_modules/turbo/schema.json`；升级依赖时 schema 随包同步升级。

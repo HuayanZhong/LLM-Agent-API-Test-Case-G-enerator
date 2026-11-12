@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
+  "ui": "tui",
   "tasks": {
     "dev": {
+      "description": "并行启动各工作区的开发服务；persistent 任务，不缓存",
       "cache": false,
       "persistent": true
     }
