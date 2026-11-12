@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "ca2ee9a8-ad70-43d8-ad78-e9535a03612a",
+  "receiptId": "2ff97c98-6d79-4a38-992f-116ae08ed215",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\business-architecture.candidate.json",
   "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\business-architecture.html",
   "specification": {
-    "sha256": "bfa26a351acad392ed9df6ad3a34ad075ee24ee7112d8a1de6df8840970fd0a2",
-    "bytes": 11844
+    "sha256": "01130763a73c9e8b721337b0178ea050304e57e6578b9f4206d62ed7f7c32510",
+    "bytes": 14047
   },
   "artifact": {
-    "sha256": "c5d9d60f919ca6762a1531e6eee723e8c4be03d2b154bd9b207dd689ecef3973",
-    "bytes": 855640
+    "sha256": "e5a63aa9858a00d3708876891b240d18bdc6e6d42e11e6a4b0593aed883529ba",
+    "bytes": 854160
   }
 }

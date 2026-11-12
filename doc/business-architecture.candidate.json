@@ -10,19 +10,43 @@
       {
         "id": "mainline",
         "label": "主流程",
-        "focus": ["feature", "people", "gen", "exec", "judge", "keep", "report", "knowledge"],
+        "focus": [
+          "feature",
+          "people",
+          "gen",
+          "exec",
+          "judge",
+          "keep",
+          "report",
+          "knowledge"
+        ],
         "note": "被测对象 → 用例生成 → 测试执行 → 结果比对 → 记录与分流"
       },
       {
         "id": "capability",
         "label": "核心能力层",
-        "focus": ["p_input", "p_scrape", "p_contract", "p_points", "p_verdict", "p_output"],
+        "focus": [
+          "p_input",
+          "p_scrape",
+          "p_contract",
+          "p_points",
+          "p_verdict",
+          "p_output"
+        ],
         "note": "用例生成模块的内部链路：从接口信息到可判定的测试数据与用例"
       },
       {
         "id": "split",
         "label": "结果分流",
-        "focus": ["judge", "mismatch", "report", "external", "consistent", "knowledge", "reflow"],
+        "focus": [
+          "judge",
+          "mismatch",
+          "report",
+          "external",
+          "consistent",
+          "knowledge",
+          "reflow"
+        ],
         "note": "判定不一致时输出报告并派发；判定一致时沉淀知识并回流"
       }
     ]
@@ -35,8 +59,14 @@
       "sublabel": "按接口位置、字段 / 类型 / 约束进行测试",
       "tag": "输入",
       "icon": "briefcase",
-      "pos": [60, 60],
-      "size": [620, 84]
+      "pos": [
+        60,
+        60
+      ],
+      "size": [
+        620,
+        84
+      ]
     },
     {
       "id": "people",
@@ -45,8 +75,14 @@
       "sublabel": "提供线索、确认正常、审核结果（不进行人工整理）",
       "tag": "参与角色",
       "icon": "person",
-      "pos": [720, 60],
-      "size": [380, 84]
+      "pos": [
+        720,
+        60
+      ],
+      "size": [
+        380,
+        84
+      ]
     },
     {
       "id": "gen",
@@ -55,8 +91,14 @@
       "sublabel": "按接口字段 / 约束生成正常、边界、异常值",
       "tag": "流程起点 · 详见能力层",
       "icon": "start",
-      "pos": [60, 230],
-      "size": [280, 100]
+      "pos": [
+        60,
+        230
+      ],
+      "size": [
+        280,
+        100
+      ]
     },
     {
       "id": "exec",
@@ -65,8 +107,14 @@
       "sublabel": "用例交由 Agent 执行",
       "tag": "Agent 执行",
       "icon": "active",
-      "pos": [380, 230],
-      "size": [180, 100]
+      "pos": [
+        380,
+        230
+      ],
+      "size": [
+        180,
+        100
+      ]
     },
     {
       "id": "judge",
@@ -75,8 +123,14 @@
       "sublabel": "对照正常现场，识别差异",
       "tag": "测试后判定",
       "icon": "decision",
-      "pos": [600, 230],
-      "size": [280, 100]
+      "pos": [
+        600,
+        230
+      ],
+      "size": [
+        280,
+        100
+      ]
     },
     {
       "id": "keep",
@@ -85,8 +139,14 @@
       "sublabel": "接口、测试数据与正常状态",
       "tag": "知识回流",
       "icon": "success",
-      "pos": [920, 230],
-      "size": [260, 100]
+      "pos": [
+        920,
+        230
+      ],
+      "size": [
+        260,
+        100
+      ]
     },
     {
       "id": "memory",
@@ -95,8 +155,14 @@
       "sublabel": "判定基准：接口、测试数据与正常状态",
       "tag": "核心基准",
       "icon": "database",
-      "pos": [60, 410],
-      "size": [300, 96]
+      "pos": [
+        60,
+        410
+      ],
+      "size": [
+        300,
+        96
+      ]
     },
     {
       "id": "graphrag",
@@ -105,8 +171,14 @@
       "sublabel": "按需检索相似用例与业务规则，不做总览",
       "tag": "仅检索",
       "icon": "database",
-      "pos": [420, 410],
-      "size": [300, 96]
+      "pos": [
+        420,
+        410
+      ],
+      "size": [
+        300,
+        96
+      ]
     },
     {
       "id": "okf",
@@ -115,17 +187,29 @@
       "sublabel": "持久、可审查的知识总览",
       "tag": "全貌入口",
       "icon": "flag",
-      "pos": [780, 410],
-      "size": [380, 96]
+      "pos": [
+        780,
+        410
+      ],
+      "size": [
+        380,
+        96
+      ]
     },
     {
       "id": "mismatch",
-      "type": "external",
+      "type": "backend",
       "label": "判定不一致",
       "tag": "异常路径",
       "icon": "failure",
-      "pos": [60, 580],
-      "size": [300, 56]
+      "pos": [
+        60,
+        580
+      ],
+      "size": [
+        300,
+        56
+      ]
     },
     {
       "id": "report",
@@ -134,8 +218,14 @@
       "sublabel": "复现步骤、差异对照与证据",
       "tag": "人工审核",
       "icon": "flag",
-      "pos": [60, 670],
-      "size": [300, 96]
+      "pos": [
+        60,
+        670
+      ],
+      "size": [
+        300,
+        96
+      ]
     },
     {
       "id": "external",
@@ -144,17 +234,29 @@
       "sublabel": "读取报告、修复代码、回传状态",
       "tag": "外部编码助手",
       "icon": "external",
-      "pos": [60, 840],
-      "size": [300, 88]
+      "pos": [
+        60,
+        840
+      ],
+      "size": [
+        300,
+        88
+      ]
     },
     {
       "id": "consistent",
-      "type": "external",
+      "type": "backend",
       "label": "判定一致",
       "tag": "正常路径",
       "icon": "success",
-      "pos": [800, 580],
-      "size": [380, 56]
+      "pos": [
+        800,
+        580
+      ],
+      "size": [
+        380,
+        56
+      ]
     },
     {
       "id": "knowledge",
@@ -163,29 +265,46 @@
       "sublabel": "正常现场与数据一并归档",
       "tag": "复用",
       "icon": "success",
-      "pos": [800, 670],
-      "size": [380, 96]
+      "pos": [
+        800,
+        670
+      ],
+      "size": [
+        380,
+        96
+      ]
     },
     {
       "id": "reflow",
-      "type": "messagebus",
+      "type": "backend",
       "label": "回流至 OKF / GraphRAG",
       "sublabel": "知识回到总览与检索",
       "tag": "闭环",
-      "icon": "messagebus",
-      "pos": [800, 840],
-      "size": [380, 88]
+      "icon": "active",
+      "pos": [
+        800,
+        840
+      ],
+      "size": [
+        380,
+        88
+      ]
     },
-
     {
       "id": "p_input",
-      "type": "cloud",
+      "type": "external",
       "label": "接口信息输入",
       "sublabel": "接口位置、字段 / 类型 / 约束；支持 curl、示例、自然语言",
       "tag": "输入",
-      "icon": "neutral",
-      "pos": [1260, 230],
-      "size": [320, 84]
+      "icon": "external",
+      "pos": [
+        1260,
+        230
+      ],
+      "size": [
+        320,
+        84
+      ]
     },
     {
       "id": "p_scrape",
@@ -194,8 +313,14 @@
       "sublabel": "在页面执行一遍，同步获取页面状态与真实请求",
       "tag": "信息补全",
       "icon": "active",
-      "pos": [1260, 340],
-      "size": [320, 84]
+      "pos": [
+        1260,
+        340
+      ],
+      "size": [
+        320,
+        84
+      ]
     },
     {
       "id": "p_contract",
@@ -204,8 +329,14 @@
       "sublabel": "完整 schema 确定性解析；残缺输入由模型补全",
       "tag": "LLM 补全",
       "icon": "backend",
-      "pos": [1260, 450],
-      "size": [320, 84]
+      "pos": [
+        1260,
+        450
+      ],
+      "size": [
+        320,
+        84
+      ]
     },
     {
       "id": "p_points",
@@ -214,65 +345,110 @@
       "sublabel": "正常值 / 边界值 / 异常值；补充库存不足、重复下单等业务点",
       "tag": "LLM 生成",
       "icon": "backend",
-      "pos": [1260, 560],
-      "size": [320, 84]
+      "pos": [
+        1260,
+        560
+      ],
+      "size": [
+        320,
+        84
+      ]
     },
     {
       "id": "p_verdict",
-      "type": "security",
+      "type": "backend",
       "label": "可判定性裁决",
       "sublabel": "规则引擎裁决 ACCEPT / DOWNGRADE / REJECT；LLM 仅给置信度",
       "tag": "规则裁决",
       "icon": "decision",
-      "pos": [1260, 670],
-      "size": [320, 84]
+      "pos": [
+        1260,
+        670
+      ],
+      "size": [
+        320,
+        84
+      ]
     },
     {
       "id": "p_output",
-      "type": "messagebus",
+      "type": "backend",
       "label": "用例与数据交付",
       "sublabel": "输出测试数据与用例（Case IR），交由执行测试 Agent",
       "tag": "仅提供输入",
-      "icon": "start",
-      "pos": [1260, 780],
-      "size": [320, 84]
+      "icon": "backend",
+      "pos": [
+        1260,
+        780
+      ],
+      "size": [
+        320,
+        84
+      ]
     }
   ],
   "boundaries": [
     {
       "kind": "region",
       "label": "参与角色与输入",
-      "wraps": ["feature", "people"],
+      "wraps": [
+        "feature",
+        "people"
+      ],
       "pad": 20
     },
     {
       "kind": "region",
       "label": "智能体处理 · 多 Agent 协同，AI 辅助执行，人工确认关键节点",
-      "wraps": ["gen", "exec", "judge", "keep"],
+      "wraps": [
+        "gen",
+        "exec",
+        "judge",
+        "keep"
+      ],
       "pad": 20
     },
     {
       "kind": "region",
       "label": "判定依据",
-      "wraps": ["memory", "graphrag", "okf"],
+      "wraps": [
+        "memory",
+        "graphrag",
+        "okf"
+      ],
       "pad": 20
     },
     {
       "kind": "region",
       "label": "结果分流 · 判定不一致",
-      "wraps": ["mismatch", "report", "external"],
+      "wraps": [
+        "mismatch",
+        "report",
+        "external"
+      ],
       "pad": 20
     },
     {
       "kind": "region",
       "label": "结果分流 · 判定一致",
-      "wraps": ["consistent", "knowledge", "reflow"],
+      "wraps": [
+        "consistent",
+        "knowledge",
+        "reflow"
+      ],
       "pad": 20
     },
     {
       "kind": "region",
       "label": "核心能力层 · 用例生成模块（放大视图）",
-      "wraps": ["p_input", "p_scrape", "p_contract", "p_points", "p_verdict", "p_output"],
+      "wraps": [
+        "p_input",
+        "p_scrape",
+        "p_contract",
+        "p_points",
+        "p_verdict",
+        "p_output"
+      ],
       "pad": 24
     }
   ],
@@ -366,7 +542,20 @@
       "variant": "dashed",
       "fromSide": "left",
       "toSide": "bottom",
-      "via": [[750, 884], [750, 520], [570, 520]]
+      "via": [
+        [
+          750,
+          884
+        ],
+        [
+          750,
+          520
+        ],
+        [
+          570,
+          520
+        ]
+      ]
     },
     {
       "id": "p-input-scrape",
