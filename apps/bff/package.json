@@ -1,0 +1,26 @@
+{
+  "name": "bff",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "nest start",
+    "start:prod": "node dist/main"
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:backend",
+    "@nestjs/core": "catalog:backend",
+    "@nestjs/platform-express": "catalog:backend",
+    "reflect-metadata": "catalog:backend",
+    "rxjs": "catalog:backend"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "catalog:backend",
+    "@nestjs/schematics": "catalog:backend",
+    "@types/express": "catalog:backend",
+    "@types/node": "catalog:backend",
+    "typescript": "catalog:backend"
+  }
+}

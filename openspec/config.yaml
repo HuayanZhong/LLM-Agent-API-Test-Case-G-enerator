@@ -9,11 +9,13 @@ context: |
   再与正常现场记忆 / GraphRAG / OKF 比对；不一致时重放复现并出测试报告，一致时沉淀知识。
   红线：系统只诊断与复验，不改代码；测试报告是唯一交付物；关键节点由人确认。
 
-  当前状态：pnpm monorepo 脚手架；apps/ 与 packages/ 下暂无源码；设计文档在 doc/；
-  OpenSpec 规格在 openspec/specs，变更在 openspec/changes。
+  当前状态：pnpm monorepo；apps/backend 与 apps/bff 已有 NestJS 12 + ESM 骨架，
+  分别监听 5000 / 4000，只有 GET /health；apps/frontend 与 packages/ 仍为空；
+  业务模块、测试与 lint 尚未接入。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
 
-  规划技术栈：Electron + Next.js / React / shadcn + 薄 BFF；NestJS 本地服务；
-  LangGraph.js + LangChain.js + Zod；ky + Vitest；chrome-devtools MCP；
+  技术栈（部分已落地）：Electron + Next.js / React / shadcn 桌面端（3000，待建）；
+  NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；
+  ky + Vitest（待统一引入）；chrome-devtools MCP；
   Supabase（Postgres / pgvector / Auth / Storage）+ MikroORM；A2A。
 
 # 按产物类型的规则（可选）

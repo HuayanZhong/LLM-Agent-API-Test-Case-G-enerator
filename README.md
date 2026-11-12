@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库以设计文档与业务架构图为主，可运行物与运行证据尚未纳入版本库。
+> 当前仓库已有两个可运行的 Nest 骨架（`apps/backend`、`apps/bff`），业务模块尚未实现。
 
 ## 目录结构
 
@@ -19,7 +19,7 @@
 ├── doc/                 # 业务架构、技术架构与数据模型图
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
-├── apps/                # 应用（待建设）
+├── apps/                # Nest 骨架：backend / bff；frontend 待建
 ├── packages/            # 共享包（待建设）
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
@@ -41,8 +41,18 @@
 
 ```bash
 pnpm install
-pnpm dev      # turbo run dev（各工作区 dev）
+pnpm dev      # turbo run dev：并行启动 backend 与 bff
 ```
+
+## Nest 骨架
+
+| 服务 | 目录 | 端口 | 健康检查 |
+|---|---|---|---|
+| backend | `apps/backend` | 5000 | `GET /health` |
+| BFF | `apps/bff` | 4000 | `GET /health` |
+| Next 前端 | `apps/frontend`（待建） | 3000 | - |
+
+两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块、测试或 lint。
 
 ## 环境变量
 

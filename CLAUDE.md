@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库是 **pnpm workspace + 设计文档的脚手架**：`apps/` 与 `packages/` 下还没有源码，不要假设存在可运行代码、测试或构建产物。
+设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；`apps/frontend` 与 `packages/` 仍为空，业务模块、测试与构建产物尚未实现。
 
 ## 常用命令
 
@@ -17,9 +17,9 @@ pnpm dev      # 根脚本：turbo run dev
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
 - `turbo.json` 与根 `package.json` 目前都只暴露 `dev`（`persistent: true`、`cache: false`）；build / lint / test 尚未接入，后续需要时再加。
-- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`；根 `package.json` 用 `catalog:tooling` 引用 Turbo。pnpm 不接受空分类，未使用的分类先用注释占位。
+- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`；`backend` catalog 已启用，两个 Nest app 用 `catalog:backend` 引用。根 `package.json` 用 `catalog:tooling` 引用 Turbo。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
-- 目前没有任何 workspace 定义 `dev`；根 `dev` 会运行 Turbo，但没有可执行的工作区任务。
+- 两个 Nest app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 backend（5000）与 bff（4000）。
 - 还没有测试框架，因此没有“跑单个测试”的命令；后续加入测试后再补 scoped script。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
@@ -46,18 +46,19 @@ pnpm dev      # 根脚本：turbo run dev
 ## 仓库结构
 
 ```text
-apps/frontend/   规划中的 Electron + Next.js/React + shadcn/ui 桌面端（空）
-apps/bff/        规划中的 Next Route Handlers 薄 BFF（空）
-apps/backend/    规划中的 NestJS 本地服务（空）
+apps/frontend/   规划中的 Electron + Next.js/React + shadcn/ui 桌面端（空，3000）
+apps/bff/        NestJS 12 BFF 骨架（4000，GET /health）
+apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/        规划中的共享包（空）
 doc/             当前设计的事实来源
 ```
 
 `doc/README.md` 是阅读索引。HTML 是交付物；`doc/source/*.candidate.json` 是可编辑的 Archify 源文件；`doc/_evidence/` 是生成的回执、截图与历史迭代，不作为设计输入，可整体删除。
 
-## 规划技术栈（来自设计文档，尚未实现）
+## 技术栈与当前实现
 
-- 桌面端：Electron 壳、Next.js + React + shadcn/ui、薄 BFF。
+- 已实现：`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架，端口 5000 / 4000，只有 `GET /health`。
+- 桌面端：Electron 壳、Next.js + React + shadcn/ui；BFF 是独立 Nest 服务。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。
 - 数据：Supabase（Postgres、pgvector、Auth、Storage）经 MikroORM 访问；GraphRAG 用邻接表 + 递归 CTE 配合 pgvector；OKF 文档放 Storage。
