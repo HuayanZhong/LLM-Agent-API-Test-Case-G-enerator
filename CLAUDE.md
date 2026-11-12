@@ -43,6 +43,10 @@ doc/             当前设计的事实来源
 - 数据：Supabase（Postgres、pgvector、Auth、Storage）经 MikroORM 访问；GraphRAG 用邻接表 + 递归 CTE 配合 pgvector；OKF 文档放 Storage。
 - 协同：A2A 负责任务派发与状态回传；Deep Agents 是可选增强，不进主架构。
 
+## 文档同步
+
+改动影响命令、依赖、工作区结构、架构或文档入口时，必须在同一次改动中更新 `README.md`、`CLAUDE.md`、`AGENTS.md` 与 `doc/README.md`。完整触发条件与检查清单见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
+
 ## 代码注释
 
 遵循 [.claude/rules/code-comments.md](.claude/rules/code-comments.md)：只注释关键决策、边界与外部依赖；每条短句，写「为什么」；默认偏多写关键点，但不要复述代码。跨工具入口见 [AGENTS.md](AGENTS.md)。

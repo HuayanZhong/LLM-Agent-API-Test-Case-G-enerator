@@ -37,6 +37,10 @@ pnpm install
 pnpm dev      # turbo run dev（各工作区 dev）
 ```
 
+## 文档维护
+
+改动命令、依赖、工作区结构或架构时，同步更新 `README.md`、`CLAUDE.md`、`AGENTS.md` 与 `doc/README.md`；完整规则见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
+
 ## 许可证
 
 [MIT](LICENSE)
