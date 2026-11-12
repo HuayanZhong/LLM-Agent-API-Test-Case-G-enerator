@@ -21,10 +21,13 @@
 ├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
 ├── apps/                # 应用（待建设）
 ├── packages/            # 共享包（待建设）
+├── .claude/             # 规则、技能与 /opsx 命令
+├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
+├── .mcp.json            # chrome-devtools MCP（固定版本）
 ├── package.json
-├── pnpm-workspace.yaml
-├── turbo.json          # Turbo 任务配置（当前只注册 dev）
-└── LICENSE             # MIT
+├── pnpm-workspace.yaml  # workspace、catalog、engineStrict
+├── turbo.json           # Turbo 任务配置（当前只注册 dev）
+└── LICENSE              # MIT
 ```
 
 ## 开发环境
@@ -34,10 +37,18 @@
 
 依赖版本统一放在 `pnpm-workspace.yaml` 的 `catalogs` 中管理；根 `package.json` 通过 `catalog:tooling` 引用 Turbo。
 
+`pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
+
 ```bash
 pnpm install
 pnpm dev      # turbo run dev（各工作区 dev）
 ```
+
+## 环境变量
+
+根目录 [.env.example](.env.example) 是唯一声明入口，当前保持为空；等前端/后端框架、数据库和模型网关确认后再补变量。
+
+真实的 `.env`、`.env.local`、`.env.*` 已被 `.gitignore` 忽略，不要提交密钥。
 
 ## OpenSpec 工作流
 
@@ -56,6 +67,9 @@ pnpm exec openspec validate --all
 - `/openspec-update-change`：修订计划并保持各产物一致。
 - `/openspec-archive-change`：归档并把 delta specs 合并进主规格。
 - `/openspec-sync-specs`：只同步规格，不归档。
+- `/opsx <explore|propose|apply|update|sync|archive>`：上述技能的快捷入口。
+
+项目级 MCP 配置在 [.mcp.json](.mcp.json)，当前只含 chrome-devtools，通过 `pnpm dlx` 固定版本。
 
 规则：新功能或行为变更先提案再实现；`openspec/specs` 是行为事实来源；归档前跑 `validate`。`opsx` 是 OpenSpec 1.x 的旧命令前缀，2.0 使用 `/openspec-*`，技能描述里仍接受 “opsx propose” 这类说法。
 

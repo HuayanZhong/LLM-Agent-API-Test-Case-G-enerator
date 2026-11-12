@@ -18,20 +18,30 @@ pnpm dev      # 根脚本：turbo run dev
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
 - `turbo.json` 与根 `package.json` 目前都只暴露 `dev`（`persistent: true`、`cache: false`）；build / lint / test 尚未接入，后续需要时再加。
 - 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`；根 `package.json` 用 `catalog:tooling` 引用 Turbo。pnpm 不接受空分类，未使用的分类先用注释占位。
+- `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 目前没有任何 workspace 定义 `dev`；根 `dev` 会运行 Turbo，但没有可执行的工作区任务。
 - 还没有测试框架，因此没有“跑单个测试”的命令；后续加入测试后再补 scoped script。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
+
+**环境变量**：根目录 `.env.example` 是唯一声明入口，当前保持为空；技术选型确认后再补变量。真实 `.env` / `.env.local` / `.env.*` 已被忽略。
 
 ## OpenSpec 工作流
 
 本项目用 OpenSpec 2.0 做规格驱动开发。新功能或行为变更先提案、再实现、最后归档；`openspec/specs/` 是行为事实来源。
 
 - 技能：`/openspec-explore`、`/openspec-propose <change>`、`/openspec-apply-change`、`/openspec-update-change`、`/openspec-archive-change`、`/openspec-sync-specs`（技能在 `.agents/skills/`，`.claude/skills/` 下是链接）。
+- 快捷入口：`/opsx <explore|propose|apply|update|sync|archive>`，按第一个参数转发到上述技能。
 - CLI：`pnpm exec openspec list`、`show`、`validate --all`、`status`、`archive`。
 - 变更目录：`openspec/changes/<change>/`，含 proposal、specs、design、tasks；归档后进入 `changes/archive/`。
 - 不要跳过 propose 直接写代码；人工确认计划后再 apply；归档前先 validate。
 - `opsx` 是 OpenSpec 1.x 的旧命令前缀；2.0 使用 `/openspec-*`，技能描述里仍接受 “opsx propose” 这类说法。
+
+## AI 协作配置
+
+- `.mcp.json`：项目级 chrome-devtools MCP，固定 `chrome-devtools-mcp@1.13.0`，通过 `pnpm dlx` 启动。
+- `.claude/commands/opsx.md`：`/opsx` 快捷入口。
+- 不配置项目级 `.claude/settings.json`，权限沿用默认模式与全局设置。
 
 ## 仓库结构
 

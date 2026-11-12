@@ -1,0 +1,17 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown 用行尾双空格表示换行，不能自动清理
+[*.md]
+trim_trailing_whitespace = false
+
+# Windows 脚本保持 CRLF
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
