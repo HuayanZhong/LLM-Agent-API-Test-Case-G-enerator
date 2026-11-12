@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\business-architecture.candidate.json",
+    "sha256": "7835cd561483ba7c4a2afc2762dc7ac67438abaf12c726e78d540b9a25a58a18",
+    "bytes": 8189
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\business-architecture.html",
+    "sha256": "76b8fb9c059690d25c9cb6dc72233d3d7cb3a69bb7caa0084597475caa162893",
+    "bytes": 839034
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-restore-2\\business-architecture.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-restore-2\\business-architecture.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-restore-2\\business-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3129,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 2,
+      "routesOverSuggestedBends": 2
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "judge-memory",
+            "from": "judge",
+            "to": "memory",
+            "label": "对照基准",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "right": {
+            "id": "judge-graphrag",
+            "from": "judge",
+            "to": "graphrag",
+            "label": "检索",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "point": [
+            626,
+            324
+          ],
+          "sharedNode": "judge"
+        },
+        {
+          "left": {
+            "id": "judge-graphrag",
+            "from": "judge",
+            "to": "graphrag",
+            "label": "检索",
+            "collectionIndex": 5,
+            "artifactIndex": 6
+          },
+          "right": {
+            "id": "judge-mismatch",
+            "from": "judge",
+            "to": "mismatch",
+            "label": "不一致",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "point": [
+            626,
+            364
+          ],
+          "sharedNode": "judge"
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "judge-mismatch",
+            "from": "judge",
+            "to": "mismatch",
+            "label": "不一致",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "bends": 4,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "reflow-to-graphrag",
+            "from": "reflow",
+            "to": "graphrag",
+            "label": "回流",
+            "collectionIndex": 12,
+            "artifactIndex": 13
+          },
+          "bends": 3,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "judge → memory and judge → graphrag cross next to judge: move node memory or graphrag so the two reach judge from different sides (for example one level with it, one directly above or below it).",
+      "judge → graphrag and judge → mismatch cross next to judge: move node graphrag or mismatch so the two reach judge from different sides (for example one level with it, one directly above or below it).",
+      "judge → mismatch needs 4 bends: move node judge or mismatch so they share a row or column with matching centers, or sit diagonally with a clear corner.",
+      "reflow → graphrag needs 3 bends: move node reflow or graphrag so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

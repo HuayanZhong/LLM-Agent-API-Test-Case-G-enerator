@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "接口测试用例辅助生成系统 · 业务架构",
+    "output": "doc/business-architecture.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "mainline",
+        "label": "主流程",
+        "focus": ["feature", "people", "gen", "exec", "judge", "keep", "report", "knowledge"],
+        "note": "被测对象 → 用例生成 → 测试执行 → 结果比对 → 记录与分流"
+      },
+      {
+        "id": "capability",
+        "label": "核心能力层",
+        "focus": ["p_input", "p_scrape", "p_contract", "p_points", "p_verdict", "p_output"],
+        "note": "用例生成模块的内部链路：从接口信息到可判定的测试数据与用例"
+      },
+      {
+        "id": "split",
+        "label": "结果分流",
+        "focus": ["judge", "mismatch", "report", "external", "consistent", "knowledge", "reflow"],
+        "note": "判定不一致时输出报告并派发；判定一致时沉淀知识并回流"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "feature",
+      "type": "external",
+      "label": "被测对象：外部交付的已实现功能 / 组件",
+      "sublabel": "按接口位置、字段 / 类型 / 约束进行测试",
+      "tag": "输入",
+      "icon": "briefcase",
+      "pos": [60, 60],
+      "size": [620, 84]
+    },
+    {
+      "id": "people",
+      "type": "external",
+      "label": "开发 / 测试人员",
+      "sublabel": "提供线索、确认正常、审核结果（不进行人工整理）",
+      "tag": "参与角色",
+      "icon": "person",
+      "pos": [720, 60],
+      "size": [380, 84]
+    },
+    {
+      "id": "gen",
+      "type": "backend",
+      "label": "测试用例与数据生成",
+      "sublabel": "按接口字段 / 约束生成正常、边界、异常值",
+      "tag": "流程起点 · 详见能力层",
+      "icon": "start",
+      "pos": [60, 230],
+      "size": [280, 100]
+    },
+    {
+      "id": "exec",
+      "type": "backend",
+      "label": "测试执行",
+      "sublabel": "用例交由 Agent 执行",
+      "tag": "Agent 执行",
+      "icon": "active",
+      "pos": [380, 230],
+      "size": [180, 100]
+    },
+    {
+      "id": "judge",
+      "type": "backend",
+      "label": "结果比对与判定",
+      "sublabel": "对照正常现场，识别差异",
+      "tag": "测试后判定",
+      "icon": "decision",
+      "pos": [600, 230],
+      "size": [280, 100]
+    },
+    {
+      "id": "keep",
+      "type": "backend",
+      "label": "正常现场记录",
+      "sublabel": "接口、测试数据与正常状态",
+      "tag": "知识回流",
+      "icon": "success",
+      "pos": [920, 230],
+      "size": [260, 100]
+    },
+    {
+      "id": "memory",
+      "type": "database",
+      "label": "正常现场记忆",
+      "sublabel": "判定基准：接口、测试数据与正常状态",
+      "tag": "核心基准",
+      "icon": "database",
+      "pos": [60, 410],
+      "size": [300, 96]
+    },
+    {
+      "id": "graphrag",
+      "type": "database",
+      "label": "GraphRAG 检索",
+      "sublabel": "按需检索相似用例与业务规则，不做总览",
+      "tag": "仅检索",
+      "icon": "database",
+      "pos": [420, 410],
+      "size": [300, 96]
+    },
+    {
+      "id": "okf",
+      "type": "database",
+      "label": "OKF 项目总览",
+      "sublabel": "持久、可审查的知识总览",
+      "tag": "全貌入口",
+      "icon": "flag",
+      "pos": [780, 410],
+      "size": [380, 96]
+    },
+    {
+      "id": "mismatch",
+      "type": "external",
+      "label": "判定不一致",
+      "tag": "异常路径",
+      "icon": "failure",
+      "pos": [60, 580],
+      "size": [300, 56]
+    },
+    {
+      "id": "report",
+      "type": "backend",
+      "label": "测试报告（唯一交付物）",
+      "sublabel": "复现步骤、差异对照与证据",
+      "tag": "人工审核",
+      "icon": "flag",
+      "pos": [60, 670],
+      "size": [300, 96]
+    },
+    {
+      "id": "external",
+      "type": "external",
+      "label": "A2A 任务派发（Claude Code 等）",
+      "sublabel": "读取报告、修复代码、回传状态",
+      "tag": "外部编码助手",
+      "icon": "external",
+      "pos": [60, 840],
+      "size": [300, 88]
+    },
+    {
+      "id": "consistent",
+      "type": "external",
+      "label": "判定一致",
+      "tag": "正常路径",
+      "icon": "success",
+      "pos": [800, 580],
+      "size": [380, 56]
+    },
+    {
+      "id": "knowledge",
+      "type": "backend",
+      "label": "知识沉淀",
+      "sublabel": "正常现场与数据一并归档",
+      "tag": "复用",
+      "icon": "success",
+      "pos": [800, 670],
+      "size": [380, 96]
+    },
+    {
+      "id": "reflow",
+      "type": "messagebus",
+      "label": "回流至 OKF / GraphRAG",
+      "sublabel": "知识回到总览与检索",
+      "tag": "闭环",
+      "icon": "messagebus",
+      "pos": [800, 840],
+      "size": [380, 88]
+    },
+
+    {
+      "id": "p_input",
+      "type": "cloud",
+      "label": "接口信息输入",
+      "sublabel": "接口位置、字段 / 类型 / 约束；支持 curl、示例、自然语言",
+      "tag": "输入",
+      "icon": "neutral",
+      "pos": [1260, 230],
+      "size": [320, 84]
+    },
+    {
+      "id": "p_scrape",
+      "type": "backend",
+      "label": "页面信息采集",
+      "sublabel": "在页面执行一遍，同步获取页面状态与真实请求",
+      "tag": "信息补全",
+      "icon": "active",
+      "pos": [1260, 340],
+      "size": [320, 84]
+    },
+    {
+      "id": "p_contract",
+      "type": "backend",
+      "label": "契约解析与补全",
+      "sublabel": "完整 schema 确定性解析；残缺输入由模型补全",
+      "tag": "LLM 补全",
+      "icon": "backend",
+      "pos": [1260, 450],
+      "size": [320, 84]
+    },
+    {
+      "id": "p_points",
+      "type": "backend",
+      "label": "测试点与数据推导",
+      "sublabel": "正常值 / 边界值 / 异常值；补充库存不足、重复下单等业务点",
+      "tag": "LLM 生成",
+      "icon": "backend",
+      "pos": [1260, 560],
+      "size": [320, 84]
+    },
+    {
+      "id": "p_verdict",
+      "type": "security",
+      "label": "可判定性裁决",
+      "sublabel": "规则引擎裁决 ACCEPT / DOWNGRADE / REJECT；LLM 仅给置信度",
+      "tag": "规则裁决",
+      "icon": "decision",
+      "pos": [1260, 670],
+      "size": [320, 84]
+    },
+    {
+      "id": "p_output",
+      "type": "messagebus",
+      "label": "用例与数据交付",
+      "sublabel": "输出测试数据与用例（Case IR），交由执行测试 Agent",
+      "tag": "仅提供输入",
+      "icon": "start",
+      "pos": [1260, 780],
+      "size": [320, 84]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "参与角色与输入",
+      "wraps": ["feature", "people"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "智能体处理 · 多 Agent 协同，AI 辅助执行，人工确认关键节点",
+      "wraps": ["gen", "exec", "judge", "keep"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "判定依据",
+      "wraps": ["memory", "graphrag", "okf"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "结果分流 · 判定不一致",
+      "wraps": ["mismatch", "report", "external"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "结果分流 · 判定一致",
+      "wraps": ["consistent", "knowledge", "reflow"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "核心能力层 · 用例生成模块（放大视图）",
+      "wraps": ["p_input", "p_scrape", "p_contract", "p_points", "p_verdict", "p_output"],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {
+      "id": "deliver-feature",
+      "from": "feature",
+      "to": "gen",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "confirm-normal",
+      "from": "people",
+      "to": "keep",
+      "label": "确认正常",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "gen-to-exec",
+      "from": "gen",
+      "to": "exec",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exec-to-judge",
+      "from": "exec",
+      "to": "judge",
+      "variant": "emphasis"
+    },
+    {
+      "id": "judge-to-keep",
+      "from": "judge",
+      "to": "keep"
+    },
+    {
+      "id": "judge-memory",
+      "from": "judge",
+      "to": "memory",
+      "label": "对照基准",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "judge-graphrag",
+      "from": "judge",
+      "to": "graphrag",
+      "label": "检索",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "mismatch-to-report",
+      "from": "mismatch",
+      "to": "report",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "report-to-external",
+      "from": "report",
+      "to": "external",
+      "label": "A2A 派发",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "consistent-to-knowledge",
+      "from": "consistent",
+      "to": "knowledge",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "knowledge-to-reflow",
+      "from": "knowledge",
+      "to": "reflow",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "reflow-to-graphrag",
+      "from": "reflow",
+      "to": "graphrag",
+      "label": "回流",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "via": [[750, 884], [750, 520], [570, 520]]
+    },
+    {
+      "id": "p-input-scrape",
+      "from": "p_input",
+      "to": "p_scrape",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p-scrape-contract",
+      "from": "p_scrape",
+      "to": "p_contract",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p-contract-points",
+      "from": "p_contract",
+      "to": "p_points",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p-points-verdict",
+      "from": "p_points",
+      "to": "p_verdict",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p-verdict-output",
+      "from": "p_verdict",
+      "to": "p_output",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "核心能力层说明",
+      "items": [
+        "题目对应测试阶段内的用例生成模块：输入接口位置与字段 / 类型 / 约束，输出可直接使用的测试数据与用例",
+        "支持残缺输入：curl、示例请求、自然语言描述与页面采集均可补全为可用契约",
+        "LLM 仅生成可判定的关系与置信度，不生成预期数值；由规则引擎裁决并默认降级",
+        "模块边界：仅提供测试输入，不执行测试、不判定结果、不生成报告、不修改代码"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "约束与边界",
+      "items": [
+        "AI 辅助执行，人工确认关键节点（AI 干活、人拍板）",
+        "系统仅诊断与复验，不修改代码、不提供修复方案",
+        "测试报告是唯一交付物；推测性原因仅标注为「待查线索」"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "范围与定位",
+      "items": [
+        "题目命名范围：测试用例生成模块",
+        "流程位置：测试阶段第一环",
+        "系统范围：信息准备、测试、问题处理、知识沉淀四个阶段",
+        "多 Agent、GraphRAG、OKF、A2A 属于系统级能力，不属于该模块内部"
+      ]
+    }
+  ]
+}

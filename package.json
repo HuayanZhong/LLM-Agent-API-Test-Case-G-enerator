@@ -1,0 +1,44 @@
+{
+  "name": "LLM-Agent-API-Test-Case-G-enerator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "基于大模型智能体的接口测试用例辅助生成系统的设计与实现 (Design and Implementation of an LLM-Agent-Assisted API Test Case Generation System)",
+  "keywords": [
+    "llm-agent",
+    "api-testing",
+    "test-case-generation",
+    "graphrag",
+    "a2a",
+    "thesis"
+  ],
+  "author": "huayan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/issues"
+  },
+  "homepage": "https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator#readme",
+  "type": "module",
+  "engines": {
+    "node": ">=26.12.1",
+    "pnpm": ">=12.18.0"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --if-present dev",
+    "build": "pnpm -r --if-present build",
+    "lint": "pnpm -r --if-present lint",
+    "test": "pnpm -r --if-present test",
+    "check": "pnpm run lint && pnpm run test"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.18.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.18.0"
+}

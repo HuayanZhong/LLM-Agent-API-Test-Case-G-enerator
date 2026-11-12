@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "接口测试用例辅助生成系统 · 业务架构（定版）",
+    "output": "doc/business-architecture.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "mainline",
+        "label": "主线",
+        "focus": ["feature", "gen", "exec", "replay", "report", "external"],
+        "note": "生成 → 执行 → 重放比对 → 不一致出报告并 A2A 派发"
+      },
+      {
+        "id": "consistent",
+        "label": "一致回流",
+        "focus": ["replay", "record", "knowledge", "okf", "graphrag"],
+        "note": "一致时记录接口 / 数据 / 正常状态，沉淀并回流 OKF 与 GraphRAG"
+      },
+      {
+        "id": "basis",
+        "label": "比对基准",
+        "focus": ["replay", "memory", "graphrag", "okf"],
+        "note": "记忆是核心基准；GraphRAG 只检索，OKF 是总览，均不作事实源"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "feature",
+      "type": "external",
+      "label": "入口：别人交付的已做好功能 / 组件",
+      "sublabel": "被测对象 · 按接口位置、字段 / 类型 / 约束测",
+      "tag": "被测对象",
+      "icon": "briefcase",
+      "pos": [60, 60],
+      "size": [430, 76]
+    },
+    {
+      "id": "people",
+      "type": "external",
+      "label": "开发 / 测试人员",
+      "sublabel": "给线索 · 确认正常 · 审核结果（不手工整理）",
+      "tag": "人拍板",
+      "icon": "person",
+      "pos": [540, 60],
+      "size": [520, 76]
+    },
+    {
+      "id": "gen",
+      "type": "backend",
+      "label": "AI 生成用例",
+      "sublabel": "按字段 / 约束出正常、边界、异常值；爬页面采集补全",
+      "tag": "流程起点",
+      "icon": "start",
+      "pos": [60, 220],
+      "size": [280, 96]
+    },
+    {
+      "id": "exec",
+      "type": "backend",
+      "label": "执行测试",
+      "sublabel": "用例交给 Agent 跑起来",
+      "tag": "Agent 执行",
+      "icon": "active",
+      "pos": [380, 220],
+      "size": [180, 96]
+    },
+    {
+      "id": "replay",
+      "type": "backend",
+      "label": "重放复现并比对",
+      "sublabel": "按记忆重放，与正常样子逐项对照",
+      "tag": "测完之后",
+      "icon": "decision",
+      "pos": [600, 220],
+      "size": [240, 96]
+    },
+    {
+      "id": "record",
+      "type": "backend",
+      "label": "记录正常现场",
+      "sublabel": "接口 + 测试数据 + 正常状态",
+      "tag": "人确认",
+      "icon": "success",
+      "pos": [880, 220],
+      "size": [240, 96]
+    },
+    {
+      "id": "graphrag",
+      "type": "database",
+      "label": "GraphRAG",
+      "sublabel": "检索驱动 · 只找相似用例 / 业务规则",
+      "tag": "只检索 · 不做总览",
+      "icon": "database",
+      "pos": [260, 400],
+      "size": [280, 88]
+    },
+    {
+      "id": "memory",
+      "type": "database",
+      "label": "正常现场记忆",
+      "sublabel": "接口 + 测试数据 + 正常状态 · 判断基准",
+      "tag": "核心基准",
+      "icon": "database",
+      "pos": [580, 400],
+      "size": [280, 88]
+    },
+    {
+      "id": "okf",
+      "type": "database",
+      "label": "OKF 项目总览",
+      "sublabel": "持久 · 可审查 · 带来源与生命周期",
+      "tag": "index / log",
+      "icon": "flag",
+      "pos": [900, 400],
+      "size": [280, 88]
+    },
+    {
+      "id": "report",
+      "type": "backend",
+      "label": "测试报告 · 唯一交付物",
+      "sublabel": "不一致 / 有问题时出 · 七项粒度，猜测只写待查线索",
+      "tag": "人审核",
+      "icon": "flag",
+      "pos": [60, 570],
+      "size": [440, 96]
+    },
+    {
+      "id": "knowledge",
+      "type": "database",
+      "label": "沉淀成知识",
+      "sublabel": "一致 / 没问题时沉淀，回流 OKF / GraphRAG",
+      "tag": "下次直接用",
+      "icon": "success",
+      "pos": [560, 570],
+      "size": [520, 96]
+    },
+    {
+      "id": "external",
+      "type": "external",
+      "label": "Claude Code 等外部编码助手",
+      "sublabel": "经 A2A 派发 · 读报告 / 改代码 / 回传状态",
+      "tag": "不参与内部流程",
+      "icon": "external",
+      "pos": [60, 760],
+      "size": [440, 84]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "谁在用",
+      "wraps": ["feature", "people"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "AI 做什么 · 多 Agent 协同",
+      "wraps": ["gen", "exec", "replay", "record"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "拿什么比",
+      "wraps": ["graphrag", "memory", "okf"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "结果分流",
+      "wraps": ["report", "knowledge"],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "外部边界 · 只接收报告",
+      "wraps": ["external"],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "id": "deliver-feature",
+      "from": "feature",
+      "to": "gen",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "id": "confirm-normal",
+      "from": "people",
+      "to": "record",
+      "label": "确认正常",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "run-cases",
+      "from": "gen",
+      "to": "exec",
+      "variant": "emphasis"
+    },
+    {
+      "id": "compare-after-run",
+      "from": "exec",
+      "to": "replay",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consistent-branch",
+      "from": "replay",
+      "to": "record"
+    },
+    {
+      "id": "replay-basis",
+      "from": "replay",
+      "to": "memory",
+      "label": "重放基准",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "retrieve-similar",
+      "from": "replay",
+      "to": "graphrag",
+      "label": "检索相似用例",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "report-branch",
+      "from": "replay",
+      "to": "report",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "record-to-knowledge",
+      "from": "record",
+      "to": "knowledge",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "back-to-okf",
+      "from": "knowledge",
+      "to": "okf",
+      "label": "回流",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "back-to-graphrag",
+      "from": "knowledge",
+      "to": "graphrag",
+      "variant": "dashed",
+      "fromSide": "left",
+      "toSide": "bottom"
+    },
+    {
+      "id": "dispatch-a2a",
+      "from": "report",
+      "to": "external",
+      "label": "A2A 派发",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "硬边界",
+      "items": [
+        "多 Agent 协同：AI 辅助采集、生成、执行、记录、比对、复跑，人只在关键处确认",
+        "系统只诊断与复验，不改代码、不给修复方案",
+        "报告是唯一交付物；猜测只写「待查线索」，回执只有已修复 / 仍重现 / 新问题",
+        "题目只点名测试阶段内的一格，不设唯一中心"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "正常现场记忆",
+      "items": [
+        "最少存：操作顺序与每步请求、测试数据、正常返回 / 页面 / 数据变化、前提与环境、确认人",
+        "三条硬边界：数据会过期 · 跑通不等于正常 · 接口改了标准同步更新"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "当前状态",
+      "items": [
+        "设计层路径闭合，端到端业务闭环未形成，无运行证据",
+        "P0 缺口：A2A 任务状态机 · 复验回退路径 · 正常现场生命周期"
+      ]
+    }
+  ]
+}
