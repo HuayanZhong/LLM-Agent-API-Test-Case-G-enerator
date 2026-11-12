@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库已有两个可运行的 Nest 骨架（`apps/backend`、`apps/bff`），业务模块尚未实现。
+> 当前仓库已有三个可运行的骨架：`apps/frontend`（Next.js）、`apps/bff` 与 `apps/backend`（NestJS）；业务模块尚未实现。
 
 ## 目录结构
 
@@ -19,8 +19,8 @@
 ├── doc/                 # 业务架构、技术架构与数据模型图
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
-├── apps/                # Nest 骨架：backend / bff；frontend 待建
-├── packages/            # 共享包（待建设）
+├── apps/                # backend（5000）、bff（4000）、frontend（3000）
+├── packages/            # ui：共享 shadcn 组件、cn() 与 Tailwind 样式
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
@@ -41,18 +41,28 @@
 
 ```bash
 pnpm install
-pnpm dev      # turbo run dev：并行启动 backend 与 bff
+pnpm dev                    # turbo run dev：并行启动 backend、bff 与 frontend
+pnpm --filter frontend dev  # 只启动 Next 前端（3000）
+pnpm --filter frontend build
 ```
 
-## Nest 骨架
+## 服务与前端骨架
 
-| 服务 | 目录 | 端口 | 健康检查 |
+| 服务 | 目录 | 端口 | 入口 |
 |---|---|---|---|
 | backend | `apps/backend` | 5000 | `GET /health` |
 | BFF | `apps/bff` | 4000 | `GET /health` |
-| Next 前端 | `apps/frontend`（待建） | 3000 | - |
+| 前端 | `apps/frontend` | 3000 | `/` |
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块、测试或 lint。
+
+前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。新增组件必须在 app 目录执行：
+
+```bash
+pnpm dlx shadcn@latest add <component> -c apps/frontend
+```
+
+UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/frontend/src/components`。
 
 ## 环境变量
 

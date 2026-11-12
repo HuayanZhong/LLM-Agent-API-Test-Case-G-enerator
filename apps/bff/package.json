@@ -20,7 +20,7 @@
     "@nestjs/cli": "catalog:backend",
     "@nestjs/schematics": "catalog:backend",
     "@types/express": "catalog:backend",
-    "@types/node": "catalog:backend",
-    "typescript": "catalog:backend"
+    "@types/node": "catalog:tooling",
+    "typescript": "catalog:tooling"
   }
 }

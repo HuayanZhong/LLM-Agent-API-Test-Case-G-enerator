@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "be225e7e-d536-4f97-8226-bb1c5e58f46f",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\source\\technical-architecture.candidate.json",
+  "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\technical-architecture.html",
+  "specification": {
+    "sha256": "10d84eaecebeb628ce3834de45c87958e9b5f646cf34bcba987fe0b4bd834644",
+    "bytes": 10529
+  },
+  "artifact": {
+    "sha256": "7487e821182d963ad66bb1d58426becf7d994333e59e15e6bfa6f8ec6ea9a7a5",
+    "bytes": 838230
+  }
+}

@@ -9,16 +9,29 @@ engineStrict: true
 # 依赖版本统一在这里管理；包内用 "pkg": "catalog:分类名" 引用
 # pnpm 不接受空 catalog，未启用的分类保持注释，加入依赖时再启用
 catalogs:
-  # 工具链：Turbo、TypeScript、ESLint、Prettier 等
+  # 工具链：Turbo、TypeScript、CLI 等
   tooling:
     "@fission-ai/openspec": ^2.0.0
     turbo: ^2.11.11
+    typescript: ^6.0.3
+    "@types/node": ^26.6.6
+    shadcn: ^4.23.0
 
-  # 前端：Next.js、React、shadcn/ui 相关依赖后续加入
-  # frontend:
-  #   next: ^...
-  #   react: ^...
-  #   react-dom: ^...
+  # 前端：Next.js、React、Tailwind、shadcn 组件依赖
+  frontend:
+    next: ^16.4.6
+    react: ^19.3.1
+    react-dom: ^19.3.1
+    next-themes: ^0.4.6
+    tailwindcss: ^4.3.5
+    "@tailwindcss/postcss": ^4.3.5
+    "@types/react": ^19.3.0
+    "@types/react-dom": ^19.3.0
+    lucide-react: ^1.72.0
+    class-variance-authority: ^0.7.1
+    cn: ^0.5.2
+    radix-ui: ^1.8.1
+    tw-animate-css: ^1.4.0
 
   # 后端：NestJS 服务（backend / bff）；LangGraph、Zod、MikroORM 等后续加入
   backend:
@@ -28,10 +41,8 @@ catalogs:
     "@nestjs/cli": ^12.0.12
     "@nestjs/schematics": ^12.0.13
     "@types/express": ^5.0.6
-    "@types/node": ^26.6.6
     reflect-metadata: ^0.2.2
     rxjs: ^7.8.2
-    typescript: ^6.0.3
 
   # 测试与质量：Vitest、覆盖率、接口测试工具等后续加入
   # testing:

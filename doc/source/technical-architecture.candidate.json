@@ -50,8 +50,8 @@
     {
       "id": "desktop",
       "type": "frontend",
-      "label": "Electron 桌面端",
-      "sublabel": "Next.js + React + shadcn/ui；主 / 渲染进程隔离",
+      "label": "前端 / 桌面端（3000）",
+      "sublabel": "Next.js 16 + React 19；Electron 待接入",
       "tag": "桌面端",
       "icon": "frontend",
       "pos": [
@@ -66,9 +66,9 @@
     {
       "id": "bff",
       "type": "backend",
-      "label": "BFF（Next Route Handlers）",
+      "label": "BFF（NestJS，4000）",
       "sublabel": "会话、SSE 进度、接口聚合",
-      "tag": "薄 BFF",
+      "tag": "独立 BFF",
       "icon": "backend",
       "pos": [
         60,
@@ -82,7 +82,7 @@
     {
       "id": "nest",
       "type": "backend",
-      "label": "NestJS 本地服务",
+      "label": "NestJS 本地服务（5000）",
       "sublabel": "接口 / 契约 / 用例 / 比对 / 知识 / 报告",
       "tag": "领域服务",
       "icon": "backend",
@@ -243,16 +243,23 @@
   "boundaries": [
     {
       "kind": "region",
-      "label": "桌面端 · 本地进程",
+      "label": "前端 · Next.js（3000）",
       "wraps": [
-        "desktop",
+        "desktop"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "BFF · NestJS（4000）",
+      "wraps": [
         "bff"
       ],
       "pad": 20
     },
     {
       "kind": "region",
-      "label": "本地服务 · NestJS",
+      "label": "本地服务 · NestJS（5000）",
       "wraps": [
         "nest",
         "agent",
@@ -383,8 +390,8 @@
       "title": "桌面端与本地进程",
       "items": [
         "Electron 主进程管理窗口、密钥与本地进程；渲染进程只跑界面",
-        "Next.js 以 standalone server 运行，BFF 只做会话、SSE 与聚合",
-        "NestJS 与 MCP 进程由主进程拉起；启动顺序、端口、优雅退出要统一"
+        "Next.js 独立运行（3000）；BFF 是独立 NestJS 服务（4000），只做会话、SSE 与聚合",
+        "当前三个服务可独立启动（3000 / 4000 / 5000）；Electron 接入后由主进程统一拉起"
       ]
     },
     {
@@ -423,7 +430,7 @@
         "LangGraph 检查点落 Postgres；任务队列 + Worker 承担长任务与并发上限",
         "模型网关做供应商切换、降级、限流与 token 预算；Prompt / 模型版本要可追溯",
         "日志、请求 ID、Agent 轨迹与 token 成本；黄金集评测幻觉断言率与通过率",
-        "Electron 主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出"
+        "Electron 接入后，主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出"
       ]
     }
   ]

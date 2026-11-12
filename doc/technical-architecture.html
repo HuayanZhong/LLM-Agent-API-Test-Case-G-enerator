@@ -5249,11 +5249,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="桌面端 · 本地进程" x="40" y="36" width="340" height="284" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="前端 · Next.js（3000）" x="40" y="36" width="340" height="134" rx="12" class="c-region" stroke-width="1"/>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="1" data-composition-frame-label="本地服务 · NestJS" x="420" y="76" width="380" height="634" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="1" data-composition-frame-label="BFF · NestJS（4000）" x="40" y="186" width="340" height="134" rx="12" class="c-region" stroke-width="1"/>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="2" data-composition-frame-label="Supabase 云" x="840" y="36" width="340" height="174" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="2" data-composition-frame-label="本地服务 · NestJS（5000）" x="420" y="76" width="380" height="634" rx="12" class="c-region" stroke-width="1"/>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="3" data-composition-frame-label="Supabase 云" x="840" y="36" width="340" height="174" rx="12" class="c-region" stroke-width="1"/>
 
         <!-- Connection paths (before components for correct z-order) -->
         <g data-graph-role="automatic-crossover" style="--step:0">
@@ -5303,8 +5305,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
         <!-- Components -->
-        <g id="node-desktop" data-node-id="desktop" data-node-label="Electron 桌面端" tabindex="0" role="button" aria-label="聚焦Electron 桌面端，Next.js + React + shadcn/ui；主 / 渲染进程隔离, 桌面端 · 本地进程" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Next.js + React + shadcn/ui；主 / 渲染进程隔离" data-node-tag="桌面端" data-node-context="桌面端 · 本地进程">
-          <title>Electron 桌面端 · Next.js + React + shadcn/ui；主 / 渲染进程隔离 · 桌面端 · 本地进程 · 桌面端</title>
+        <g id="node-desktop" data-node-id="desktop" data-node-label="前端 / 桌面端（3000）" tabindex="0" role="button" aria-label="聚焦前端 / 桌面端（3000），Next.js 16 + React 19；Electron 待接入, 前端 · Next.js（3000）" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Next.js 16 + React 19；Electron 待接入" data-node-tag="桌面端" data-node-context="前端 · Next.js（3000）">
+          <title>前端 / 桌面端（3000） · Next.js 16 + React 19；Electron 待接入 · 前端 · Next.js（3000） · 桌面端</title>
           <rect x="60" y="60" width="300" height="90" rx="8" class="c-mask"/>
           <rect x="60" y="60" width="300" height="90" rx="8" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(66 66) scale(0.6875)">
@@ -5313,37 +5315,37 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="210" y="103" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Electron 桌面端</text>
-        <text data-detail="context" x="210" y="119" class="t-muted" font-size="9" text-anchor="middle">Next.js + React + shadcn/ui；主 / 渲染进程隔离</text>
+          <text data-node-label="" data-detail-anchor="" x="210" y="103" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">前端 / 桌面端（3000）</text>
+        <text data-detail="context" x="210" y="119" class="t-muted" font-size="9" text-anchor="middle">Next.js 16 + React 19；Electron 待接入</text>
         <text data-detail="fine" x="210" y="142" class="t-frontend" font-size="7" text-anchor="middle">桌面端</text>
         </g>
 
-        <g id="node-bff" data-node-id="bff" data-node-label="BFF（Next Route Handlers）" tabindex="0" role="button" aria-label="聚焦BFF（Next Route Handlers），会话、SSE 进度、接口聚合, 桌面端 · 本地进程" aria-pressed="false" data-node-kind="backend" data-node-sublabel="会话、SSE 进度、接口聚合" data-node-tag="薄 BFF" data-node-context="桌面端 · 本地进程">
-          <title>BFF（Next Route Handlers） · 会话、SSE 进度、接口聚合 · 桌面端 · 本地进程 · 薄 BFF</title>
+        <g id="node-bff" data-node-id="bff" data-node-label="BFF（NestJS，4000）" tabindex="0" role="button" aria-label="聚焦BFF（NestJS，4000），会话、SSE 进度、接口聚合, BFF · NestJS（4000）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="会话、SSE 进度、接口聚合" data-node-tag="独立 BFF" data-node-context="BFF · NestJS（4000）">
+          <title>BFF（NestJS，4000） · 会话、SSE 进度、接口聚合 · BFF · NestJS（4000） · 独立 BFF</title>
           <rect x="60" y="210" width="300" height="90" rx="8" class="c-mask"/>
           <rect x="60" y="210" width="300" height="90" rx="8" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(66 216) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="210" y="253" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BFF（Next Route Handlers）</text>
+          <text data-node-label="" data-detail-anchor="" x="210" y="253" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">BFF（NestJS，4000）</text>
         <text data-detail="context" x="210" y="269" class="t-muted" font-size="9" text-anchor="middle">会话、SSE 进度、接口聚合</text>
-        <text data-detail="fine" x="210" y="292" class="t-backend" font-size="7" text-anchor="middle">薄 BFF</text>
+        <text data-detail="fine" x="210" y="292" class="t-backend" font-size="7" text-anchor="middle">独立 BFF</text>
         </g>
 
-        <g id="node-nest" data-node-id="nest" data-node-label="NestJS 本地服务" tabindex="0" role="button" aria-label="聚焦NestJS 本地服务，接口 / 契约 / 用例 / 比对 / 知识 / 报告, 本地服务 · NestJS" aria-pressed="false" data-node-kind="backend" data-node-sublabel="接口 / 契约 / 用例 / 比对 / 知识 / 报告" data-node-tag="领域服务" data-node-context="本地服务 · NestJS">
-          <title>NestJS 本地服务 · 接口 / 契约 / 用例 / 比对 / 知识 / 报告 · 本地服务 · NestJS · 领域服务</title>
+        <g id="node-nest" data-node-id="nest" data-node-label="NestJS 本地服务（5000）" tabindex="0" role="button" aria-label="聚焦NestJS 本地服务（5000），接口 / 契约 / 用例 / 比对 / 知识 / 报告, 本地服务 · NestJS（5000）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="接口 / 契约 / 用例 / 比对 / 知识 / 报告" data-node-tag="领域服务" data-node-context="本地服务 · NestJS（5000）">
+          <title>NestJS 本地服务（5000） · 接口 / 契约 / 用例 / 比对 / 知识 / 报告 · 本地服务 · NestJS（5000） · 领域服务</title>
           <rect x="440" y="100" width="340" height="100" rx="8" class="c-mask"/>
           <rect x="440" y="100" width="340" height="100" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(446 106) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="610" y="148" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">NestJS 本地服务</text>
+          <text data-node-label="" data-detail-anchor="" x="610" y="148" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">NestJS 本地服务（5000）</text>
         <text data-detail="context" x="610" y="164" class="t-muted" font-size="9" text-anchor="middle">接口 / 契约 / 用例 / 比对 / 知识 / 报告</text>
         <text data-detail="fine" x="610" y="192" class="t-backend" font-size="7" text-anchor="middle">领域服务</text>
         </g>
 
-        <g id="node-agent" data-node-id="agent" data-node-label="LangGraph.js + LangChain.js" tabindex="0" role="button" aria-label="聚焦LangGraph.js + LangChain.js，状态图 / 检查点 / 模型适配 / Zod, 本地服务 · NestJS" aria-pressed="false" data-node-kind="backend" data-node-sublabel="状态图 / 检查点 / 模型适配 / Zod" data-node-tag="Agent 编排" data-node-context="本地服务 · NestJS">
-          <title>LangGraph.js + LangChain.js · 状态图 / 检查点 / 模型适配 / Zod · 本地服务 · NestJS · Agent 编排</title>
+        <g id="node-agent" data-node-id="agent" data-node-label="LangGraph.js + LangChain.js" tabindex="0" role="button" aria-label="聚焦LangGraph.js + LangChain.js，状态图 / 检查点 / 模型适配 / Zod, 本地服务 · NestJS（5000）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="状态图 / 检查点 / 模型适配 / Zod" data-node-tag="Agent 编排" data-node-context="本地服务 · NestJS（5000）">
+          <title>LangGraph.js + LangChain.js · 状态图 / 检查点 / 模型适配 / Zod · 本地服务 · NestJS（5000） · Agent 编排</title>
           <rect x="440" y="270" width="340" height="100" rx="8" class="c-mask"/>
           <rect x="440" y="270" width="340" height="100" rx="8" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-backend" transform="translate(446 276) scale(0.6875)">
@@ -5354,8 +5356,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="fine" x="610" y="362" class="t-backend" font-size="7" text-anchor="middle">Agent 编排</text>
         </g>
 
-        <g id="node-exec" data-node-id="exec" data-node-label="执行 / 采集 / 派发" tabindex="0" role="button" aria-label="聚焦执行 / 采集 / 派发，ky + Vitest · MCP Client · A2A, 本地服务 · NestJS" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ky + Vitest · MCP Client · A2A" data-node-tag="执行层" data-node-context="本地服务 · NestJS">
-          <title>执行 / 采集 / 派发 · ky + Vitest · MCP Client · A2A · 本地服务 · NestJS · 执行层</title>
+        <g id="node-exec" data-node-id="exec" data-node-label="执行 / 采集 / 派发" tabindex="0" role="button" aria-label="聚焦执行 / 采集 / 派发，ky + Vitest · MCP Client · A2A, 本地服务 · NestJS（5000）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ky + Vitest · MCP Client · A2A" data-node-tag="执行层" data-node-context="本地服务 · NestJS（5000）">
+          <title>执行 / 采集 / 派发 · ky + Vitest · MCP Client · A2A · 本地服务 · NestJS（5000） · 执行层</title>
           <rect x="440" y="440" width="340" height="100" rx="8" class="c-mask"/>
           <rect x="440" y="440" width="340" height="100" rx="8" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-backend" transform="translate(446 446) scale(0.6875)">
@@ -5443,8 +5445,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="fine" x="1010" y="312" class="t-backend" font-size="7" text-anchor="middle">知识服务</text>
         </g>
 
-        <g id="node-queue" data-node-id="queue" data-node-label="任务队列 / Worker" tabindex="0" role="button" aria-label="聚焦任务队列 / Worker，p-queue + SQL 任务表；长任务不阻塞 API, 本地服务 · NestJS" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="p-queue + SQL 任务表；长任务不阻塞 API" data-node-tag="运行时" data-node-context="本地服务 · NestJS">
-          <title>任务队列 / Worker · p-queue + SQL 任务表；长任务不阻塞 API · 本地服务 · NestJS · 运行时</title>
+        <g id="node-queue" data-node-id="queue" data-node-label="任务队列 / Worker" tabindex="0" role="button" aria-label="聚焦任务队列 / Worker，p-queue + SQL 任务表；长任务不阻塞 API, 本地服务 · NestJS（5000）" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="p-queue + SQL 任务表；长任务不阻塞 API" data-node-tag="运行时" data-node-context="本地服务 · NestJS（5000）">
+          <title>任务队列 / Worker · p-queue + SQL 任务表；长任务不阻塞 API · 本地服务 · NestJS（5000） · 运行时</title>
           <rect x="440" y="610" width="340" height="80" rx="8" class="c-mask"/>
           <rect x="440" y="610" width="340" height="80" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(446 616) scale(0.6875)">
@@ -5497,17 +5499,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="桌面端 · 本地进程">
-          <rect data-graph-role="structural-frame-label-mask" x="44" y="40" width="101.8" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="48" y="53" class="t-cloud" font-size="9" font-weight="600">桌面端 · 本地进程</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="前端 · Next.js（3000）">
+          <rect data-graph-role="structural-frame-label-mask" x="44" y="40" width="128.8" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="48" y="53" class="t-cloud" font-size="9" font-weight="600">前端 · Next.js（3000）</text>
         </g>
 
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="region" data-composition-frame-label="本地服务 · NestJS">
-          <rect data-graph-role="structural-frame-label-mask" x="424" y="80" width="101.8" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="428" y="93" class="t-cloud" font-size="9" font-weight="600">本地服务 · NestJS</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="region" data-composition-frame-label="BFF · NestJS（4000）">
+          <rect data-graph-role="structural-frame-label-mask" x="44" y="190" width="118" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="48" y="203" class="t-cloud" font-size="9" font-weight="600">BFF · NestJS（4000）</text>
         </g>
 
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="2" data-composition-frame-kind="region" data-composition-frame-label="Supabase 云">
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="2" data-composition-frame-kind="region" data-composition-frame-label="本地服务 · NestJS（5000）">
+          <rect data-graph-role="structural-frame-label-mask" x="424" y="80" width="145" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="428" y="93" class="t-cloud" font-size="9" font-weight="600">本地服务 · NestJS（5000）</text>
+        </g>
+
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="3" data-composition-frame-kind="region" data-composition-frame-label="Supabase 云">
           <rect data-graph-role="structural-frame-label-mask" x="844" y="40" width="69.4" height="16" rx="3" class="c-mask"/>
           <text data-boundary-label="" x="848" y="53" class="t-cloud" font-size="9" font-weight="600">Supabase 云</text>
         </g>
@@ -5724,8 +5731,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </div>
         <ul>
           <li>Electron 主进程管理窗口、密钥与本地进程；渲染进程只跑界面</li>
-          <li>Next.js 以 standalone server 运行，BFF 只做会话、SSE 与聚合</li>
-          <li>NestJS 与 MCP 进程由主进程拉起；启动顺序、端口、优雅退出要统一</li>
+          <li>Next.js 独立运行（3000）；BFF 是独立 NestJS 服务（4000），只做会话、SSE 与聚合</li>
+          <li>当前三个服务可独立启动（3000 / 4000 / 5000）；Electron 接入后由主进程统一拉起</li>
         </ul>
       </div>
 
@@ -5776,7 +5783,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <li>LangGraph 检查点落 Postgres；任务队列 + Worker 承担长任务与并发上限</li>
           <li>模型网关做供应商切换、降级、限流与 token 预算；Prompt / 模型版本要可追溯</li>
           <li>日志、请求 ID、Agent 轨迹与 token 成本；黄金集评测幻觉断言率与通过率</li>
-          <li>Electron 主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出</li>
+          <li>Electron 接入后，主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出</li>
         </ul>
       </div>
     </div>

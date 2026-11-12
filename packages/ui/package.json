@@ -1,0 +1,31 @@
+{
+  "name": "@workspace/ui",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "class-variance-authority": "catalog:frontend",
+    "cn": "catalog:frontend",
+    "lucide-react": "catalog:frontend",
+    "radix-ui": "catalog:frontend",
+    "react": "catalog:frontend",
+    "react-dom": "catalog:frontend"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "catalog:frontend",
+    "@types/node": "catalog:tooling",
+    "@types/react": "catalog:frontend",
+    "@types/react-dom": "catalog:frontend",
+    "shadcn": "catalog:tooling",
+    "tailwindcss": "catalog:frontend",
+    "tw-animate-css": "catalog:frontend",
+    "typescript": "catalog:tooling"
+  },
+  "exports": {
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./postcss.config.mjs",
+    "./lib/*": "./src/lib/*.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./hooks/*": "./src/hooks/*.ts"
+  }
+}

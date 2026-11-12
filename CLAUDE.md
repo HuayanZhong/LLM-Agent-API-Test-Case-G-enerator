@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；`apps/frontend` 与 `packages/` 仍为空，业务模块、测试与构建产物尚未实现。
+设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 骨架、`packages/ui` 的共享组件包，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块、测试与 lint 尚未实现。
 
 ## 常用命令
 
@@ -16,10 +16,11 @@ pnpm dev      # 根脚本：turbo run dev
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 目前都只暴露 `dev`（`persistent: true`、`cache: false`）；build / lint / test 尚未接入，后续需要时再加。
-- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`；`backend` catalog 已启用，两个 Nest app 用 `catalog:backend` 引用。根 `package.json` 用 `catalog:tooling` 引用 Turbo。
+- `turbo.json` 与根 `package.json` 目前只暴露 `dev`（`persistent: true`、`cache: false`）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint / test 尚未接入。
+- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
-- 两个 Nest app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 backend（5000）与 bff（4000）。
+- 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
+- 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - 还没有测试框架，因此没有“跑单个测试”的命令；后续加入测试后再补 scoped script。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
@@ -46,10 +47,10 @@ pnpm dev      # 根脚本：turbo run dev
 ## 仓库结构
 
 ```text
-apps/frontend/   规划中的 Electron + Next.js/React + shadcn/ui 桌面端（空，3000）
+apps/frontend/   Next.js 16 + React 19 + Tailwind v4 骨架（3000，src/）
 apps/bff/        NestJS 12 BFF 骨架（4000，GET /health）
 apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
-packages/        规划中的共享包（空）
+packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
 doc/             当前设计的事实来源
 ```
 
@@ -57,8 +58,8 @@ doc/             当前设计的事实来源
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架，端口 5000 / 4000，只有 `GET /health`。
-- 桌面端：Electron 壳、Next.js + React + shadcn/ui；BFF 是独立 Nest 服务。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）。
+- 桌面端：Electron 壳待接入；Next.js 前端已可独立运行，通过 `@workspace/ui` 引用共享组件。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。
 - 数据：Supabase（Postgres、pgvector、Auth、Storage）经 MikroORM 访问；GraphRAG 用邻接表 + 递归 CTE 配合 pgvector；OKF 文档放 Storage。

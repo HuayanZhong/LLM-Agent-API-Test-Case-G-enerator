@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\source\\technical-architecture.candidate.json",
+    "sha256": "10d84eaecebeb628ce3834de45c87958e9b5f646cf34bcba987fe0b4bd834644",
+    "bytes": 10529
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\technical-architecture.html",
+    "sha256": "7487e821182d963ad66bb1d58426becf7d994333e59e15e6bfa6f8ec6ea9a7a5",
+    "bytes": 838230
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\_evidence\\review-technical-3\\technical-architecture.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\_evidence\\review-technical-3\\technical-architecture.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\_evidence\\review-technical-3\\technical-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-12T19:54:19.285Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 4627,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "exec-target",
+            "from": "exec",
+            "to": "target",
+            "label": "HTTP",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "bends": 3,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "exec → target needs 3 bends: move node exec or target so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}
