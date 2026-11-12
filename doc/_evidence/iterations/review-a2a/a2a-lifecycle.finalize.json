@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "lifecycle",
+  "quality": "showcase",
+  "startedAt": "2026-11-12T16:47:20.466Z",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+    "sha256": "7cf220a6dc5acd2dd6a74fe510733169b16b3af0d6e5fec5665d78706cfd8799",
+    "bytes": 6062
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html"
+  },
+  "stages": {
+    "validate": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": null,
+      "command": [
+        "E:\\nodejs\\node.exe",
+        "C:\\Users\\Administrator\\.agents\\skills\\archify\\bin\\archify.mjs",
+        "deliver",
+        "lifecycle",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html",
+        "--quality",
+        "showcase",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "deliver",
+        "receiptId": "48ca0284-aed0-4b52-a26a-921af478116a",
+        "stage": "render",
+        "type": "lifecycle",
+        "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+        "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html",
+        "error": "Lifecycle layout validation failed:\n- The lifecycle is 1620px wide; at 9px text it stays readable on a desktop only up to 1395px. Transition labels or notes widen their main-path gaps.",
+        "diagnostics": [
+          {
+            "code": "lifecycle/too-wide",
+            "severity": "error",
+            "message": "The lifecycle is 1620px wide; at 9px text it stays readable on a desktop only up to 1395px. Transition labels or notes widen their main-path gaps.",
+            "subject": {
+              "diagramType": "lifecycle",
+              "path": "/mainPath"
+            },
+            "evidence": {
+              "viewBoxWidth": 1620,
+              "budgetPx": 1395,
+              "mainPathStates": 6,
+              "lowerRowStates": 7,
+              "wideStepLabels": [
+                {
+                  "from": "in_progress",
+                  "to": "fixed",
+                  "label": "回执：已修复",
+                  "excessPx": 38,
+                  "widthDriver": "label"
+                },
+                {
+                  "from": "draft",
+                  "to": "dispatched",
+                  "label": "派发报告",
+                  "excessPx": 14,
+                  "widthDriver": "label"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "in_progress",
+                  "label": "对端接收",
+                  "excessPx": 14,
+                  "widthDriver": "label"
+                },
+                {
+                  "from": "fixed",
+                  "to": "verifying",
+                  "label": "触发复验",
+                  "excessPx": 14,
+                  "widthDriver": "label"
+                },
+                {
+                  "from": "verifying",
+                  "to": "closed",
+                  "label": "复验通过",
+                  "excessPx": 14,
+                  "widthDriver": "label"
+                }
+              ],
+              "spacingWideners": [
+                {
+                  "from": "in_progress",
+                  "to": "timeout",
+                  "label": "处理超时",
+                  "widthDriver": "label"
+                },
+                {
+                  "from": "retry",
+                  "to": "dispatched",
+                  "label": "重新派发",
+                  "widthDriver": "label"
+                }
+              ]
+            },
+            "supportedFixes": [
+              "relieve the routes crowding \"处理超时\", \"重新派发\": those label/note boxes found no clear spot at the base spacing, so lower-row and route spacing grew; main-path gap growth is bounded by the text readability budget. Only equivalent exits with identical labels, notes and variants can share an arrow; keep distinct notes separate, or move a secondary transition elsewhere",
+              "review the width-driving main-path transition text: \"in_progress\" -> \"fixed\" label (+38px), \"draft\" -> \"dispatched\" label (+14px), \"dispatched\" -> \"in_progress\" label (+14px), \"fixed\" -> \"verifying\" label (+14px), \"verifying\" -> \"closed\" label (+14px); preserve every condition; shorten wording only, or move complete detail to a card explicitly associated with the same transition; shorter wording may not resolve other layout constraints",
+              "shorten state labels and sublabels",
+              "move secondary phases off mainPath or merge adjacent phases",
+              "split the lifecycle into two diagrams"
+            ]
+          }
+        ],
+        "provenance": "absent",
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      },
+      "execution": "embedded-in-deliver"
+    },
+    "deliver": {
+      "status": "not-run",
+      "execution": "blocked-by-validate"
+    }
+  },
+  "browserCheck": {
+    "requested": true,
+    "ran": false
+  },
+  "diagnostics": [
+    {
+      "code": "lifecycle/too-wide",
+      "severity": "error",
+      "message": "The lifecycle is 1620px wide; at 9px text it stays readable on a desktop only up to 1395px. Transition labels or notes widen their main-path gaps.",
+      "subject": {
+        "diagramType": "lifecycle",
+        "path": "/mainPath"
+      },
+      "evidence": {
+        "viewBoxWidth": 1620,
+        "budgetPx": 1395,
+        "mainPathStates": 6,
+        "lowerRowStates": 7,
+        "wideStepLabels": [
+          {
+            "from": "in_progress",
+            "to": "fixed",
+            "label": "回执：已修复",
+            "excessPx": 38,
+            "widthDriver": "label"
+          },
+          {
+            "from": "draft",
+            "to": "dispatched",
+            "label": "派发报告",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "dispatched",
+            "to": "in_progress",
+            "label": "对端接收",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "fixed",
+            "to": "verifying",
+            "label": "触发复验",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "verifying",
+            "to": "closed",
+            "label": "复验通过",
+            "excessPx": 14,
+            "widthDriver": "label"
+          }
+        ],
+        "spacingWideners": [
+          {
+            "from": "in_progress",
+            "to": "timeout",
+            "label": "处理超时",
+            "widthDriver": "label"
+          },
+          {
+            "from": "retry",
+            "to": "dispatched",
+            "label": "重新派发",
+            "widthDriver": "label"
+          }
+        ]
+      },
+      "supportedFixes": [
+        "relieve the routes crowding \"处理超时\", \"重新派发\": those label/note boxes found no clear spot at the base spacing, so lower-row and route spacing grew; main-path gap growth is bounded by the text readability budget. Only equivalent exits with identical labels, notes and variants can share an arrow; keep distinct notes separate, or move a secondary transition elsewhere",
+        "review the width-driving main-path transition text: \"in_progress\" -> \"fixed\" label (+38px), \"draft\" -> \"dispatched\" label (+14px), \"dispatched\" -> \"in_progress\" label (+14px), \"fixed\" -> \"verifying\" label (+14px), \"verifying\" -> \"closed\" label (+14px); preserve every condition; shorten wording only, or move complete detail to a card explicitly associated with the same transition; shorter wording may not resolve other layout constraints",
+        "shorten state labels and sublabels",
+        "move secondary phases off mainPath or merge adjacent phases",
+        "split the lifecycle into two diagrams"
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a\\a2a-lifecycle.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a\\a2a-lifecycle.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "validate",
+  "finishedAt": "2026-11-12T16:47:20.993Z",
+  "durationMs": 526,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "bea6b89a-ce22-43bd-9c33-b00d797938be",
+  "status": "current",
+  "command": "deliver",
+  "type": "erd",
+  "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-core.candidate.json",
+  "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-core.html",
+  "specification": {
+    "sha256": "7d383e09442a31c44f6d57fe3395ca889f2ee7d6c13a364b521a71160e6c6027",
+    "bytes": 8752
+  },
+  "artifact": {
+    "sha256": "9de628f9e9ba4b07c5c6c0e1562050be57f52a7546483c274eccd344a4b20409",
+    "bytes": 860280
+  }
+}

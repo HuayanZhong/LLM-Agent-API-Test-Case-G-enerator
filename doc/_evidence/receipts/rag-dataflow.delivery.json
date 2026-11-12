@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "2e8487bd-2869-4526-a330-9bb21603f404",
+  "status": "current",
+  "command": "deliver",
+  "type": "dataflow",
+  "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\rag-dataflow.candidate.json",
+  "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\rag-dataflow.html",
+  "specification": {
+    "sha256": "17344faf7d8c06da6cd4dcc678abc7cc3175ef2fe15c7bfdde9ba003797fd8f0",
+    "bytes": 5873
+  },
+  "artifact": {
+    "sha256": "230e3c111d44bd3a67d5ec3dd0fef880d36c28f64a6269bd9b5a6e2e5bfec6b0",
+    "bytes": 832140
+  }
+}

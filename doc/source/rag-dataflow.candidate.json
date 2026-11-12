@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "RAG 数据流 · 索引、检索与回流",
+    "output": "doc/rag-dataflow.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "indexing",
+        "label": "离线索引",
+        "focus": ["src_docs", "src_scene", "chunk", "embed", "vec", "graph", "okf"],
+        "note": "接口文档、用例与正常现场经切片、Embedding 后写入向量、图与 OKF"
+      },
+      {
+        "id": "retrieval",
+        "label": "在线检索",
+        "focus": ["query", "retrieve", "rerank", "prompt", "agent"],
+        "note": "查询 → 混合检索 → 重排 → Prompt 注入 → 生成/判定"
+      },
+      {
+        "id": "feedback",
+        "label": "回流",
+        "focus": ["agent", "feedback", "chunk", "okf"],
+        "note": "命中与未命中都要回流：重切片、更新 OKF 状态、刷新索引"
+      }
+    ]
+  },
+  "stages": [
+    { "label": "输入" },
+    { "label": "切片" },
+    { "label": "索引" },
+    { "label": "检索" },
+    { "label": "注入" }
+  ],
+  "nodes": [
+    { "id": "src_docs", "type": "frontend", "label": "接口文档 / 用例", "sublabel": "OpenAPI / curl / 采集", "tag": "来源", "stage": 0, "row": 0 },
+    { "id": "src_scene", "type": "database", "label": "正常现场 / 报告", "sublabel": "基线、差异、证据", "tag": "来源", "stage": 0, "row": 2 },
+    { "id": "chunk", "type": "backend", "label": "清洗与切片", "sublabel": "按接口 / 字段 / 场景", "tag": "切片", "stage": 1, "row": 1 },
+    { "id": "embed", "type": "backend", "label": "Embedding", "sublabel": "模型网关 / 批量", "tag": "向量化", "stage": 2, "row": 0 },
+    { "id": "vec", "type": "database", "label": "pgvector", "sublabel": "HNSW / 维度固定", "tag": "向量索引", "stage": 2, "row": 1 },
+    { "id": "graph", "type": "database", "label": "图邻接表", "sublabel": "节点 / 边 / 递归 CTE", "tag": "图索引", "stage": 2, "row": 2 },
+    { "id": "okf", "type": "database", "label": "OKF 文档", "sublabel": "index.md / log.md", "tag": "可审查", "stage": 2, "row": 3 },
+    { "id": "query", "type": "backend", "label": "查询构造", "sublabel": "当前用例 / 比对上下文", "tag": "查询", "stage": 3, "row": 0 },
+    { "id": "retrieve", "type": "backend", "label": "混合检索", "sublabel": "向量 + 图 + 过滤", "tag": "检索", "stage": 3, "row": 1 },
+    { "id": "rerank", "type": "backend", "label": "重排与去重", "sublabel": "相关性 / 时效 / 版本", "tag": "重排", "stage": 3, "row": 2 },
+    { "id": "prompt", "type": "backend", "label": "Prompt 注入", "sublabel": "Top-K + 引用", "tag": "上下文", "stage": 4, "row": 1 },
+    { "id": "agent", "type": "backend", "label": "生成 / 判定 Agent", "sublabel": "LangGraph", "tag": "消费", "stage": 4, "row": 0 },
+    { "id": "feedback", "type": "messagebus", "label": "命中反馈", "sublabel": "未命中 / 过期 → 回流", "tag": "回流", "stage": 4, "row": 3 }
+  ],
+  "flows": [
+    { "id": "docs-chunk", "from": "src_docs", "to": "chunk", "label": "文档 / 用例", "variant": "emphasis" },
+    { "id": "scene-chunk", "from": "src_scene", "to": "chunk", "label": "基线 / 证据" },
+    { "id": "chunk-embed", "from": "chunk", "to": "embed", "label": "待向量化片段", "variant": "emphasis" },
+    { "id": "chunk-graph", "from": "chunk", "to": "graph", "label": "实体 / 关系" },
+    { "id": "chunk-okf", "from": "chunk", "to": "okf", "label": "结构化条目", "variant": "dashed" },
+    { "id": "embed-vec", "from": "embed", "to": "vec", "label": "向量写入", "variant": "emphasis" },
+    { "id": "vec-retrieve", "from": "vec", "to": "retrieve", "label": "相似片段", "variant": "emphasis" },
+    { "id": "graph-retrieve", "from": "graph", "to": "retrieve", "label": "关联实体" },
+    { "id": "okf-retrieve", "from": "okf", "to": "retrieve", "label": "来源 / 时效", "variant": "dashed" },
+    { "id": "query-retrieve", "from": "query", "to": "retrieve", "label": "查询", "variant": "emphasis" },
+    { "id": "retrieve-rerank", "from": "retrieve", "to": "rerank", "label": "候选片段", "variant": "emphasis" },
+    { "id": "rerank-prompt", "from": "rerank", "to": "prompt", "label": "Top-K", "variant": "emphasis" },
+    { "id": "prompt-agent", "from": "prompt", "to": "agent", "label": "上下文" },
+    { "id": "agent-feedback", "from": "agent", "to": "feedback", "label": "命中 / 未命中", "variant": "dashed" },
+    { "id": "feedback-chunk", "from": "feedback", "to": "chunk", "label": "回流 / 重切片", "variant": "dashed" },
+    { "id": "feedback-okf", "from": "feedback", "to": "okf", "label": "更新状态", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "索引口径",
+      "items": [
+        "切片按接口 / 字段 / 场景组织，保留 operationId、字段路径与来源",
+        "Embedding 模型与维度先定；pgvector 建 HNSW 索引，维度变更要重建",
+        "增量刷新：接口版本、正常现场、报告变更时只重切受影响片段"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "检索口径",
+      "items": [
+        "混合检索：向量相似 + 图邻接遍历 + 项目 / 版本 / 时效过滤",
+        "重排后再注入 Prompt；每条上下文带来源与过期标记",
+        "GraphRAG 只做检索，不做事实源；结论仍回到正常现场与人工确认"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "回流与评测",
+      "items": [
+        "未命中、过期、人工驳回都要回流：重切片或更新 OKF 状态",
+        "索引重建要有版本号与灰度；旧索引保留可回滚",
+        "评测：召回率、命中率、引用准确率、token 成本"
+      ]
+    }
+  ]
+}

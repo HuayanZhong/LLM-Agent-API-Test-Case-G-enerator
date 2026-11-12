@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "lifecycle",
+  "quality": "showcase",
+  "startedAt": "2026-11-12T16:58:36.203Z",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+    "sha256": "8d8059dcb7b8fa6c19feb2177ee7ef819d80b7fad8fc6132e441357ecfe77faa",
+    "bytes": 7451
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html"
+  },
+  "stages": {
+    "validate": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": null,
+      "command": [
+        "E:\\nodejs\\node.exe",
+        "C:\\Users\\Administrator\\.agents\\skills\\archify\\bin\\archify.mjs",
+        "deliver",
+        "lifecycle",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html",
+        "--quality",
+        "showcase",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "deliver",
+        "receiptId": "4597f6c1-6199-449e-8ecc-4bfcbee94e2e",
+        "stage": "render",
+        "type": "lifecycle",
+        "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+        "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html",
+        "error": "Lifecycle layout validation failed:\n- The lifecycle is 1476px wide; at 9px text it stays readable on a desktop only up to 1395px.",
+        "diagnostics": [
+          {
+            "code": "lifecycle/too-wide",
+            "severity": "error",
+            "message": "The lifecycle is 1476px wide; at 9px text it stays readable on a desktop only up to 1395px.",
+            "subject": {
+              "diagramType": "lifecycle",
+              "path": "/mainPath"
+            },
+            "evidence": {
+              "viewBoxWidth": 1476,
+              "budgetPx": 1395,
+              "mainPathStates": 6,
+              "lowerRowStates": 7,
+              "wideStepLabels": [],
+              "spacingWideners": []
+            },
+            "supportedFixes": [
+              "shorten state labels and sublabels",
+              "move secondary phases off mainPath or merge adjacent phases",
+              "split the lifecycle into two diagrams"
+            ]
+          }
+        ],
+        "provenance": "absent",
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      },
+      "execution": "embedded-in-deliver"
+    },
+    "deliver": {
+      "status": "not-run",
+      "execution": "blocked-by-validate"
+    }
+  },
+  "browserCheck": {
+    "requested": true,
+    "ran": false
+  },
+  "diagnostics": [
+    {
+      "code": "lifecycle/too-wide",
+      "severity": "error",
+      "message": "The lifecycle is 1476px wide; at 9px text it stays readable on a desktop only up to 1395px.",
+      "subject": {
+        "diagramType": "lifecycle",
+        "path": "/mainPath"
+      },
+      "evidence": {
+        "viewBoxWidth": 1476,
+        "budgetPx": 1395,
+        "mainPathStates": 6,
+        "lowerRowStates": 7,
+        "wideStepLabels": [],
+        "spacingWideners": []
+      },
+      "supportedFixes": [
+        "shorten state labels and sublabels",
+        "move secondary phases off mainPath or merge adjacent phases",
+        "split the lifecycle into two diagrams"
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a-4\\a2a-lifecycle.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a-4\\a2a-lifecycle.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "validate",
+  "finishedAt": "2026-11-12T16:58:36.776Z",
+  "durationMs": 573,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

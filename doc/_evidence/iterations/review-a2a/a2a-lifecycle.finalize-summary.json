@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "lifecycle",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+    "sha256": "7cf220a6dc5acd2dd6a74fe510733169b16b3af0d6e5fec5665d78706cfd8799",
+    "bytes": 6062
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html"
+  },
+  "gates": {
+    "validate": "fail",
+    "deliver": "not-run",
+    "check": "not-run",
+    "browser-check": "not-run"
+  },
+  "failedStage": "validate",
+  "diagnostics": [
+    {
+      "code": "lifecycle/too-wide",
+      "severity": "error",
+      "message": "The lifecycle is 1620px wide; at 9px text it stays readable on a desktop only up to 1395px. Transition labels or notes widen their main-path gaps.",
+      "subject": {
+        "diagramType": "lifecycle",
+        "path": "/mainPath"
+      },
+      "evidence": {
+        "viewBoxWidth": 1620,
+        "budgetPx": 1395,
+        "mainPathStates": 6,
+        "lowerRowStates": 7,
+        "wideStepLabels": [
+          {
+            "from": "in_progress",
+            "to": "fixed",
+            "label": "回执：已修复",
+            "excessPx": 38,
+            "widthDriver": "label"
+          },
+          {
+            "from": "draft",
+            "to": "dispatched",
+            "label": "派发报告",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "dispatched",
+            "to": "in_progress",
+            "label": "对端接收",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "fixed",
+            "to": "verifying",
+            "label": "触发复验",
+            "excessPx": 14,
+            "widthDriver": "label"
+          },
+          {
+            "from": "verifying",
+            "to": "closed",
+            "label": "复验通过",
+            "excessPx": 14,
+            "widthDriver": "label"
+          }
+        ],
+        "spacingWideners": [
+          {
+            "from": "in_progress",
+            "to": "timeout",
+            "label": "处理超时",
+            "widthDriver": "label"
+          },
+          {
+            "from": "retry",
+            "to": "dispatched",
+            "label": "重新派发",
+            "widthDriver": "label"
+          }
+        ]
+      },
+      "supportedFixes": [
+        "relieve the routes crowding \"处理超时\", \"重新派发\": those label/note boxes found no clear spot at the base spacing, so lower-row and route spacing grew; main-path gap growth is bounded by the text readability budget. Only equivalent exits with identical labels, notes and variants can share an arrow; keep distinct notes separate, or move a secondary transition elsewhere",
+        "review the width-driving main-path transition text: \"in_progress\" -> \"fixed\" label (+38px), \"draft\" -> \"dispatched\" label (+14px), \"dispatched\" -> \"in_progress\" label (+14px), \"fixed\" -> \"verifying\" label (+14px), \"verifying\" -> \"closed\" label (+14px); preserve every condition; shorten wording only, or move complete detail to a card explicitly associated with the same transition; shorter wording may not resolve other layout constraints",
+        "shorten state labels and sublabels",
+        "move secondary phases off mainPath or merge adjacent phases",
+        "split the lifecycle into two diagrams"
+      ]
+    }
+  ],
+  "diagnosticSummary": {
+    "total": 1,
+    "shown": 1,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a\\a2a-lifecycle.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-a2a\\a2a-lifecycle.finalize-summary.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 526,
+  "browserCheck": {
+    "requested": true,
+    "ran": false
+  },
+  "nextAction": {
+    "action": "edit-in-place",
+    "candidate": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+    "constraint": "Preserve unaffected semantics and geometry; apply each diagnostic's supportedFixes, or the fix its message names, and do not replace the whole candidate.",
+    "then": "finalize-once"
+  }
+}

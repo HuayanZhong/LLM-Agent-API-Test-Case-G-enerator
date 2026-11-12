@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "533e1a62-4363-458d-9234-88ae421c1bb3",
+  "status": "current",
+  "command": "deliver",
+  "type": "lifecycle",
+  "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.candidate.json",
+  "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\a2a-lifecycle.html",
+  "specification": {
+    "sha256": "03ccdea6024603973daf238bc0758d197aea99f3bd9e4dc8131779e6d770091a",
+    "bytes": 5988
+  },
+  "artifact": {
+    "sha256": "bb5a6a0c20cb3c5a488ee4098c88bc6768fd29f0263174fd23ef1b4ce1ea9162",
+    "bytes": 830036
+  }
+}

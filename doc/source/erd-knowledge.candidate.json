@@ -1,0 +1,507 @@
+{
+  "schema_version": 1,
+  "diagram_type": "erd",
+  "meta": {
+    "title": "数据模型 · 知识与协同（GraphRAG、OKF、A2A、治理）",
+    "output": "doc/erd-knowledge.html",
+    "locale": "zh-CN",
+    "quality_profile": "standard",
+    "views": [
+      {
+        "id": "knowledge",
+        "label": "知识与图谱",
+        "focus": [
+          "projects",
+          "knowledge_nodes",
+          "knowledge_edges"
+        ],
+        "note": "知识节点带 embedding 与来源；边是图检索的邻接关系"
+      },
+      {
+        "id": "okf",
+        "label": "OKF",
+        "focus": [
+          "projects",
+          "okf_documents"
+        ],
+        "note": "OKF 以文档路径为唯一键，frontmatter 存来源、确认与过期"
+      },
+      {
+        "id": "a2a",
+        "label": "A2A 协同",
+        "focus": [
+          "reports",
+          "a2a_tasks",
+          "a2a_events"
+        ],
+        "note": "任务幂等键、回执原文与事件流水"
+      },
+      {
+        "id": "governance",
+        "label": "治理",
+        "focus": [
+          "audit_logs",
+          "prompt_versions",
+          "eval_runs"
+        ],
+        "note": "审计、Prompt/模型版本、评测记录"
+      }
+    ]
+  },
+  "layout": {
+    "mode": "grid",
+    "gapX": 80,
+    "gapY": 42
+  },
+  "entities": [
+    {
+      "id": "projects",
+      "label": "projects",
+      "tag": "知识引用",
+      "row": 0,
+      "col": 0,
+      "width": 230,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "name",
+          "type": "varchar(160)"
+        }
+      ]
+    },
+    {
+      "id": "knowledge_nodes",
+      "label": "knowledge_nodes",
+      "tag": "知识",
+      "row": 1,
+      "col": 0,
+      "width": 260,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "project_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "projects.id"
+        },
+        {
+          "name": "kind",
+          "type": "varchar(30)"
+        },
+        {
+          "name": "title",
+          "type": "varchar(200)"
+        },
+        {
+          "name": "body",
+          "type": "text"
+        },
+        {
+          "name": "embedding",
+          "type": "vector(1024)"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "sources",
+          "type": "jsonb"
+        },
+        {
+          "name": "stale_after",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "knowledge_edges",
+      "label": "knowledge_edges",
+      "tag": "知识",
+      "row": 2,
+      "col": 0,
+      "width": 260,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "from_node_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "knowledge_nodes.id"
+        },
+        {
+          "name": "to_node_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "knowledge_nodes.id"
+        },
+        {
+          "name": "relation",
+          "type": "varchar(40)"
+        },
+        {
+          "name": "weight",
+          "type": "numeric(6,3)"
+        }
+      ]
+    },
+    {
+      "id": "okf_documents",
+      "label": "okf_documents",
+      "tag": "OKF",
+      "row": 1,
+      "col": 1,
+      "width": 260,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "project_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "projects.id"
+        },
+        {
+          "name": "path",
+          "type": "text",
+          "key": "uk"
+        },
+        {
+          "name": "kind",
+          "type": "varchar(30)"
+        },
+        {
+          "name": "frontmatter",
+          "type": "jsonb"
+        },
+        {
+          "name": "version",
+          "type": "int"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "stale_after",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "reports",
+      "label": "reports",
+      "tag": "协同引用",
+      "row": 0,
+      "col": 2,
+      "width": 230,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "delivered_at",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "a2a_tasks",
+      "label": "a2a_tasks",
+      "tag": "协同",
+      "row": 1,
+      "col": 2,
+      "width": 270,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "report_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "reports.id"
+        },
+        {
+          "name": "external_agent",
+          "type": "varchar(80)"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "attempt",
+          "type": "int"
+        },
+        {
+          "name": "idempotency_key",
+          "type": "varchar(120)",
+          "key": "uk"
+        },
+        {
+          "name": "timeout_at",
+          "type": "timestamptz"
+        },
+        {
+          "name": "last_receipt",
+          "type": "jsonb"
+        }
+      ]
+    },
+    {
+      "id": "a2a_events",
+      "label": "a2a_events",
+      "tag": "协同",
+      "row": 2,
+      "col": 2,
+      "width": 270,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "task_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "a2a_tasks.id"
+        },
+        {
+          "name": "event_type",
+          "type": "varchar(40)"
+        },
+        {
+          "name": "payload",
+          "type": "jsonb"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "audit_logs",
+      "label": "audit_logs",
+      "tag": "治理",
+      "row": 0,
+      "col": 3,
+      "width": 250,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "actor_id",
+          "type": "uuid"
+        },
+        {
+          "name": "action",
+          "type": "varchar(80)"
+        },
+        {
+          "name": "entity_type",
+          "type": "varchar(40)"
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid"
+        },
+        {
+          "name": "payload",
+          "type": "jsonb"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "prompt_versions",
+      "label": "prompt_versions",
+      "tag": "治理",
+      "row": 1,
+      "col": 3,
+      "width": 250,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "name",
+          "type": "varchar(80)"
+        },
+        {
+          "name": "version",
+          "type": "int"
+        },
+        {
+          "name": "template",
+          "type": "text"
+        },
+        {
+          "name": "model",
+          "type": "varchar(80)"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz"
+        }
+      ]
+    },
+    {
+      "id": "eval_runs",
+      "label": "eval_runs",
+      "tag": "治理",
+      "row": 2,
+      "col": 3,
+      "width": 250,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "key": "pk"
+        },
+        {
+          "name": "project_id",
+          "type": "uuid",
+          "key": "fk",
+          "references": "projects.id"
+        },
+        {
+          "name": "dataset",
+          "type": "varchar(80)"
+        },
+        {
+          "name": "metrics",
+          "type": "jsonb"
+        },
+        {
+          "name": "status",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "nodes-projects",
+      "from": "knowledge_nodes",
+      "to": "projects",
+      "label": "scoped to",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "edges-from",
+      "from": "knowledge_edges",
+      "to": "knowledge_nodes",
+      "label": "from",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "edges-to",
+      "from": "knowledge_edges",
+      "to": "knowledge_nodes",
+      "label": "to",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "okf-projects",
+      "from": "okf_documents",
+      "to": "projects",
+      "label": "scoped to",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "tasks-reports",
+      "from": "a2a_tasks",
+      "to": "reports",
+      "label": "dispatches",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "events-tasks",
+      "from": "a2a_events",
+      "to": "a2a_tasks",
+      "label": "appends to",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    },
+    {
+      "id": "eval-projects",
+      "from": "eval_runs",
+      "to": "projects",
+      "label": "evaluates",
+      "fromCardinality": "many",
+      "toCardinality": "one"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "知识与 OKF",
+      "items": [
+        "knowledge_nodes 存切片、来源与 embedding；knowledge_edges 存图邻接，供递归 CTE",
+        "OKF 以 path 唯一；frontmatter 存 sources / verified / status / stale_after",
+        "冲突条目标“待确认”，确认前旧条目不覆盖；停用不删除"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "A2A 协同",
+      "items": [
+        "a2a_tasks 以 idempotency_key 去重，last_receipt 保留回执原文",
+        "a2a_events 追加写，状态迁移可审计；timeout_at 驱动超时与重试",
+        "报告只挂 report_id，不复制报告正文"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "治理",
+      "items": [
+        "audit_logs 记录谁在何时改了什么；entity_id 为多态引用",
+        "prompt_versions 固定 Prompt、模型与状态，保证生成可追溯",
+        "eval_runs 存黄金集指标：召回、准确率、幻觉断言率、token 成本"
+      ]
+    }
+  ]
+}

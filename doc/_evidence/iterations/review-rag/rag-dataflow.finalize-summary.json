@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "dataflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\rag-dataflow.candidate.json",
+    "sha256": "17344faf7d8c06da6cd4dcc678abc7cc3175ef2fe15c7bfdde9ba003797fd8f0",
+    "bytes": 5873
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\rag-dataflow.html",
+    "sha256": "230e3c111d44bd3a67d5ec3dd0fef880d36c28f64a6269bd9b5a6e2e5bfec6b0",
+    "bytes": 832140
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-rag\\rag-dataflow.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-rag\\rag-dataflow.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-rag\\rag-dataflow.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3777,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "resolvedCrossovers": 3,
+      "routesOverSuggestedBends": 3,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [
+        {
+          "left": {
+            "id": "graph-retrieve",
+            "from": "graph",
+            "to": "retrieve",
+            "label": "关联实体",
+            "collectionIndex": 7,
+            "artifactIndex": 8
+          },
+          "right": {
+            "id": "feedback-chunk",
+            "from": "feedback",
+            "to": "chunk",
+            "label": "回流 / 重切片",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            657,
+            385
+          ]
+        },
+        {
+          "left": {
+            "id": "okf-retrieve",
+            "from": "okf",
+            "to": "retrieve",
+            "label": "来源 / 时效",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "right": {
+            "id": "feedback-chunk",
+            "from": "feedback",
+            "to": "chunk",
+            "label": "回流 / 重切片",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "point": [
+            629.5,
+            341
+          ]
+        },
+        {
+          "left": {
+            "id": "rerank-prompt",
+            "from": "rerank",
+            "to": "prompt",
+            "label": "Top-K",
+            "collectionIndex": 11,
+            "artifactIndex": 12
+          },
+          "right": {
+            "id": "agent-feedback",
+            "from": "agent",
+            "to": "feedback",
+            "label": "命中 / 未命中",
+            "collectionIndex": 13,
+            "artifactIndex": 14
+          },
+          "point": [
+            889,
+            271
+          ]
+        }
+      ],
+      "detours": [
+        {
+          "relationship": {
+            "id": "vec-retrieve",
+            "from": "vec",
+            "to": "retrieve",
+            "label": "相似片段",
+            "collectionIndex": 6,
+            "artifactIndex": 7
+          },
+          "bends": 4,
+          "stretch": 1.271
+        },
+        {
+          "relationship": {
+            "id": "agent-feedback",
+            "from": "agent",
+            "to": "feedback",
+            "label": "命中 / 未命中",
+            "collectionIndex": 13,
+            "artifactIndex": 14
+          },
+          "bends": 4,
+          "stretch": 1.423,
+          "directCorridorBlockers": [
+            {
+              "id": "prompt",
+              "label": "Prompt 注入",
+              "box": [
+                904,
+                242,
+                112,
+                58
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "feedback-chunk",
+            "from": "feedback",
+            "to": "chunk",
+            "label": "回流 / 重切片",
+            "collectionIndex": 14,
+            "artifactIndex": 15
+          },
+          "bends": 4,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  }
+}

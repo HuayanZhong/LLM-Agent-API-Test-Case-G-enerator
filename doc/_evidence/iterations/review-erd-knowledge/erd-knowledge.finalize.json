@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "erd",
+  "quality": "standard",
+  "startedAt": "2026-11-12T17:03:36.566Z",
+  "specification": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.candidate.json",
+    "sha256": "bc3fad1ed475a9e97dc3e903f3c5fc19c4f41d0b50aaaebdd5e490a8f5cebd89",
+    "bytes": 8472
+  },
+  "artifact": {
+    "path": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.html"
+  },
+  "stages": {
+    "validate": {
+      "status": "fail",
+      "exitCode": 1,
+      "durationMs": null,
+      "command": [
+        "E:\\nodejs\\node.exe",
+        "C:\\Users\\Administrator\\.agents\\skills\\archify\\bin\\archify.mjs",
+        "deliver",
+        "erd",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.candidate.json",
+        "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.html",
+        "--quality",
+        "standard",
+        "--json"
+      ],
+      "receipt": {
+        "schemaVersion": 1,
+        "ok": false,
+        "command": "deliver",
+        "receiptId": "96074011-0953-486d-bc38-7778a6db07ff",
+        "stage": "render",
+        "type": "erd",
+        "input": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.candidate.json",
+        "output": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\erd-knowledge.html",
+        "error": "Entity-relationship layout validation failed:\n- Domain \"引用\" is named but cannot be drawn: \"projects\", \"reports\" do not fill a solid rectangle of grid cells (a row, a column, or a filled block — not an L or diagonal), and a band around them would enclose cells the domain does not own. Move them into one block, or split the tag.",
+        "diagnostics": [
+          {
+            "code": "erd/domain-not-drawn",
+            "severity": "error",
+            "message": "Domain \"引用\" is named but cannot be drawn: \"projects\", \"reports\" do not fill a solid rectangle of grid cells (a row, a column, or a filled block — not an L or diagonal), and a band around them would enclose cells the domain does not own. Move them into one block, or split the tag.",
+            "subject": {
+              "diagramType": "erd",
+              "entityId": "projects",
+              "domain": "引用"
+            },
+            "evidence": {
+              "domain": "引用",
+              "entities": [
+                "projects",
+                "reports"
+              ],
+              "reason": "scattered",
+              "offGrid": []
+            },
+            "supportedFixes": [
+              "Give the domain members one solid rectangle of grid cells (a row, a column, or a filled block — not an L).",
+              "Split the tag so each domain can be drawn as a band.",
+              "Drop the tag to group nothing."
+            ]
+          }
+        ],
+        "provenance": "absent",
+        "update": {
+          "status": "unavailable",
+          "installedVersion": null,
+          "availableVersion": null,
+          "releaseNotes": null,
+          "checkedAt": null,
+          "source": null,
+          "noticeRequired": false,
+          "noticeText": null,
+          "reason": "disabled"
+        }
+      },
+      "execution": "embedded-in-deliver"
+    },
+    "deliver": {
+      "status": "not-run",
+      "execution": "blocked-by-validate"
+    }
+  },
+  "browserCheck": {
+    "requested": true,
+    "ran": false
+  },
+  "diagnostics": [
+    {
+      "code": "erd/domain-not-drawn",
+      "severity": "error",
+      "message": "Domain \"引用\" is named but cannot be drawn: \"projects\", \"reports\" do not fill a solid rectangle of grid cells (a row, a column, or a filled block — not an L or diagonal), and a band around them would enclose cells the domain does not own. Move them into one block, or split the tag.",
+      "subject": {
+        "diagramType": "erd",
+        "entityId": "projects",
+        "domain": "引用"
+      },
+      "evidence": {
+        "domain": "引用",
+        "entities": [
+          "projects",
+          "reports"
+        ],
+        "reason": "scattered",
+        "offGrid": []
+      },
+      "supportedFixes": [
+        "Give the domain members one solid rectangle of grid cells (a row, a column, or a filled block — not an L).",
+        "Split the tag so each domain can be drawn as a band.",
+        "Drop the tag to group nothing."
+      ]
+    }
+  ],
+  "evidence": {
+    "receipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-erd-knowledge\\erd-knowledge.finalize.json",
+    "summaryReceipt": "C:\\Users\\Administrator\\Desktop\\基于大模型智能体的接口测试用例辅助生成系统的设计与实现\\doc\\review-erd-knowledge\\erd-knowledge.finalize-summary.json"
+  },
+  "visualReview": "not-requested",
+  "failedStage": "validate",
+  "finishedAt": "2026-11-12T17:03:37.080Z",
+  "durationMs": 514,
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-11T15:33:35.412Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  }
+}

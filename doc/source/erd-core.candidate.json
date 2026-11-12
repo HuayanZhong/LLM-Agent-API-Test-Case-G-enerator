@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "diagram_type": "erd",
+  "meta": {
+    "title": "数据模型 · 主链（接口、用例、执行、基线与报告）",
+    "output": "doc/erd-core.html",
+    "locale": "zh-CN",
+    "quality_profile": "standard",
+    "views": [
+      {
+        "id": "chain",
+        "label": "生成与执行",
+        "focus": ["interfaces", "interface_versions", "cases", "test_runs", "test_results"],
+        "note": "接口版本 → 用例 → 执行 → 结果"
+      },
+      {
+        "id": "baseline",
+        "label": "基线与问题",
+        "focus": ["normal_scenes", "findings", "reports", "test_runs"],
+        "note": "正常现场作为基准，差异进入 findings，报告挂到 finding"
+      },
+      {
+        "id": "scope",
+        "label": "项目范围",
+        "focus": ["projects", "interfaces", "normal_scenes"],
+        "note": "项目 → 接口；正常现场按接口归属"
+      }
+    ]
+  },
+  "layout": {
+    "mode": "grid",
+    "gapX": 80,
+    "gapY": 42
+  },
+  "entities": [
+    {
+      "id": "projects",
+      "label": "projects",
+      "tag": "项目与接口",
+      "row": 0,
+      "col": 0,
+      "width": 250,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "name", "type": "varchar(160)" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "created_at", "type": "timestamptz" }
+      ]
+    },
+    {
+      "id": "interfaces",
+      "label": "interfaces",
+      "tag": "项目与接口",
+      "row": 1,
+      "col": 0,
+      "width": 250,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "project_id", "type": "uuid", "key": "fk", "references": "projects.id" },
+        { "name": "operation_id", "type": "varchar(200)", "key": "uk" },
+        { "name": "method", "type": "varchar(10)" },
+        { "name": "path", "type": "text" },
+        { "name": "status", "type": "varchar(20)" }
+      ]
+    },
+    {
+      "id": "interface_versions",
+      "label": "interface_versions",
+      "tag": "项目与接口",
+      "row": 2,
+      "col": 0,
+      "width": 250,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "interface_id", "type": "uuid", "key": "fk", "references": "interfaces.id" },
+        { "name": "version", "type": "int" },
+        { "name": "schema_json", "type": "jsonb" },
+        { "name": "source", "type": "varchar(30)" },
+        { "name": "verified_at", "type": "timestamptz" },
+        { "name": "stale_after", "type": "timestamptz" }
+      ]
+    },
+    {
+      "id": "cases",
+      "label": "cases",
+      "tag": "测试执行",
+      "row": 0,
+      "col": 1,
+      "width": 260,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "interface_version_id", "type": "uuid", "key": "fk", "references": "interface_versions.id" },
+        { "name": "title", "type": "varchar(200)" },
+        { "name": "case_ir", "type": "jsonb" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "version", "type": "int" },
+        { "name": "change_ref", "type": "varchar(120)" }
+      ]
+    },
+    {
+      "id": "test_runs",
+      "label": "test_runs",
+      "tag": "测试执行",
+      "row": 1,
+      "col": 1,
+      "width": 260,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "case_id", "type": "uuid", "key": "fk", "references": "cases.id" },
+        { "name": "environment", "type": "varchar(60)" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "started_at", "type": "timestamptz" },
+        { "name": "finished_at", "type": "timestamptz" },
+        { "name": "trace_id", "type": "varchar(64)" }
+      ]
+    },
+    {
+      "id": "test_results",
+      "label": "test_results",
+      "tag": "测试执行",
+      "row": 2,
+      "col": 1,
+      "width": 260,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "run_id", "type": "uuid", "key": "fk", "references": "test_runs.id" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "request_json", "type": "jsonb" },
+        { "name": "response_json", "type": "jsonb" },
+        { "name": "assertions_json", "type": "jsonb" },
+        { "name": "duration_ms", "type": "int" }
+      ]
+    },
+    {
+      "id": "normal_scenes",
+      "label": "normal_scenes",
+      "tag": "基线与问题",
+      "row": 0,
+      "col": 2,
+      "width": 280,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "interface_id", "type": "uuid", "key": "fk", "references": "interfaces.id" },
+        { "name": "name", "type": "varchar(160)" },
+        { "name": "steps", "type": "jsonb" },
+        { "name": "test_data", "type": "jsonb" },
+        { "name": "expected_json", "type": "jsonb" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "confirmed_by", "type": "uuid" },
+        { "name": "stale_after", "type": "timestamptz" },
+        { "name": "version", "type": "int" }
+      ]
+    },
+    {
+      "id": "findings",
+      "label": "findings",
+      "tag": "基线与问题",
+      "row": 1,
+      "col": 2,
+      "width": 280,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "run_id", "type": "uuid", "key": "fk", "references": "test_runs.id" },
+        { "name": "scene_id", "type": "uuid", "key": "fk", "references": "normal_scenes.id" },
+        { "name": "severity", "type": "varchar(10)" },
+        { "name": "diff_json", "type": "jsonb" },
+        { "name": "status", "type": "varchar(20)" },
+        { "name": "created_at", "type": "timestamptz" }
+      ]
+    },
+    {
+      "id": "reports",
+      "label": "reports",
+      "tag": "基线与问题",
+      "row": 2,
+      "col": 2,
+      "width": 280,
+      "attributes": [
+        { "name": "id", "type": "uuid", "key": "pk" },
+        { "name": "finding_id", "type": "uuid", "key": "fk", "references": "findings.id" },
+        { "name": "format", "type": "varchar(20)" },
+        { "name": "content_json", "type": "jsonb" },
+        { "name": "storage_path", "type": "text" },
+        { "name": "delivered_at", "type": "timestamptz" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "interfaces-projects", "from": "interfaces", "to": "projects", "label": "belongs to", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "versions-interfaces", "from": "interface_versions", "to": "interfaces", "label": "versions", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "cases-versions", "from": "cases", "to": "interface_versions", "label": "generated from", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "runs-cases", "from": "test_runs", "to": "cases", "label": "executes", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "results-runs", "from": "test_results", "to": "test_runs", "label": "result of", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "scenes-interfaces", "from": "normal_scenes", "to": "interfaces", "label": "baseline for", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "findings-runs", "from": "findings", "to": "test_runs", "label": "detected in", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "findings-scenes", "from": "findings", "to": "normal_scenes", "label": "diff vs", "fromCardinality": "many", "toCardinality": "one" },
+    { "id": "reports-findings", "from": "reports", "to": "findings", "label": "reports on", "fromCardinality": "many", "toCardinality": "one" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "主链关系",
+      "items": [
+        "接口按版本固化契约；用例只依赖 interface_version，保证可复现",
+        "一次执行产生 test_run 与多条 test_result；trace_id 关联日志与请求证据",
+        "finding 同时指向执行与正常现场，报告只挂 finding，不重复存证据"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "生命周期字段",
+      "items": [
+        "normal_scenes 的 confirmed_by / stale_after / version 承接“人确认”与“会过期”",
+        "interface_versions 的 verified_at / stale_after 承接接口变更后的基准失效",
+        "cases 的 change_ref 记录因哪个接口变更而修订"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "读图",
+      "items": [
+        "三列分别是项目与接口、测试执行、基线与问题",
+        "所有 fk 都是 uuid；JSONB 只存 Case IR、请求响应、差异与报告体",
+        "证据文件放 Supabase Storage，表里只保存 storage_path"
+      ]
+    }
+  ]
+}

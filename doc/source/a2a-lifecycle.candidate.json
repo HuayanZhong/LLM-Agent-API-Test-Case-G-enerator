@@ -1,0 +1,243 @@
+{
+  "schema_version": 3,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "A2A 任务生命周期 · 派发、回执与复验",
+    "output": "doc/a2a-lifecycle.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "happy",
+        "label": "主路径",
+        "focus": [
+          "dispatched",
+          "in_progress",
+          "fixed",
+          "verifying",
+          "closed"
+        ],
+        "note": "报告派发 → 对端修复 → 回执已修复 → 复验通过 → 关闭"
+      },
+      {
+        "id": "exceptions",
+        "label": "异常路径",
+        "focus": [
+          "dispatched",
+          "in_progress",
+          "timeout",
+          "cancelled"
+        ],
+        "note": "超时、拒绝与取消都要有明确出口；无法判定时在复验中由人工裁决"
+      },
+      {
+        "id": "reverify",
+        "label": "复验闭环",
+        "focus": [
+          "fixed",
+          "reopened",
+          "new_issue",
+          "verifying",
+          "closed"
+        ],
+        "note": "仍重现与新问题都要回到复验，上下文不能丢"
+      }
+    ]
+  },
+  "mainPath": [
+    "dispatched",
+    "in_progress",
+    "fixed",
+    "verifying",
+    "closed"
+  ],
+  "states": [
+    {
+      "id": "dispatched",
+      "type": "start",
+      "label": "已派发",
+      "sublabel": "报告送出，等待接收",
+      "tag": "起点",
+      "step": "02"
+    },
+    {
+      "id": "in_progress",
+      "type": "active",
+      "label": "处理中",
+      "sublabel": "对端修复中",
+      "tag": "处理中",
+      "step": "03"
+    },
+    {
+      "id": "fixed",
+      "type": "waiting",
+      "label": "已修复",
+      "sublabel": "回执修复",
+      "tag": "待复验",
+      "step": "04"
+    },
+    {
+      "id": "verifying",
+      "type": "decision",
+      "label": "复验中",
+      "sublabel": "重放基准",
+      "tag": "复验",
+      "step": "05"
+    },
+    {
+      "id": "closed",
+      "type": "success",
+      "label": "已关闭",
+      "sublabel": "复验通过",
+      "tag": "终态",
+      "step": "06"
+    },
+    {
+      "id": "timeout",
+      "type": "waiting",
+      "label": "超时 / 重试",
+      "sublabel": "超时未回执，可重发",
+      "tag": "可重试"
+    },
+    {
+      "id": "reopened",
+      "type": "failure",
+      "label": "仍重现",
+      "sublabel": "回执仍重现",
+      "tag": "回退"
+    },
+    {
+      "id": "new_issue",
+      "type": "failure",
+      "label": "新问题",
+      "sublabel": "回执新问题",
+      "tag": "新任务"
+    },
+    {
+      "id": "cancelled",
+      "type": "neutral",
+      "label": "终止",
+      "sublabel": "对端拒绝 / 人工取消",
+      "tag": "终态"
+    }
+  ],
+  "transitions": [
+    {
+      "id": "dispatched-progress",
+      "from": "dispatched",
+      "to": "in_progress",
+      "label": "接收"
+    },
+    {
+      "id": "progress-fixed",
+      "from": "in_progress",
+      "to": "fixed",
+      "label": "修复",
+      "variant": "emphasis"
+    },
+    {
+      "id": "progress-reopened",
+      "from": "in_progress",
+      "to": "reopened",
+      "label": "仍重现",
+      "variant": "security"
+    },
+    {
+      "id": "progress-new",
+      "from": "in_progress",
+      "to": "new_issue",
+      "label": "新问题",
+      "variant": "security"
+    },
+    {
+      "id": "fixed-verifying",
+      "from": "fixed",
+      "to": "verifying",
+      "label": "复验",
+      "variant": "emphasis"
+    },
+    {
+      "id": "reopened-verifying",
+      "from": "reopened",
+      "to": "verifying",
+      "label": "复验"
+    },
+    {
+      "id": "verifying-closed",
+      "from": "verifying",
+      "to": "closed",
+      "label": "通过",
+      "variant": "emphasis"
+    },
+    {
+      "id": "verifying-reopened",
+      "from": "verifying",
+      "to": "reopened",
+      "label": "仍失败",
+      "variant": "security"
+    },
+    {
+      "id": "dispatched-timeout",
+      "from": "dispatched",
+      "to": "timeout",
+      "label": "超时",
+      "variant": "dashed"
+    },
+    {
+      "id": "progress-timeout",
+      "from": "in_progress",
+      "to": "timeout",
+      "label": "超时",
+      "variant": "dashed"
+    },
+    {
+      "id": "new-dispatched",
+      "from": "new_issue",
+      "to": "dispatched",
+      "label": "新报告",
+      "variant": "dashed"
+    },
+    {
+      "id": "dispatched-cancelled",
+      "from": "dispatched",
+      "to": "cancelled",
+      "label": "取消",
+      "variant": "dashed"
+    },
+    {
+      "id": "timeout-dispatched",
+      "from": "timeout",
+      "to": "dispatched",
+      "label": "重发"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "状态与超时",
+      "items": [
+        "每个任务有唯一 idempotency_key，重复派发不产生第二条任务",
+        "已派发 / 处理中都有 timeout_at；超时进入可重试，不直接判为失败",
+        "状态迁移写 a2a_events，任何状态都能追溯到报告与正常现场"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "回执三态",
+      "items": [
+        "回执只有三种：已修复 / 仍重现 / 出现新问题",
+        "已修复必须触发复验，复验通过才允许关闭，避免误报已修复",
+        "仍重现沿用原上下文回到复验；新问题生成新报告，不覆盖原任务"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "失败路径",
+      "items": [
+        "对端拒绝或人工取消进入终止，需要重新生成任务或转人工处理",
+        "无法判定时停在复验中，由人工确认修复或确认仍重现",
+        "所有异常路径保留证据与回执原文，便于审计与复盘"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,430 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "接口测试用例辅助生成系统 · 技术架构（桌面端）",
+    "output": "doc/technical-architecture.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "generation",
+        "label": "生成链路",
+        "focus": [
+          "desktop",
+          "bff",
+          "nest",
+          "agent",
+          "models",
+          "supabase"
+        ],
+        "note": "工作台 → BFF → NestJS → LangGraph/LangChain → 模型；Case IR 由 Zod 校验"
+      },
+      {
+        "id": "execution",
+        "label": "执行与采集",
+        "focus": [
+          "nest",
+          "agent",
+          "exec",
+          "devtools",
+          "target",
+          "queue"
+        ],
+        "note": "ky + Vitest 执行用例；chrome-devtools MCP 只做页面采集"
+      },
+      {
+        "id": "data",
+        "label": "数据与知识",
+        "focus": [
+          "nest",
+          "supabase",
+          "agent",
+          "rag"
+        ],
+        "note": "MikroORM 访问 Supabase；GraphRAG 检索服务做向量与图检索；Postgres / pgvector / Auth / Storage"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "desktop",
+      "type": "frontend",
+      "label": "Electron 桌面端",
+      "sublabel": "Next.js + React + shadcn/ui；主 / 渲染进程隔离",
+      "tag": "桌面端",
+      "icon": "frontend",
+      "pos": [
+        60,
+        60
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "bff",
+      "type": "backend",
+      "label": "BFF（Next Route Handlers）",
+      "sublabel": "会话、SSE 进度、接口聚合",
+      "tag": "薄 BFF",
+      "icon": "backend",
+      "pos": [
+        60,
+        210
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "nest",
+      "type": "backend",
+      "label": "NestJS 本地服务",
+      "sublabel": "接口 / 契约 / 用例 / 比对 / 知识 / 报告",
+      "tag": "领域服务",
+      "icon": "backend",
+      "pos": [
+        440,
+        100
+      ],
+      "size": [
+        340,
+        100
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "backend",
+      "label": "LangGraph.js + LangChain.js",
+      "sublabel": "状态图 / 检查点 / 模型适配 / Zod",
+      "tag": "Agent 编排",
+      "icon": "decision",
+      "pos": [
+        440,
+        270
+      ],
+      "size": [
+        340,
+        100
+      ]
+    },
+    {
+      "id": "exec",
+      "type": "backend",
+      "label": "执行 / 采集 / 派发",
+      "sublabel": "ky + Vitest · MCP Client · A2A",
+      "tag": "执行层",
+      "icon": "active",
+      "pos": [
+        440,
+        440
+      ],
+      "size": [
+        340,
+        100
+      ]
+    },
+    {
+      "id": "models",
+      "type": "cloud",
+      "label": "模型网关 / 国产模型 API",
+      "sublabel": "DeepSeek / Qwen / GLM · 对话与 Embedding",
+      "tag": "模型服务",
+      "icon": "cloud",
+      "pos": [
+        860,
+        370
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "supabase",
+      "type": "database",
+      "label": "Supabase（云）",
+      "sublabel": "Postgres + pgvector + Auth + Storage / OKF",
+      "tag": "数据与知识",
+      "icon": "database",
+      "pos": [
+        860,
+        60
+      ],
+      "size": [
+        300,
+        130
+      ]
+    },
+    {
+      "id": "devtools",
+      "type": "external",
+      "label": "chrome-devtools MCP",
+      "sublabel": "页面操作 / 网络观察",
+      "tag": "本地 MCP",
+      "icon": "external",
+      "pos": [
+        860,
+        500
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "target",
+      "type": "external",
+      "label": "被测接口 / 测试环境",
+      "sublabel": "白名单 / 写操作清理",
+      "tag": "测试目标",
+      "icon": "external",
+      "pos": [
+        860,
+        630
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "claude",
+      "type": "external",
+      "label": "Claude Code 等外部编码助手",
+      "sublabel": "A2A 任务 / 状态回传",
+      "tag": "外部对端",
+      "icon": "external",
+      "pos": [
+        860,
+        760
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "rag",
+      "type": "backend",
+      "label": "GraphRAG 检索服务",
+      "sublabel": "切片 / 向量化 / 图检索 / 重排",
+      "tag": "知识服务",
+      "icon": "database",
+      "pos": [
+        860,
+        230
+      ],
+      "size": [
+        300,
+        90
+      ]
+    },
+    {
+      "id": "queue",
+      "type": "messagebus",
+      "label": "任务队列 / Worker",
+      "sublabel": "p-queue + SQL 任务表；长任务不阻塞 API",
+      "tag": "运行时",
+      "icon": "messagebus",
+      "pos": [
+        440,
+        610
+      ],
+      "size": [
+        340,
+        80
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "桌面端 · 本地进程",
+      "wraps": [
+        "desktop",
+        "bff"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "本地服务 · NestJS",
+      "wraps": [
+        "nest",
+        "agent",
+        "exec",
+        "queue"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "Supabase 云",
+      "wraps": [
+        "supabase"
+      ],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "id": "desktop-bff",
+      "from": "desktop",
+      "to": "bff",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "bff-nest",
+      "from": "bff",
+      "to": "nest",
+      "label": "REST / JWT",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "nest-agent",
+      "from": "nest",
+      "to": "agent",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "agent-exec",
+      "from": "agent",
+      "to": "exec",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "agent-models",
+      "from": "agent",
+      "to": "models",
+      "label": "模型调用",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "nest-supabase",
+      "from": "nest",
+      "to": "supabase",
+      "label": "MikroORM",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "exec-devtools",
+      "from": "exec",
+      "to": "devtools",
+      "label": "MCP",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "exec-target",
+      "from": "exec",
+      "to": "target",
+      "label": "HTTP",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "exec-claude",
+      "from": "exec",
+      "to": "claude",
+      "label": "A2A",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [
+        [
+          820,
+          490
+        ],
+        [
+          820,
+          805
+        ]
+      ]
+    },
+    {
+      "id": "agent-rag",
+      "from": "agent",
+      "to": "rag",
+      "label": "检索",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "rag-supabase",
+      "from": "rag",
+      "to": "supabase",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "exec-queue",
+      "from": "exec",
+      "to": "queue",
+      "label": "长任务",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "桌面端与本地进程",
+      "items": [
+        "Electron 主进程管理窗口、密钥与本地进程；渲染进程只跑界面",
+        "Next.js 以 standalone server 运行，BFF 只做会话、SSE 与聚合",
+        "NestJS 与 MCP 进程由主进程拉起；启动顺序、端口、优雅退出要统一"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "编排与契约",
+      "items": [
+        "LangGraph.js 负责状态图、检查点、重试与人工介入；LangChain.js 负责模型适配与工具调用",
+        "Case IR、执行结果、报告统一用 Zod 定义；解析失败重试，不合法拒收",
+        "Deep Agents 只作可选增强：Node 生态若无可用版本，用 LangGraph.js 复刻或加 Python sidecar"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "数据与知识",
+      "items": [
+        "MikroORM 管业务表与迁移；pgvector 自定义类型与 HNSW 索引走 SQL 迁移",
+        "GraphRAG 检索服务负责切片、向量化、图检索与重排；邻接表 + pgvector 都落在 Supabase",
+        "Postgres 存业务表、JSONB、图邻接表；Storage 存报告、证据与 OKF 文档",
+        "Embedding 模型与维度要先定；OKF 用 sources / verified / stale_after 管生命周期"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "执行与安全",
+      "items": [
+        "ky + Vitest 负责批量执行与断言；chrome-devtools MCP 只负责采集",
+        "被测地址白名单，禁内网与元数据地址；写操作只在测试环境并清理",
+        "提示词注入与页面内容不可信：工具白名单、输出校验、密钥只放主进程/NestJS",
+        "A2A 回执到本地需隧道或轮询；长任务用队列 + 超时重试"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "运行时与治理",
+      "items": [
+        "LangGraph 检查点落 Postgres；任务队列 + Worker 承担长任务与并发上限",
+        "模型网关做供应商切换、降级、限流与 token 预算；Prompt / 模型版本要可追溯",
+        "日志、请求 ID、Agent 轨迹与 token 成本；黄金集评测幻觉断言率与通过率",
+        "Electron 主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出"
+      ]
+    }
+  ]
+}
