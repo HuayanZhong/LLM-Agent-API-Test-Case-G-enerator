@@ -11,6 +11,8 @@
 - 变更依赖、catalog 分类、Node / pnpm 版本要求。
 - 变更命令、端口、环境变量、进程启动顺序。
 - 变更技术栈、架构分层、数据流或对外协议。
+- 变更项目范围、当前状态或规划技术栈（OpenSpec context）。
+- 变更行为规格、验收场景或 OpenSpec 工作流。
 - 新增、移动规则文件、设计图或文档入口。
 - 任何会让新成员或新 Agent 照旧文档做错事的改动。
 
@@ -23,6 +25,8 @@
 | 跨工具入口、规则位置 | `AGENTS.md` |
 | 图或文档新增、重命名、阅读顺序 | `doc/README.md` |
 | 规则本身 | `.claude/rules/*.md` |
+| 项目范围、状态、技术栈 | `openspec/config.yaml` 的 `context` |
+| 行为规格、验收场景 | `openspec/specs/`（通过 OpenSpec 变更 / 归档更新） |
 
 ## 做法
 
@@ -33,10 +37,20 @@
 - 提交前检查：README 的命令能跑、CLAUDE 的路径存在、AGENTS 的入口有效、`doc/README.md` 的链接可达。
 - 如果判断不需要更新，在提交说明或回复里写一句“文档无需更新，因为……”，不要沉默。
 
+## 收尾检查
+
+每次大改动结束前：
+
+- 跑 `pnpm exec openspec validate --all`；归档变更后确认 `openspec/specs/` 已更新。
+- 确认 `openspec/config.yaml` 的 `context` 仍与项目现状一致（范围、状态、技术栈）。
+- README 的命令能跑、路径存在；CLAUDE / AGENTS 的入口有效；`doc/README.md` 的链接可达。
+- 过期内容已删除或标为废弃；旧命令、旧路径没有残留。
+
 ## 审查清单
 
 - 有没有新增、改名或删除命令、脚本、任务？
 - 有没有依赖、版本、catalog 变化？
 - 有没有目录、入口或规则文件移动？
-- README / CLAUDE / AGENTS / doc/README 是否仍指向真实路径？
+- 有没有 OpenSpec 上下文或规格变化？
+- README / CLAUDE / AGENTS / doc/README / openspec 是否仍指向真实路径？
 - 旧说法是否删除或标为废弃？

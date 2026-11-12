@@ -16,7 +16,9 @@
 
 ```
 .
-├── doc/                 # 业务架构 HTML、评审记录与视觉校验产物
+├── doc/                 # 业务架构、技术架构与数据模型图
+├── openspec/            # OpenSpec 规格与变更（specs / changes）
+├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
 ├── apps/                # 应用（待建设）
 ├── packages/            # 共享包（待建设）
 ├── package.json
@@ -37,9 +39,29 @@ pnpm install
 pnpm dev      # turbo run dev（各工作区 dev）
 ```
 
+## OpenSpec 工作流
+
+本项目用 OpenSpec 2.0 做规格驱动开发：规格在 `openspec/specs/`，变更在 `openspec/changes/`，AI 技能在 `.agents/skills/`（`.claude/skills/` 下是链接）。
+
+```bash
+pnpm exec openspec list          # 查看变更与规格
+pnpm exec openspec validate --all
+```
+
+在 Claude Code 中：
+
+- `/openspec-explore`：先探索、澄清需求，不写代码。
+- `/openspec-propose <变更名>`：生成 proposal、specs、design、tasks。
+- `/openspec-apply-change`：按 tasks 实施。
+- `/openspec-update-change`：修订计划并保持各产物一致。
+- `/openspec-archive-change`：归档并把 delta specs 合并进主规格。
+- `/openspec-sync-specs`：只同步规格，不归档。
+
+规则：新功能或行为变更先提案再实现；`openspec/specs` 是行为事实来源；归档前跑 `validate`。`opsx` 是 OpenSpec 1.x 的旧命令前缀，2.0 使用 `/openspec-*`，技能描述里仍接受 “opsx propose” 这类说法。
+
 ## 文档维护
 
-改动命令、依赖、工作区结构或架构时，同步更新 `README.md`、`CLAUDE.md`、`AGENTS.md` 与 `doc/README.md`；完整规则见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
+改动命令、依赖、工作区结构或架构时，同步更新 `README.md`、`CLAUDE.md`、`AGENTS.md`、`doc/README.md`，以及 OpenSpec 的 `context` / `specs`；完整规则见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
 
 ## 许可证
 

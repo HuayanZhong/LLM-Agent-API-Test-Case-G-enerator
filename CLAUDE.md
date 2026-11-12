@@ -23,6 +23,16 @@ pnpm dev      # 根脚本：turbo run dev
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
+## OpenSpec 工作流
+
+本项目用 OpenSpec 2.0 做规格驱动开发。新功能或行为变更先提案、再实现、最后归档；`openspec/specs/` 是行为事实来源。
+
+- 技能：`/openspec-explore`、`/openspec-propose <change>`、`/openspec-apply-change`、`/openspec-update-change`、`/openspec-archive-change`、`/openspec-sync-specs`（技能在 `.agents/skills/`，`.claude/skills/` 下是链接）。
+- CLI：`pnpm exec openspec list`、`show`、`validate --all`、`status`、`archive`。
+- 变更目录：`openspec/changes/<change>/`，含 proposal、specs、design、tasks；归档后进入 `changes/archive/`。
+- 不要跳过 propose 直接写代码；人工确认计划后再 apply；归档前先 validate。
+- `opsx` 是 OpenSpec 1.x 的旧命令前缀；2.0 使用 `/openspec-*`，技能描述里仍接受 “opsx propose” 这类说法。
+
 ## 仓库结构
 
 ```text
@@ -45,7 +55,7 @@ doc/             当前设计的事实来源
 
 ## 文档同步
 
-改动影响命令、依赖、工作区结构、架构或文档入口时，必须在同一次改动中更新 `README.md`、`CLAUDE.md`、`AGENTS.md` 与 `doc/README.md`。完整触发条件与检查清单见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
+改动影响命令、依赖、工作区结构、架构或文档入口时，必须在同一次改动中更新 `README.md`、`CLAUDE.md`、`AGENTS.md`、`doc/README.md`，以及 `openspec/config.yaml` 的 `context` / `openspec/specs`。完整触发条件与检查清单见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
 
 ## 代码注释
 

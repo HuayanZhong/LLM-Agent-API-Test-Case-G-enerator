@@ -30,6 +30,7 @@
     "dev": "turbo run dev"
   },
   "devDependencies": {
+    "@fission-ai/openspec": "catalog:tooling",
     "turbo": "catalog:tooling"
   },
   "devEngines": {

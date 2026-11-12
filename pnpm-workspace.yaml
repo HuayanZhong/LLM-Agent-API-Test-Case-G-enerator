@@ -8,6 +8,7 @@ packages:
 catalogs:
   # 工具链：Turbo、TypeScript、ESLint、Prettier 等
   tooling:
+    "@fission-ai/openspec": ^2.0.0
     turbo: ^2.11.11
 
   # 前端：Next.js、React、shadcn/ui 相关依赖后续加入
@@ -35,3 +36,4 @@ minimumReleaseAgeExclude:
   - '@turbo/windows-64@2.11.11'
   - '@turbo/windows-arm64@2.11.11'
   - turbo@2.11.11
+  - '@fission-ai/openspec@2.0.0'

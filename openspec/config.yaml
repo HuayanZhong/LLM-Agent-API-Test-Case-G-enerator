@@ -1,0 +1,38 @@
+schema: spec-driven
+
+context: |
+  语言：zh-CN
+  所有 OpenSpec 产物必须用中文撰写；结构化标题与 SHALL/MUST 关键词保留英文。
+
+  项目：基于大模型智能体的接口测试用例辅助生成系统（本科毕设）。
+  目标：别人交付已做好的功能 / 组件后，AI 按接口生成用例与测试数据，Agent 执行测试，
+  再与正常现场记忆 / GraphRAG / OKF 比对；不一致时重放复现并出测试报告，一致时沉淀知识。
+  红线：系统只诊断与复验，不改代码；测试报告是唯一交付物；关键节点由人确认。
+
+  当前状态：pnpm monorepo 脚手架；apps/ 与 packages/ 下暂无源码；设计文档在 doc/；
+  OpenSpec 规格在 openspec/specs，变更在 openspec/changes。
+
+  规划技术栈：Electron + Next.js / React / shadcn + 薄 BFF；NestJS 本地服务；
+  LangGraph.js + LangChain.js + Zod；ky + Vitest；chrome-devtools MCP；
+  Supabase（Postgres / pgvector / Auth / Storage）+ MikroORM；A2A。
+
+# 按产物类型的规则（可选）
+# 为特定产物添加自定义规则。
+# 示例：
+#   rules:
+#     proposal:
+#       - 提案控制在 500 字以内
+#       - 明确写出不做什么
+#     tasks:
+#       - 任务拆分到可验收的粒度
+
+# 按操作的指导（可选）
+# 为 apply / archive 添加建议性指导，与上面的产物规则分开。
+# 示例：
+#   operations:
+#     apply:
+#       guidance:
+#         - 测试小结保持简洁
+#     archive:
+#       guidance:
+#         - 归档前先总结结果
