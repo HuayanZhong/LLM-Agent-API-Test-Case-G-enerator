@@ -1,3 +1,33 @@
 packages:
   - apps/*
   - packages/*
+
+catalogs:
+  # 工具链：Turbo、TypeScript、ESLint、Prettier 等
+  tooling:
+    turbo: ^2.11.11
+
+  # 前端：Next.js、React、shadcn/ui 相关依赖后续加入
+  # frontend:
+  #   next: ^...
+  #   react: ^...
+  #   react-dom: ^...
+
+  # 后端：NestJS、LangGraph/LangChain、Zod、MikroORM、Supabase 等后续加入
+  # backend:
+  #   "@nestjs/core": ^...
+  #   "@langchain/langgraph": ^...
+  #   zod: ^...
+
+  # 测试与质量：Vitest、覆盖率、接口测试工具等后续加入
+  # testing:
+  #   vitest: ^...
+
+minimumReleaseAgeExclude:
+  - '@turbo/darwin-64@2.11.11'
+  - '@turbo/darwin-arm64@2.11.11'
+  - '@turbo/linux-64@2.11.11'
+  - '@turbo/linux-arm64@2.11.11'
+  - '@turbo/windows-64@2.11.11'
+  - '@turbo/windows-arm64@2.11.11'
+  - turbo@2.11.11

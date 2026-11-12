@@ -27,11 +27,10 @@
     "pnpm": ">=12.18.0"
   },
   "scripts": {
-    "dev": "pnpm -r --parallel --if-present dev",
-    "build": "pnpm -r --if-present build",
-    "lint": "pnpm -r --if-present lint",
-    "test": "pnpm -r --if-present test",
-    "check": "pnpm run lint && pnpm run test"
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "catalog:tooling"
   },
   "devEngines": {
     "packageManager": {

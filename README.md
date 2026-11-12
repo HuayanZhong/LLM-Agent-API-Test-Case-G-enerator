@@ -21,19 +21,20 @@
 ├── packages/            # 共享包（待建设）
 ├── package.json
 ├── pnpm-workspace.yaml
-└── LICENSE              # MIT
+├── turbo.json          # Turbo 任务配置（当前只注册 dev）
+└── LICENSE             # MIT
 ```
 
 ## 开发环境
 
-- Node.js >= 20
-- pnpm >= 9（仓库锁定 `pnpm@12.18.0`，见 `packageManager`）
+- Node.js >= 26.12.1
+- pnpm >= 12.18.0（仓库锁定 `pnpm@12.18.0`，见 `packageManager`）
+
+依赖版本统一放在 `pnpm-workspace.yaml` 的 `catalogs` 中管理；根 `package.json` 通过 `catalog:tooling` 引用 Turbo。
 
 ```bash
 pnpm install
-pnpm dev      # 各工作区 dev（若存在）
-pnpm build    # 各工作区 build（若存在）
-pnpm test     # 各工作区 test（若存在）
+pnpm dev      # turbo run dev（各工作区 dev）
 ```
 
 ## 许可证
