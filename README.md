@@ -20,7 +20,7 @@
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
 ├── apps/                # backend（5000）、bff（4000）、frontend（3000）
-├── packages/            # ui：共享 shadcn 组件、cn() 与 Tailwind 样式
+├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
@@ -42,6 +42,7 @@
 ```bash
 pnpm install
 pnpm dev                    # turbo run dev：并行启动 backend、bff 与 frontend
+pnpm check-types            # turbo run check-types：四个包并行类型检查
 pnpm --filter frontend dev  # 只启动 Next 前端（3000）
 pnpm --filter frontend build
 ```
@@ -67,6 +68,8 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 
 `packages/ui` 的 Storybook 在 6006 提供组件预览与 MCP 端点 `http://127.0.0.1:6006/mcp`；MCP 只在 Storybook dev 运行时可用，当前为 docs + development 工具集。
 
+四个包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
+
 ## 包级文档
 
 每个 workspace 包都有一份 `README.md`、`CLAUDE.md`、`AGENTS.md`。包本地事实（命令、端口、边界）以包 README 为准；下面的表格只是聚合入口。
@@ -77,6 +80,7 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 | `apps/bff` | [README](apps/bff/README.md) | [CLAUDE](apps/bff/CLAUDE.md) | [AGENTS](apps/bff/AGENTS.md) |
 | `apps/backend` | [README](apps/backend/README.md) | [CLAUDE](apps/backend/CLAUDE.md) | [AGENTS](apps/backend/AGENTS.md) |
 | `packages/ui` | [README](packages/ui/README.md) | [CLAUDE](packages/ui/CLAUDE.md) | [AGENTS](packages/ui/AGENTS.md) |
+| `packages/typescript-config` | [README](packages/typescript-config/README.md) | [CLAUDE](packages/typescript-config/CLAUDE.md) | [AGENTS](packages/typescript-config/AGENTS.md) |
 
 ## 环境变量
 

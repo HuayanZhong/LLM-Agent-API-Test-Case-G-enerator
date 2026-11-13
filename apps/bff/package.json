@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
+    "check-types": "tsc --noEmit",
     "start": "nest start",
     "start:prod": "node dist/main"
   },
@@ -21,6 +22,7 @@
     "@nestjs/schematics": "catalog:backend",
     "@types/express": "catalog:backend",
     "@types/node": "catalog:tooling",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "catalog:tooling"
   }
 }

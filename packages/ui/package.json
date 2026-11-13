@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "check-types": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -25,6 +26,7 @@
     "@types/node": "catalog:tooling",
     "@types/react": "catalog:frontend",
     "@types/react-dom": "catalog:frontend",
+    "@workspace/typescript-config": "workspace:*",
     "shadcn": "catalog:tooling",
     "storybook": "catalog:storybook",
     "tailwindcss": "catalog:frontend",

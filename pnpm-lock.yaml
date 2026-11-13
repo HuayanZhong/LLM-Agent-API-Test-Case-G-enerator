@@ -308,6 +308,9 @@ importers:
       '@types/node':
         specifier: catalog:tooling
         version: 26.6.6
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       typescript:
         specifier: catalog:tooling
         version: 6.0.3
@@ -342,6 +345,9 @@ importers:
       '@types/node':
         specifier: catalog:tooling
         version: 26.6.6
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       typescript:
         specifier: catalog:tooling
         version: 6.0.3
@@ -376,9 +382,14 @@ importers:
       '@types/react-dom':
         specifier: catalog:frontend
         version: 19.3.0(@types/react@19.3.0)
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       typescript:
         specifier: catalog:tooling
         version: 6.0.3
+
+  packages/typescript-config: {}
 
   packages/ui:
     dependencies:
@@ -428,6 +439,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:frontend
         version: 19.3.0(@types/react@19.3.0)
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       shadcn:
         specifier: catalog:tooling
         version: 4.23.0

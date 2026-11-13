@@ -12,11 +12,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 pnpm install
-pnpm dev      # 根脚本：turbo run dev
+pnpm dev          # 根脚本：turbo run dev
+pnpm check-types  # 根脚本：turbo run check-types
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 目前只暴露 `dev`（`persistent: true`、`cache: false`）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint / test 尚未接入。
+- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）与 `check-types`（`dependsOn: ["^check-types"]`）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint / test 尚未接入。
 - 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
@@ -52,6 +53,7 @@ apps/frontend/   Next.js 16 + React 19 + Tailwind v4 骨架（3000，src/）
 apps/bff/        NestJS 12 BFF 骨架（4000，GET /health）
 apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
+packages/typescript-config/  共享 tsconfig profile（@workspace/typescript-config）
 doc/             当前设计的事实来源
 ```
 
@@ -65,6 +67,7 @@ doc/             当前设计的事实来源
 - `apps/bff/CLAUDE.md`：BFF 边界、ESM 导入后缀、端口 4000。
 - `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、端口 5000。
 - `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、Storybook 与 MCP、组件只能从 app 目录添加。
+- `packages/typescript-config/CLAUDE.md`：profile 分工、路径选项不能进共享包、Next 跳过自动写入、`types` 必须留在 app。
 
 每个包同时有 `README.md` 与 `AGENTS.md`；三份文件的分工与章节要求见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
 

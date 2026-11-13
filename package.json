@@ -27,7 +27,8 @@
     "pnpm": ">=12.18.0"
   },
   "scripts": {
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
     "@fission-ai/openspec": "catalog:tooling",

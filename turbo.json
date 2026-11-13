@@ -6,6 +6,10 @@
       "description": "并行启动各工作区的开发服务；persistent 任务，不缓存",
       "cache": false,
       "persistent": true
+    },
+    "check-types": {
+      "description": "各工作区并行做类型检查",
+      "dependsOn": ["^check-types"]
     }
   }
 }
