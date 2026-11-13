@@ -4,8 +4,9 @@
 
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
+- Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 时可用
 - 前端应用：[../../apps/frontend/AGENTS.md](../../apps/frontend/AGENTS.md)
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 项目工作流：`openspec/`（OpenSpec 2.0）
 
-组件只通过 `shadcn add`（在 `apps/frontend` 下执行）写入，不要手工复制。
+组件只通过 `shadcn add`（在 `apps/frontend` 下执行）写入，不要手工复制。story 放 `stories/`，不要放回 `src/`。

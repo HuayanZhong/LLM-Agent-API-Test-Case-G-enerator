@@ -1,0 +1,4 @@
+@import "../src/styles/globals.css";
+
+/* stories 在 src 之外，单独注册扫描路径；app 构建不会读到这里 */
+@source "../stories/**/*.{ts,tsx}";

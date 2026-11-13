@@ -17,6 +17,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "stories", ".storybook"],
   "exclude": ["node_modules", "dist"]
 }

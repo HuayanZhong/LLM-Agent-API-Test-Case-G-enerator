@@ -3,6 +3,10 @@
     "chrome-devtools": {
       "command": "pnpm",
       "args": ["dlx", "chrome-devtools-mcp@1.13.0"]
+    },
+    "storybook": {
+      "type": "http",
+      "url": "http://127.0.0.1:6006/mcp"
     }
   }
 }

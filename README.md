@@ -53,6 +53,7 @@ pnpm --filter frontend build
 | backend | `apps/backend` | 5000 | `GET /health` |
 | BFF | `apps/bff` | 4000 | `GET /health` |
 | 前端 | `apps/frontend` | 3000 | `/` |
+| Storybook | `packages/ui` | 6006 | `pnpm --filter @workspace/ui storybook` |
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块、测试或 lint。
 
@@ -63,6 +64,8 @@ pnpm dlx shadcn@latest add <component> -c apps/frontend
 ```
 
 UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/frontend/src/components`。
+
+`packages/ui` 的 Storybook 在 6006 提供组件预览与 MCP 端点 `http://127.0.0.1:6006/mcp`；MCP 只在 Storybook dev 运行时可用，当前为 docs + development 工具集。
 
 ## 包级文档
 

@@ -21,6 +21,7 @@ pnpm dev      # 根脚本：turbo run dev
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
+- Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 还没有测试框架，因此没有“跑单个测试”的命令；后续加入测试后再补 scoped script。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
@@ -63,7 +64,7 @@ doc/             当前设计的事实来源
 - `apps/frontend/CLAUDE.md`：Next App Router、shadcn 安装位置、字体与主题、`AGENTS.md` 托管块。
 - `apps/bff/CLAUDE.md`：BFF 边界、ESM 导入后缀、端口 4000。
 - `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、端口 5000。
-- `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、组件只能从 app 目录添加。
+- `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、Storybook 与 MCP、组件只能从 app 目录添加。
 
 每个包同时有 `README.md` 与 `AGENTS.md`；三份文件的分工与章节要求见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
 

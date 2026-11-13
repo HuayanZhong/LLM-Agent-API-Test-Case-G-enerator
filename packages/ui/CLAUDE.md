@@ -22,10 +22,19 @@
 - 不引入 `dist` / 构建脚本；Next 通过 `transpilePackages: ["@workspace/ui"]` 直接编译源码。
 - `hooks/` 目录按需创建；`exports` 里已预留 `./hooks/*`。
 
+## Storybook
+
+- 命令：`pnpm --filter @workspace/ui storybook`（6006）、`pnpm --filter @workspace/ui build-storybook`。
+- story 放 `stories/`，不要放回 `src/`；`src/` 只保留会被 app 引用的发布源码。
+- 用 CSF 3：`Meta` / `StoryObj` / `export default meta`。export 标识符保持英文（`Primary`），展示名与 docs 描述用中文（`name: "主要"`、`parameters.docs.description`）。
+- stories 的 Tailwind 扫描由 `.storybook/storybook.css` 的 `@source "../stories/**/*.{ts,tsx}"` 负责；不要把这条塞进 `globals.css`，否则 app 构建也会扫 story。
+- MCP 端点 `http://127.0.0.1:6006/mcp`，只在 Storybook dev 运行时可用；工具集为 docs + development，暂不含 `test-run`。
+- 不引入 `@storybook/addon-vitest`、Vitest、Playwright；测试工具集等统一测试栈后另开变更。
+
 ## 改动前读什么
 
 - shadcn 安装与 alias：[../../apps/frontend/CLAUDE.md](../../apps/frontend/CLAUDE.md)
-- 样式与组件规则：`.claude/skills/shadcn/rules/`（styling、composition、forms、icons）
+- 样式与组件规则：[../../.claude/skills/shadcn/rules/](../../.claude/skills/shadcn/rules/)（styling、composition、forms、icons）
 - 文档同步：[../../.claude/rules/doc-sync.md](../../.claude/rules/doc-sync.md)
 - 注释规则：[../../.claude/rules/code-comments.md](../../.claude/rules/code-comments.md)
 
@@ -33,3 +42,5 @@
 
 - `pnpm --filter frontend build` 退出码 0（本包没有独立 build 脚本）。
 - 新增组件后，从 `apps/frontend` 的页面 import 一次，确认路径与类型解析正常。
+- 改 story 或样式后：6006 页面正常渲染，明暗主题可切换；`build-storybook` 退出码 0。
+- MCP 改动后：`tools/list` 含 `docs-list` / `docs-show` / `stories-preview`，不含 `test-run`。

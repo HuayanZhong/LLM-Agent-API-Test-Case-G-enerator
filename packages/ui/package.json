@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "type": "module",
   "private": true,
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
   "dependencies": {
     "class-variance-authority": "catalog:frontend",
     "cn": "catalog:frontend",
@@ -12,14 +16,21 @@
     "react-dom": "catalog:frontend"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "catalog:storybook",
+    "@storybook/addon-docs": "catalog:storybook",
+    "@storybook/addon-mcp": "catalog:storybook",
+    "@storybook/addon-themes": "catalog:storybook",
+    "@storybook/react-vite": "catalog:storybook",
     "@tailwindcss/postcss": "catalog:frontend",
     "@types/node": "catalog:tooling",
     "@types/react": "catalog:frontend",
     "@types/react-dom": "catalog:frontend",
     "shadcn": "catalog:tooling",
+    "storybook": "catalog:storybook",
     "tailwindcss": "catalog:frontend",
     "tw-animate-css": "catalog:frontend",
-    "typescript": "catalog:tooling"
+    "typescript": "catalog:tooling",
+    "vite": "catalog:storybook"
   },
   "exports": {
     "./globals.css": "./src/styles/globals.css",
