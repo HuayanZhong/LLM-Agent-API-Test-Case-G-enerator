@@ -56,13 +56,24 @@ pnpm --filter frontend build
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块、测试或 lint。
 
-前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。新增组件必须在 app 目录执行：
+前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。新增组件时必须让 CLI 以 app 工作区为目标：
 
 ```bash
 pnpm dlx shadcn@latest add <component> -c apps/frontend
 ```
 
 UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/frontend/src/components`。
+
+## 包级文档
+
+每个 workspace 包都有一份 `README.md`、`CLAUDE.md`、`AGENTS.md`。包本地事实（命令、端口、边界）以包 README 为准；下面的表格只是聚合入口。
+
+| 包 | 说明 | AI 规则 | 跨工具入口 |
+|---|---|---|---|
+| `apps/frontend` | [README](apps/frontend/README.md) | [CLAUDE](apps/frontend/CLAUDE.md) | [AGENTS](apps/frontend/AGENTS.md) |
+| `apps/bff` | [README](apps/bff/README.md) | [CLAUDE](apps/bff/CLAUDE.md) | [AGENTS](apps/bff/AGENTS.md) |
+| `apps/backend` | [README](apps/backend/README.md) | [CLAUDE](apps/backend/CLAUDE.md) | [AGENTS](apps/backend/AGENTS.md) |
+| `packages/ui` | [README](packages/ui/README.md) | [CLAUDE](packages/ui/CLAUDE.md) | [AGENTS](packages/ui/AGENTS.md) |
 
 ## 环境变量
 

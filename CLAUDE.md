@@ -56,6 +56,17 @@ doc/             当前设计的事实来源
 
 `doc/README.md` 是阅读索引。HTML 是交付物；`doc/source/*.candidate.json` 是可编辑的 Archify 源文件；`doc/_evidence/` 是生成的回执、截图与历史迭代，不作为设计输入，可整体删除。
 
+## 包级文档
+
+进入某个包工作时，先读同目录 `CLAUDE.md`。包级文件只写本地事实（命令、端口、目录、坑），全局规则仍以本文件为准。
+
+- `apps/frontend/CLAUDE.md`：Next App Router、shadcn 安装位置、字体与主题、`AGENTS.md` 托管块。
+- `apps/bff/CLAUDE.md`：BFF 边界、ESM 导入后缀、端口 4000。
+- `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、端口 5000。
+- `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、组件只能从 app 目录添加。
+
+每个包同时有 `README.md` 与 `AGENTS.md`；三份文件的分工与章节要求见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
+
 ## 技术栈与当前实现
 
 - 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）。

@@ -19,6 +19,9 @@ context: |
   ky + Vitest（待统一引入）；chrome-devtools MCP；
   Supabase（Postgres / pgvector / Auth / Storage）+ MikroORM；A2A。
 
+  文档约定：根 README / CLAUDE / AGENTS 是全局索引；每个 workspace 包另有
+  README.md / CLAUDE.md / AGENTS.md，包本地事实（命令、端口、边界）以包 README 为准。
+
 # 按产物类型的规则（可选）
 # 为特定产物添加自定义规则。
 # 示例：
