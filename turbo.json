@@ -10,6 +10,16 @@
     "check-types": {
       "description": "各工作区并行做类型检查",
       "dependsOn": ["^check-types"]
+    },
+    "test": {
+      "description": "各工作区并行运行 Vitest 测试并产出覆盖率；行覆盖率低于 95% 即失败",
+      "dependsOn": ["^test"],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "description": "各工作区并行进入 watch 模式；persistent 任务，不缓存",
+      "cache": false,
+      "persistent": true
     }
   }
 }

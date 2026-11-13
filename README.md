@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库已有三个可运行的骨架：`apps/frontend`（Next.js）、`apps/bff` 与 `apps/backend`（NestJS）；业务模块尚未实现。
+> 当前仓库已有三个可运行的骨架：`apps/frontend`（Next.js）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI 与 tsconfig、Vitest 配置在 `packages/`；业务模块尚未实现。
 
 ## 目录结构
 
@@ -20,13 +20,13 @@
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
 ├── apps/                # backend（5000）、bff（4000）、frontend（3000）
-├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig
+├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
 ├── package.json
 ├── pnpm-workspace.yaml  # workspace、catalog、engineStrict
-├── turbo.json           # Turbo 任务配置（当前只注册 dev）
+├── turbo.json           # Turbo 任务配置（dev / check-types / test / test:watch）
 └── LICENSE              # MIT
 ```
 
@@ -43,6 +43,8 @@
 pnpm install
 pnpm dev                    # turbo run dev：并行启动 backend、bff 与 frontend
 pnpm check-types            # turbo run check-types：四个包并行类型检查
+pnpm test                   # turbo run test：四个包并行跑 Vitest，行覆盖率 ≥ 95%
+pnpm test:watch             # turbo run test:watch：四个包并行 watch
 pnpm --filter frontend dev  # 只启动 Next 前端（3000）
 pnpm --filter frontend build
 ```
@@ -56,7 +58,7 @@ pnpm --filter frontend build
 | 前端 | `apps/frontend` | 3000 | `/` |
 | Storybook | `packages/ui` | 6006 | `pnpm --filter @workspace/ui storybook` |
 
-两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块、测试或 lint。
+两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块或 lint；测试已接入，只有一个 `health` 冒烟用例。
 
 前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。新增组件时必须让 CLI 以 app 工作区为目标：
 
@@ -70,6 +72,8 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 
 四个包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
 
+Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、Next 的 `__tests__/**/*.test.tsx`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
+
 ## 包级文档
 
 每个 workspace 包都有一份 `README.md`、`CLAUDE.md`、`AGENTS.md`。包本地事实（命令、端口、边界）以包 README 为准；下面的表格只是聚合入口。
@@ -81,6 +85,7 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 | `apps/backend` | [README](apps/backend/README.md) | [CLAUDE](apps/backend/CLAUDE.md) | [AGENTS](apps/backend/AGENTS.md) |
 | `packages/ui` | [README](packages/ui/README.md) | [CLAUDE](packages/ui/CLAUDE.md) | [AGENTS](packages/ui/AGENTS.md) |
 | `packages/typescript-config` | [README](packages/typescript-config/README.md) | [CLAUDE](packages/typescript-config/CLAUDE.md) | [AGENTS](packages/typescript-config/AGENTS.md) |
+| `packages/vitest-config` | [README](packages/vitest-config/README.md) | [CLAUDE](packages/vitest-config/CLAUDE.md) | [AGENTS](packages/vitest-config/AGENTS.md) |
 
 ## 环境变量
 

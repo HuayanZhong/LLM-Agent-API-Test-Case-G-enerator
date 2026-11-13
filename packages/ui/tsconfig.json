@@ -5,6 +5,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": ["src", "stories", ".storybook"],
+  "include": ["src", "stories", ".storybook", "vitest.config.ts", "__tests__"],
   "exclude": ["node_modules", "dist"]
 }

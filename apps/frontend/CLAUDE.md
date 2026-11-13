@@ -11,6 +11,8 @@ Next.js 16 App Router 前端骨架：页面、布局、app 级 block。共享 UI
 ```bash
 pnpm --filter frontend dev     # 3000
 pnpm --filter frontend build
+pnpm --filter frontend test    # vitest run --coverage，行覆盖率 ≥ 95%
+pnpm --filter frontend test:watch
 pnpm --filter frontend start
 ```
 
@@ -18,6 +20,7 @@ pnpm --filter frontend start
 
 - 页面：`src/app/layout.tsx`、`src/app/page.tsx`。
 - app 级组件：`src/components/`；`@/*` 指向 `./src/*`。
+- 测试：`__tests__/**/*.test.tsx`（Next 官方 Vitest 指南的 `__tests__` 约定），setup 在 `__tests__/setup.ts`。
 - 共享组件：`@workspace/ui/components/*`；`cn()` 在 `@workspace/ui/lib/utils`。
 
 ## 本包约束
@@ -29,6 +32,9 @@ pnpm --filter frontend start
 - 不使用 `next/font/google`；字体栈在 `globals.css` 的 `@theme inline` 里，避免构建时访问 Google Fonts。
 - `AGENTS.md` 的 `<!-- BEGIN:nextjs-agent-rules -->` 块由 `next dev` 重写；我们的内容放在标记上方，不要编辑标记内部。
 - `next-env.d.ts` 由 Next 生成，不要手改。
+- 测试配置继承 `@workspace/vitest-config/react`，用 `@vitejs/plugin-react` + `vite-tsconfig-paths`；`setupFiles` 指向 `__tests__/setup.ts`。
+- 覆盖率只卡行覆盖率 95%；`src/app/layout.tsx` 是 Next 根布局（html/body/metadata），已在 `coverage.exclude` 中排除。
+- Vitest 不支持 async Server Components；遇到 `async` 页面用 e2e，不要在 `__tests__` 里强行渲染。
 - Electron 壳尚未接入；不要假设存在主进程或 IPC。
 
 ## 改动前读什么
@@ -42,4 +48,5 @@ pnpm --filter frontend start
 
 - `pnpm --filter frontend dev` 后访问 `http://localhost:3000`，页面与组件正常渲染。
 - 改样式后确认 `.next` 产出的 CSS 同时包含 app 侧与 ui 侧类名。
-- `pnpm --filter frontend build` 退出码 0。
+- `pnpm --filter frontend test` 用例通过，行覆盖率 ≥ 95%。
+- `pnpm --filter frontend check-types` 与 `pnpm --filter frontend build` 退出码 0。

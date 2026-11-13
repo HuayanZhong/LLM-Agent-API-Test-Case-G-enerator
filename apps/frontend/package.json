@@ -7,6 +7,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "check-types": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
     "start": "next start -p 3000"
   },
   "dependencies": {
@@ -18,10 +20,19 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:frontend",
+    "@testing-library/dom": "catalog:testing",
+    "@testing-library/jest-dom": "catalog:testing",
+    "@testing-library/react": "catalog:testing",
     "@types/node": "catalog:tooling",
     "@types/react": "catalog:frontend",
     "@types/react-dom": "catalog:frontend",
+    "@vitejs/plugin-react": "catalog:testing",
+    "@vitest/coverage-v8": "catalog:testing",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "catalog:tooling"
+    "@workspace/vitest-config": "workspace:*",
+    "jsdom": "catalog:testing",
+    "typescript": "catalog:tooling",
+    "vite": "catalog:tooling",
+    "vitest": "catalog:testing"
   }
 }

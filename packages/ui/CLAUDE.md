@@ -29,7 +29,15 @@
 - 用 CSF 3：`Meta` / `StoryObj` / `export default meta`。export 标识符保持英文（`Primary`），展示名与 docs 描述用中文（`name: "主要"`、`parameters.docs.description`）。
 - stories 的 Tailwind 扫描由 `.storybook/storybook.css` 的 `@source "../stories/**/*.{ts,tsx}"` 负责；不要把这条塞进 `globals.css`，否则 app 构建也会扫 story。
 - MCP 端点 `http://127.0.0.1:6006/mcp`，只在 Storybook dev 运行时可用；工具集为 docs + development，暂不含 `test-run`。
-- 不引入 `@storybook/addon-vitest`、Vitest、Playwright；测试工具集等统一测试栈后另开变更。
+- 测试已接入：`pnpm --filter @workspace/ui test`（`vitest run --coverage`，行覆盖率 ≥ 95%）、`pnpm --filter @workspace/ui test:watch`；测试放 `__tests__/`，`src/` 只留发布源码。
+- 仍不引入 `@storybook/addon-vitest`、Playwright；MCP 工具集保持 docs + development。
+
+## 测试
+
+- 配置：`vitest.config.ts` 继承 `@workspace/vitest-config/react`，`plugins: [react()]`，路径别名用 Vite 8 原生 `resolve.tsconfigPaths`。
+- 目录：`__tests__/**/*.test.tsx`；setup 在 `__tests__/setup.ts`（引入 jest-dom 并显式 `afterEach(cleanup)`）。
+- 覆盖率：只卡行覆盖率 95%，`coverage.include` 覆盖 `src` 下全部 ts/tsx；报告在 `coverage/`。
+- 组件测试直接 import `@workspace/ui/components/*`，走包 `exports` 或 tsconfig paths，不要复制组件到测试目录。
 
 ## 改动前读什么
 
@@ -41,6 +49,7 @@
 ## 验证
 
 - `pnpm --filter frontend build` 退出码 0（本包没有独立 build 脚本）。
+- `pnpm --filter @workspace/ui test` 用例通过，行覆盖率 ≥ 95%；`check-types` 退出码 0。
 - 新增组件后，从 `apps/frontend` 的页面 import 一次，确认路径与类型解析正常。
 - 改 story 或样式后：6006 页面正常渲染，明暗主题可切换；`build-storybook` 退出码 0。
 - MCP 改动后：`tools/list` 含 `docs-list` / `docs-show` / `stories-preview`，不含 `test-run`。

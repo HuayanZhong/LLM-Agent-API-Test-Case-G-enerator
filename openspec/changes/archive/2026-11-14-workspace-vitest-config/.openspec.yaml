@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-14
+skip_specs: true
+goal: 统一测试栈并让测试可并行、可缓存；为后续 oxc/lint 接入留位

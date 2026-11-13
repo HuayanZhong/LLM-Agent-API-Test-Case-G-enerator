@@ -9,13 +9,14 @@ engineStrict: true
 # 依赖版本统一在这里管理；包内用 "pkg": "catalog:分类名" 引用
 # pnpm 不接受空 catalog，未启用的分类保持注释，加入依赖时再启用
 catalogs:
-  # 工具链：Turbo、TypeScript、CLI 等
+  # 工具链：Turbo、TypeScript、Vite、CLI 等
   tooling:
     "@fission-ai/openspec": ^2.0.0
     turbo: ^2.11.11
     typescript: ^6.0.3
     "@types/node": ^26.6.6
     shadcn: ^4.23.0
+    vite: ^8.3.8
 
   # 前端：Next.js、React、Tailwind、shadcn 组件依赖
   frontend:
@@ -41,22 +42,28 @@ catalogs:
     "@storybook/addon-a11y": ^10.6.7
     "@storybook/addon-themes": ^10.6.7
     "@storybook/addon-mcp": ^10.6.7
-    vite: ^8.3.8
 
   # 后端：NestJS 服务（backend / bff）；LangGraph、Zod、MikroORM 等后续加入
   backend:
     "@nestjs/common": ^12.5.0
     "@nestjs/core": ^12.5.0
     "@nestjs/platform-express": ^12.5.0
+    "@nestjs/testing": ^12.5.0
     "@nestjs/cli": ^12.0.12
     "@nestjs/schematics": ^12.0.13
     "@types/express": ^5.0.6
     reflect-metadata: ^0.2.2
     rxjs: ^7.8.2
 
-  # 测试与质量：Vitest、覆盖率、接口测试工具等后续加入
-  # testing:
-  #   vitest: ^...
+  # 测试与质量：Vitest、覆盖率、Testing Library
+  testing:
+    vitest: ^5.1.0
+    "@vitest/coverage-v8": ^5.1.0
+    jsdom: ^31.0.1
+    "@testing-library/react": ^16.3.3
+    "@testing-library/dom": ^10.4.2
+    "@testing-library/jest-dom": ^6.9.1
+    "@vitejs/plugin-react": ^6.3.0
 
 # pnpm 12：允许依赖运行安装脚本（Storybook/Vite 构建需要 esbuild）
 allowBuilds:
@@ -75,3 +82,4 @@ minimumReleaseAgeExclude:
   - "@nestjs/common@12.5.0"
   - "@nestjs/core@12.5.0"
   - "@nestjs/platform-express@12.5.0"
+  - jsdom@31.0.1

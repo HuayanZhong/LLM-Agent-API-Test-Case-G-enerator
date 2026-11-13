@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "check-types": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -23,16 +25,24 @@
     "@storybook/addon-themes": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",
     "@tailwindcss/postcss": "catalog:frontend",
+    "@testing-library/dom": "catalog:testing",
+    "@testing-library/jest-dom": "catalog:testing",
+    "@testing-library/react": "catalog:testing",
     "@types/node": "catalog:tooling",
     "@types/react": "catalog:frontend",
     "@types/react-dom": "catalog:frontend",
+    "@vitejs/plugin-react": "catalog:testing",
+    "@vitest/coverage-v8": "catalog:testing",
     "@workspace/typescript-config": "workspace:*",
+    "@workspace/vitest-config": "workspace:*",
+    "jsdom": "catalog:testing",
     "shadcn": "catalog:tooling",
     "storybook": "catalog:storybook",
     "tailwindcss": "catalog:frontend",
     "tw-animate-css": "catalog:frontend",
     "typescript": "catalog:tooling",
-    "vite": "catalog:storybook"
+    "vite": "catalog:tooling",
+    "vitest": "catalog:testing"
   },
   "exports": {
     "./globals.css": "./src/styles/globals.css",

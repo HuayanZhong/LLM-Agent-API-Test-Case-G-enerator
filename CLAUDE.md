@@ -14,16 +14,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pnpm install
 pnpm dev          # 根脚本：turbo run dev
 pnpm check-types  # 根脚本：turbo run check-types
+pnpm test         # 根脚本：turbo run test（行覆盖率 < 95% 失败）
+pnpm test:watch   # 根脚本：turbo run test:watch
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）与 `check-types`（`dependsOn: ["^check-types"]`）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint / test 尚未接入。
+- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）与 `test:watch`（persistent、不缓存）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint 尚未接入。
 - 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
-- 还没有测试框架，因此没有“跑单个测试”的命令；后续加入测试后再补 scoped script。
+- 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.tsx`。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
@@ -54,6 +56,7 @@ apps/bff/        NestJS 12 BFF 骨架（4000，GET /health）
 apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
 packages/typescript-config/  共享 tsconfig profile（@workspace/typescript-config）
+packages/vitest-config/      共享 Vitest profile（@workspace/vitest-config）
 doc/             当前设计的事实来源
 ```
 
@@ -68,12 +71,13 @@ doc/             当前设计的事实来源
 - `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、端口 5000。
 - `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、Storybook 与 MCP、组件只能从 app 目录添加。
 - `packages/typescript-config/CLAUDE.md`：profile 分工、路径选项不能进共享包、Next 跳过自动写入、`types` 必须留在 app。
+- `packages/vitest-config/CLAUDE.md`：profile 与覆盖率门槛、路径项留在各包、`.ts` 源码加载与 Node 26 前提。
 
 每个包同时有 `README.md` 与 `AGENTS.md`；三份文件的分工与章节要求见 [.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)。
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；四个包的 Vitest 配置与 `health` / 页面 / `Button` 冒烟测试，根 `pnpm test` 行覆盖率门槛 95%。
 - 桌面端：Electron 壳待接入；Next.js 前端已可独立运行，通过 `@workspace/ui` 引用共享组件。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。

@@ -12,14 +12,15 @@ context: |
   当前状态：pnpm monorepo；apps/frontend 是 Next.js 16 + React 19 + Tailwind v4 骨架
   （3000，src/），packages/ui 提供 shadcn radix-nova 组件、共享样式与 Storybook 10.6（6006）；
   packages/typescript-config 提供 base / nextjs / react-library / nestjs 四个共享 tsconfig profile，
-  根 pnpm check-types 经 Turbo 并行执行；
+  根 pnpm check-types 经 Turbo 并行执行；packages/vitest-config 提供 base / react 两个 Vitest profile，
+  根 pnpm test 经 Turbo 并行执行并卡 95% 行覆盖率；
   apps/backend 与 apps/bff 是 NestJS 12 + ESM 骨架，分别监听 5000 / 4000，只有 GET /health；
-  业务模块、测试与 lint 尚未接入。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
+  业务模块与 lint 尚未接入。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
 
   技术栈（部分已落地）：Electron（待接入）+ Next.js 16 / React 19 / Tailwind v4 / shadcn 桌面端（3000）；
   NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；
   Storybook 10.6（@storybook/react-vite）与 @storybook/addon-mcp（docs + development 工具集）；
-  ky + Vitest（待统一引入）；chrome-devtools MCP；
+  ky + Vitest（已接入，行覆盖率门槛 95%）；chrome-devtools MCP；
   Supabase（Postgres / pgvector / Auth / Storage）+ MikroORM；A2A。
 
   文档约定：根 README / CLAUDE / AGENTS 是全局索引；每个 workspace 包另有

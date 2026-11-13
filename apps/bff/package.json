@@ -7,6 +7,8 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "check-types": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
     "start": "nest start",
     "start:prod": "node dist/main"
   },
@@ -20,9 +22,14 @@
   "devDependencies": {
     "@nestjs/cli": "catalog:backend",
     "@nestjs/schematics": "catalog:backend",
+    "@nestjs/testing": "catalog:backend",
     "@types/express": "catalog:backend",
     "@types/node": "catalog:tooling",
+    "@vitest/coverage-v8": "catalog:testing",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "catalog:tooling"
+    "@workspace/vitest-config": "workspace:*",
+    "typescript": "catalog:tooling",
+    "vite": "catalog:tooling",
+    "vitest": "catalog:testing"
   }
 }
