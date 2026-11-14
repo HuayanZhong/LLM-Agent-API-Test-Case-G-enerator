@@ -22,7 +22,7 @@
 
 - 包内**不写相对 import**。Node 的 ESM 不会把 `./base.js` 改写成 `./base.ts`；写 `./base.ts` 又要求消费方开启 `allowImportingTsExtensions`，而 Nest 的 `nest build` 会 emit，不能开。profile 多了就继续用对象展开，不要拆文件。
 - 只写无路径语义的 `test` 选项。`include` / `setupFiles` / `coverage.include` / `coverage.exclude` 留在消费包；Vitest 用包根解析这些路径。
-- 覆盖率公共项只在这里：`provider: "v8"`、`reporter: ["text", "html"]`、`thresholds: { lines: 95 }`。`coverage.enabled` 不打开，交给各包 `test` 脚本的 `--coverage`。
+- 覆盖率公共项只在这里：`provider: "v8"`、`reporter: ["text", "lcov", "json-summary"]`、`thresholds: { lines: 95 }`。`coverage.enabled` 不打开，交给各包 `test` 脚本的 `--coverage`。HTML 报告按需用 `--coverage.reporter=html` 生成。
 - 不把 `globals: true` 放进 profile。测试文件显式 `import`，也避免 `vitest/globals` 与 `nest build` 的老问题。
 - 本包以 `.ts` 源码加载，依赖 Node 26 类型剥离与 pnpm 符号链接；不要把包目录复制进 `node_modules`，也不要把 `exports` 改到 `dist`。
 - 不引入 `@storybook/addon-vitest`、Playwright；Oxlint / Oxfmt 配置在仓库根，本包只提供 `lint` / `format` 脚本。

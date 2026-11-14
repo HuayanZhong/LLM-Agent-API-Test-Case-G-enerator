@@ -13,6 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 pnpm install
 pnpm dev          # 根脚本：turbo run dev
+pnpm build        # 根脚本：turbo run build（三个 app，产物进缓存）
 pnpm check-types  # 根脚本：turbo run check-types
 pnpm test         # 根脚本：turbo run test（行覆盖率 < 95% 失败）
 pnpm test:watch   # 根脚本：turbo run test:watch
@@ -20,16 +21,18 @@ pnpm lint         # 根脚本：turbo run lint（六个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
 pnpm format       # 根脚本：turbo run format（六个包并行 oxfmt --check）
 pnpm format:fix   # 根脚本：turbo run format:fix
+pnpm format:root      # 根配置文件 oxfmt --check
+pnpm format:root:fix  # 写入根配置文件格式
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`，`globalDependencies` 纳入两个 Oxc 根配置。各 app 自己仍有 `build` / `start`，Turbo 的 build 尚未接入。
+- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`build`（`dependsOn: ["^build"]`，产物 `.next/**`、`dist/**`、`storybook-static/**`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`，`globalDependencies` 纳入两个 Oxc 根配置、`.editorconfig` 与 `.nvmrc`。根配置文件由 `//#format:root` 根任务单独检查。
 - 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn、Oxlint、Oxfmt）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
-- 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.tsx`。
+- 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
 - Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 不在任何包内，格式化需手工保持。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
@@ -49,7 +52,7 @@ pnpm format:fix   # 根脚本：turbo run format:fix
 
 ## AI 协作配置
 
-- `.mcp.json`：项目级 chrome-devtools MCP，固定 `chrome-devtools-mcp@1.13.0`，通过 `pnpm dlx` 启动。
+- `.mcp.json`：项目级 chrome-devtools MCP，固定 `chrome-devtools-mcp@1.13.0`，通过 `pnpm dlx` 启动。Storybook 的 `http://127.0.0.1:6006/mcp` 只在 dev 时可用，不写进常驻配置，需要时在本地 MCP 设置里临时加入。
 - `.claude/commands/opsx.md`：`/opsx` 快捷入口。
 - 不配置项目级 `.claude/settings.json`，权限沿用默认模式与全局设置。
 

@@ -34,10 +34,10 @@ export default defineConfig({
 
 | profile | 使用方 | 关键设置 |
 |---|---|---|
-| `base` | `apps/backend`、`apps/bff` | `environment: "node"`、`clearMocks`、`passWithNoTests`、覆盖率 `v8` + `text`/`html`、`thresholds.lines: 95` |
+| `base` | `apps/backend`、`apps/bff` | `environment: "node"`、`clearMocks`、`passWithNoTests`、覆盖率 `v8` + `text`/`lcov`/`json-summary`、`thresholds.lines: 95` |
 | `react` | `apps/frontend`、`packages/ui` | 在 `base` 上只把 `environment` 改成 `"jsdom"` |
 
-`coverage.enabled` 保持 `false`，由各包 `test` 脚本的 `--coverage` 打开。
+`coverage.enabled` 保持 `false`，由各包 `test` 脚本的 `--coverage` 打开。需要可视化报告时用 `--coverage.reporter=html`。
 
 ## 目录
 

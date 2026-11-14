@@ -15,6 +15,9 @@ coverage/
 # Turborepo
 .turbo
 
+# Local git worktrees
+.worktrees/
+
 # Claude Code local settings
 .claude/settings.local.json
 

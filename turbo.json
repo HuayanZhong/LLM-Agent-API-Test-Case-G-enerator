@@ -1,12 +1,17 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
-  "globalDependencies": [".oxlintrc.json", ".oxfmtrc.json"],
+  "globalDependencies": [".oxlintrc.json", ".oxfmtrc.json", ".editorconfig", ".nvmrc"],
   "tasks": {
     "dev": {
       "description": "并行启动各工作区的开发服务；persistent 任务，不缓存",
       "cache": false,
       "persistent": true
+    },
+    "build": {
+      "description": "各工作区并行构建；产物进 Turbo 缓存",
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"]
     },
     "check-types": {
       "description": "各工作区并行做类型检查",
@@ -39,6 +44,13 @@
       "description": "各工作区并行运行 oxfmt；会写文件，不缓存",
       "cache": false,
       "dependsOn": ["^format:fix"]
+    },
+    "//#format:root": {
+      "description": "根任务：检查仓库根配置文件格式；六个包任务覆盖不到这些文件"
+    },
+    "//#format:root:fix": {
+      "description": "根任务：写入根配置文件格式；会写文件，不缓存",
+      "cache": false
     }
   }
 }

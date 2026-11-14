@@ -9,7 +9,9 @@ export const base = {
     passWithNoTests: true,
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      // html 默认关闭：CI 要的是 lcov 与 json-summary，本地需要可视化时用
+      // --coverage.reporter=html 临时打开，避免每个包都堆一份大 HTML。
+      reporter: ["text", "lcov", "json-summary"],
       thresholds: { lines: 95 },
     },
   },

@@ -23,12 +23,16 @@
 ├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
+├── .gitattributes       # 行尾与二进制文件约定
+├── .nvmrc               # Node 版本（26.12.1），本地与 CI 共用
+├── .editorconfig        # 编辑器缩进与行尾；Oxfmt 会读取
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
 ├── .oxfmtrc.json        # 共享 Oxfmt 格式化配置
 ├── .oxlintrc.json       # 共享 Oxlint 检查配置
 ├── package.json
 ├── pnpm-workspace.yaml  # workspace、catalog、engineStrict
-├── turbo.json           # Turbo 任务配置（dev / check-types / test / lint / format）
+├── skills-lock.json     # 第三方 skill 的版本与哈希
+├── turbo.json           # Turbo 任务配置（dev / build / check-types / test / lint / format）
 └── LICENSE              # MIT
 ```
 
@@ -44,6 +48,7 @@
 ```bash
 pnpm install
 pnpm dev                    # turbo run dev：并行启动 backend、bff 与 frontend
+pnpm build                  # turbo run build：构建三个 app，产物进 Turbo 缓存
 pnpm check-types            # turbo run check-types：五个包并行类型检查
 pnpm test                   # turbo run test：四个包并行跑 Vitest，行覆盖率 ≥ 95%
 pnpm test:watch             # turbo run test:watch：四个包并行 watch
@@ -51,6 +56,8 @@ pnpm lint                   # turbo run lint：六个包并行 oxlint
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
 pnpm format                 # turbo run format：六个包并行 oxfmt --check
 pnpm format:fix             # turbo run format:fix：写入格式化
+pnpm format:root            # 根配置文件 oxfmt --check（不属于任何 workspace 包）
+pnpm format:root:fix        # 写入根配置文件格式
 pnpm --filter frontend dev  # 只启动 Next 前端（3000）
 pnpm --filter frontend build
 ```
@@ -78,9 +85,11 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 
 四个包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
 
-Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、Next 的 `__tests__/**/*.test.tsx`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
+Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 不属于任何 workspace 包，`pnpm format` 不覆盖它们，修改后需手工保持格式。
+覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
+
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 等不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 单独检查；`.editorconfig` 与 `.nvmrc` 已纳入 Turbo `globalDependencies`，改动会失效格式化缓存。
 
 ## 包级文档
 
@@ -120,7 +129,7 @@ pnpm exec openspec validate --all
 - `/openspec-sync-specs`：只同步规格，不归档。
 - `/opsx <explore|propose|apply|update|sync|archive>`：上述技能的快捷入口。
 
-项目级 MCP 配置在 [.mcp.json](.mcp.json)，当前只含 chrome-devtools，通过 `pnpm dlx` 固定版本。
+项目级 MCP 配置在 [.mcp.json](.mcp.json)，当前只含 chrome-devtools，通过 `pnpm dlx` 固定版本。Storybook 的 `http://127.0.0.1:6006/mcp` 只在 dev 运行时可用，因此不写进常驻配置；需要时在本地 MCP 设置里临时加入。
 
 规则：新功能或行为变更先提案再实现；`openspec/specs` 是行为事实来源；归档前跑 `validate`。`opsx` 是 OpenSpec 1.x 的旧命令前缀，2.0 使用 `/openspec-*`，技能描述里仍接受 “opsx propose” 这类说法。
 

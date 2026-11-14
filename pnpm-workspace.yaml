@@ -71,7 +71,12 @@ catalogs:
 allowBuilds:
   esbuild: true
 
-# pnpm 供应链策略：安装 turbo 时自动加入的平台二进制放行项
+# pnpm 供应链策略：新版本发布后至少等待 1 天才可安装，降低投毒风险。
+# 显式写出官方默认值，避免不同 pnpm 版本默认值漂移。
+minimumReleaseAge: 1440
+
+# 上面的例外清单。Turbo 平台二进制与 OpenSpec 由安装时自动写入；
+# Nest 三件套与 jsdom 为手动放行，升级时复核是否仍必要。
 minimumReleaseAgeExclude:
   - "@turbo/darwin-64@2.11.11"
   - "@turbo/darwin-arm64@2.11.11"

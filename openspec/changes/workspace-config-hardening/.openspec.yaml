@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-14
+goal: 补 Turbo build 任务、修复 .test.ts 发现、补齐缓存输入与根文件格式化检查
+skip_specs: true
