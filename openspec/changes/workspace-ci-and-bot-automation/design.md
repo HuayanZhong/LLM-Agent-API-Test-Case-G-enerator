@@ -207,23 +207,32 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@<sha>
-        with: { fetch-depth: 1, persist-credentials: false }
+        with: { fetch-depth: 0, persist-credentials: false }
       - uses: anthropics/claude-code-action@<sha>
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          use_sticky_comment: true
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
-            ...按仓库约定审查...
+            ...按官方 code-review 协议审查...
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(git blame:*),Bash(git log:*)"
 ```
 
 - 跳过 draft 与 fork PR：fork 没有 secrets，注入会失败并产生红色 check。
 - 只评论，不 `approve`、不 push；符合“关键节点由人确认”。
 - `concurrency` 按 PR 取消旧运行，`timeout-minutes` 限成本。
-- prompt 里显式写“不报告 linter 已覆盖的问题”，避免与 `quality` 重复。
-- 可选 `paths` 过滤到 `apps/**`、`packages/**`、`.github/**`，文档类 PR 不触发。
+- `fetch-depth: 0`：审查协议里有 git blame / git log 这一路，浅克隆拿不到历史。本仓库 `.git` 约 15 MB，代价可接受。
+- `use_sticky_comment: true`：同一 PR 只保留一条评论，重跑时更新，不刷屏。
+- prompt 采用 Anthropic 官方 `code-review` 插件的协议（`plugins/code-review/commands/code-review.md`）：
+  - 先做资格判断（closed / draft / 自动化 PR / 已审过）再开审；
+  - 读根与包级 `CLAUDE.md`、`.claude/rules/*.md` 作为规则来源；
+  - 五个独立视角：规则一致性、diff 内明显 bug、git 历史、历史 PR 评论、代码注释矛盾；
+  - 每个问题 0-100 置信度打分，门槛 80，低于门槛丢弃；
+  - 明确的 false-positive 清单，包含 linter / typechecker / 测试已覆盖的问题、改动前存在的问题、未修改的行；
+  - 输出含完整 SHA 的代码链接，前后各留至少 1 行上下文。
+- 与 `quality.yml` 分工：格式与类型问题由 CI 负责，agent review 只报行为与规则层面的问题。
 
 ### D9. `renovate.json`
 
@@ -271,11 +280,14 @@ jobs:
 - [`pnpm audit` 可能因下游漏洞阻塞] → 记录 ignore 列表与复查条件。
 - [Renovate 与 `minimumReleaseAge` 冲突] → 两边都设 3 天，保持一致。
 - [required checks 配错阻塞 PR] → 先不 required，观察一周后逐项开启。
-- [`.github` 文件被 Oxfmt 格式化] → `.github/**` 是 YAML/JSON，Oxfmt 会处理；根 `format:root` 不包含 `.github`，需要在 CI 单独跑或加进根脚本。
+- [`.github` 文件被 Oxfmt 格式化] → `.github` 与 `renovate.json` 已加入根 `format:root` 脚本与 `//#format:root` inputs。
+
+## Implementation Notes
+
+- `pnpm audit --audit-level=high` 当前退出 0；存在 3 个 low / moderate 漏洞：`deepmerge`（无修补版本）、`glob`（≥14.0.2 修补）、`minimatch`（≥11.0.1 修补）。均低于 CI 的 high 门槛，暂不写 `pnpm.auditConfig.ignoreCves`；升级到修补版本或出现 high 时再处理。
+- `format:root` 已覆盖 `.github/` 与 `renovate.json`，本地检查 16 个文件通过。
+- 本地可用 `@action-validator/cli` 与 PyYAML 做语法/schema 校验；actionlint / zizmor 二进制与 PyPI 下载在 Windows 环境受限，最终以 CI 的 `zizmor-action` 为准。
 
 ## Open Questions
 
-- `pnpm audit` 是否在 PR 必过，还是 nightly 单独跑。
-- CodeQL 是否现在启用（javascript 语言，免费但会增加 CI 时间）。
-- agent review 用 Anthropic API key 还是 OAuth token；成本预算多少。
-- 是否同时保留 Copilot review（GitHub 原生）作为第二意见。
+无（pnpm audit、CodeQL、agent review 凭证与 Copilot 取舍已在实施中确定：PR 跑 high 门槛的 audit、暂不启用 CodeQL、agent review 用 `ANTHROPIC_API_KEY`、只保留 Copilot instructions 文件）。

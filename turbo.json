@@ -59,7 +59,9 @@
         ".oxlintrc.json",
         ".oxfmtrc.json",
         ".mcp.json",
-        "skills-lock.json"
+        "skills-lock.json",
+        ".github/**",
+        "renovate.json"
       ]
     },
     "//#format:root:fix": {

@@ -1,0 +1,81 @@
+name: Agent Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # draft 不审；fork PR 没有 secrets，注入会失败
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          # 需要完整历史，审查流程里的 git blame / git log 才能生效
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: anthropics/claude-code-action@f3b070c88125d33dbae5653df5f143101d4ea9dc # v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # 同一 PR 只保留一条评论，重跑时更新而不是刷屏
+          use_sticky_comment: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            PR 分支已在当前工作目录检出。你是只读审查者：不修改代码、不 push、不 approve。
+
+            ## 流程
+
+            1. 先判断该不该审：PR 已关闭、是 draft、是 renovate[bot] 之类的自动化 PR、
+               或已经有本 workflow 的评论且没有新提交 → 直接结束，不发评论。
+            2. 读规则来源：根 CLAUDE.md、改动目录下的包级 CLAUDE.md、
+               .claude/rules/code-comments.md、.claude/rules/doc-sync.md、
+               openspec/config.yaml 的 context。规则没写到的风格偏好不要报。
+            3. 用 `gh pr diff` 读改动，从五个角度各审一遍：
+               a. 规则一致性（CLAUDE.md 与 .claude/rules 的具体条款）
+               b. 改动本身里的明显 bug（只看 diff，不追历史）
+               c. `git log` / `git blame` 给出的历史上下文
+               d. 同一批文件的历史 PR 评论里是否有可复用的意见（`gh pr list`）
+               e. 被改文件里的注释是否与新代码矛盾
+            4. 每个问题按 0-100 打分：0 不可能；25 可能；50 真实但次要；
+               75 很可能真实且重要；100 确定且高频。低于 80 一律丢弃。
+               规则类问题必须回到规则原文确认它确实写了这一条。
+            5. 过滤后没有 ≥80 的问题，就不发评论。
+
+            ## 不要报的（false positive）
+
+            - 改动之前就存在的问题
+            - linter / formatter / 类型检查 / 测试已经覆盖的问题（由 quality 与 test workflow 负责）
+            - 资深工程师不会提的吹毛求疵
+            - 规则没明确要求的一般质量问题（覆盖率、文档、泛泛的安全建议）
+            - 已被 lint ignore 注释显式豁免的问题
+            - 用户没有改到的行
+            - 看起来像 bug、实际是本次变更有意为之的行为
+
+            ## 输出
+
+            - 只发 GitHub 评论，不要把审查正文当消息输出。顶层用 `gh pr comment`；
+              行内问题用 `mcp__github_inline_comment__create_inline_comment`（带 `confirmed: true`）。
+            - 简短、不用 emoji。
+            - 每条格式：`简要描述（依据：规则原文 / 代码位置）`，并附完整 SHA 的链接：
+              https://github.com/<owner>/<repo>/blob/<full-sha>/<path>#L<start>-L<end>
+              必须用完整 SHA，链接前后各留至少 1 行上下文。
+            - 没有问题时只发：`### Code review` 与 `未发现问题，已检查 bug 与 CLAUDE.md 一致性。`
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(git blame:*),Bash(git log:*)"

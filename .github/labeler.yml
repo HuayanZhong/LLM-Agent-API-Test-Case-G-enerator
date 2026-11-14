@@ -1,0 +1,25 @@
+apps/frontend:
+  - changed-files:
+      - any-glob-to-any-file: "apps/frontend/**"
+
+apps/backend:
+  - changed-files:
+      - any-glob-to-any-file: "apps/backend/**"
+
+apps/bff:
+  - changed-files:
+      - any-glob-to-any-file: "apps/bff/**"
+
+packages:
+  - changed-files:
+      - any-glob-to-any-file: "packages/**"
+
+.github:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "doc/**"
+          - "**/*.md"

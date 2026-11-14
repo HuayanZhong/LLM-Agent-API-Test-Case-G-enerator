@@ -25,6 +25,10 @@ context: |
   由 Next 原生加载；变量必须同时写进 turbo.json 对应任务的 env，
   否则 Turbo 默认 strict 模式不会传给任务；.env*、apps/frontend/.env* 与 .nvmrc 在 globalDependencies 中。
 
+  CI：.github/workflows 按 quality / test / build / security / agent-review / labeler 拆分，
+  共用 .github/actions/setup；action 按 SHA 固定，permissions 默认 contents: read；
+  agent review 跳过 draft 与 fork PR，需要 ANTHROPIC_API_KEY；renovate.json 周末运行、不自动合并。
+
   技术栈（部分已落地）：Electron（待接入）+ Next.js 16 / React 19 / Tailwind v4 / shadcn 桌面端（3000）；
   NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；
   Storybook 10.6（@storybook/react-vite）与 @storybook/addon-mcp（docs + development 工具集）；

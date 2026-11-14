@@ -1,0 +1,17 @@
+name: Setup
+description: Install pnpm, Node and workspace dependencies
+
+runs:
+  using: composite
+  steps:
+    # 必须先装 pnpm，setup-node 的 cache: pnpm 才能找到它
+    - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      with:
+        version: 12.18.0
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+      with:
+        node-version-file: .nvmrc
+        cache: pnpm
+    # CI 必须使用锁文件；本地已验证 --frozen-lockfile 通过
+    - run: pnpm install --frozen-lockfile
+      shell: bash

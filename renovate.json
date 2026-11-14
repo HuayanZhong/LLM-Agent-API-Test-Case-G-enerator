@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "schedule": ["every weekend"],
+  "minimumReleaseAge": "3 days",
+  "automerge": false,
+  "packageRules": [
+    {
+      "matchPackageNames": ["next", "react", "react-dom"],
+      "groupName": "react"
+    },
+    {
+      "matchPackageNames": ["@nestjs/*"],
+      "groupName": "nestjs"
+    },
+    {
+      "matchPackageNames": ["vitest", "@vitest/*", "@testing-library/*"],
+      "groupName": "testing"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": false
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["every weekend"]
+  }
+}

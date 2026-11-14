@@ -33,7 +33,7 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
-- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`。
+- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
@@ -54,7 +54,17 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 - `.mcp.json`：项目级 chrome-devtools MCP，固定 `chrome-devtools-mcp@1.13.0`，通过 `pnpm dlx` 启动。Storybook 的 `http://127.0.0.1:6006/mcp` 只在 dev 时可用，不写进常驻配置，需要时在本地 MCP 设置里临时加入。
 - `.claude/commands/opsx.md`：`/opsx` 快捷入口。
+- `.github/copilot-instructions.md`：Copilot review 的项目红线、注释与测试约定。
 - 不配置项目级 `.claude/settings.json`，权限沿用默认模式与全局设置。
+
+## CI 与自动化
+
+- `.github/workflows/` 按职责拆成 `quality`、`test`、`build`、`security`、`agent-review`、`labeler`；安装逻辑统一走 `.github/actions/setup/action.yml`（pnpm 12.18.0 + `.nvmrc` + `--frozen-lockfile`）。
+- 所有 action 按 SHA 固定，`permissions` 默认 `contents: read`，checkout 统一 `persist-credentials: false`；`push` 只跑 `main`，并响应 `merge_group`。
+- `agent-review.yml` 只评论、不 approve、不改代码；跳过 draft 与 fork PR；需要仓库 Secrets 的 `ANTHROPIC_API_KEY`，fork PR 不注入。`labeler.yml` 用 `pull_request_target` 但不 checkout、不执行 PR 代码。
+- `renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并；GitHub Actions digest 由 `helpers:pinGitHubActionDigests` 固定。
+- required checks 先只开 `quality` 与 `test`，观察一轮再考虑 `build` / `security` / `agent-review`。
+- `.github/` 与 `renovate.json` 由 `pnpm format:root` 检查。
 
 ## 仓库结构
 
@@ -65,6 +75,8 @@ apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
 packages/typescript-config/  共享 tsconfig profile（@workspace/typescript-config）
 packages/vitest-config/      共享 Vitest profile（@workspace/vitest-config）
+.github/         CI 工作流、复合 action、Copilot 指令与协作模板
+renovate.json    依赖升级与 GitHub Actions digest 固定
 .oxlintrc.json   共享 Oxlint 配置（不用 packages 包化）
 .oxfmtrc.json    共享 Oxfmt 配置
 doc/             当前设计的事实来源

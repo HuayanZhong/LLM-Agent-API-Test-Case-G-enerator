@@ -1,0 +1,12 @@
+# 默认负责人；按目录细化，便于 GitHub 自动请求 review
+* @HuayanZhong
+
+/apps/frontend/ @HuayanZhong
+/apps/backend/ @HuayanZhong
+/apps/bff/ @HuayanZhong
+/packages/ui/ @HuayanZhong
+/packages/typescript-config/ @HuayanZhong
+/packages/vitest-config/ @HuayanZhong
+/.github/ @HuayanZhong
+/openspec/ @HuayanZhong
+/doc/ @HuayanZhong

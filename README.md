@@ -22,6 +22,8 @@
 ├── apps/                # backend（5000）、bff（4000）、frontend（3000）
 ├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
+├── .github/             # CI 工作流、复合 action、协作模板
+├── renovate.json        # 依赖升级与 GitHub Actions digest 固定
 ├── .env.example         # 环境变量声明入口
 ├── .env.development     # 本地开发 / 测试值（gitignored）
 ├── .env.production      # 生产构建值（gitignored）
@@ -94,7 +96,28 @@ Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile�
 
 覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
+
+## CI 与自动化
+
+[![Quality](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/quality.yml/badge.svg)](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/quality.yml)
+[![Test](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/test.yml/badge.svg)](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/test.yml)
+[![Security](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/security.yml/badge.svg)](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/security.yml)
+
+工作流按职责拆分；所有 action 按 SHA 固定，`permissions` 默认 `contents: read`，checkout 统一 `persist-credentials: false`。
+
+| 工作流 | 触发 | 内容 |
+|---|---|---|
+| `quality.yml` | `push: main`、PR、merge queue | `pnpm lint`、`format`、`format:root`、`check-types` |
+| `test.yml` | 同上 | `pnpm test`，上传各包 `lcov.info` / `coverage-summary.json` |
+| `build.yml` | 同上 | `pnpm build`，上传 `.next` / `dist`，保留 7 天 |
+| `security.yml` | `push: main`、PR、每周 | zizmor 扫 workflow；`pnpm audit --audit-level=high` |
+| `agent-review.yml` | PR（跳过 draft 与 fork） | Claude Code Action 只评论，不 approve、不改代码 |
+| `labeler.yml` | `pull_request_target` | 按 `apps/frontend`、`packages`、`.github`、文档等路径打标签 |
+
+`renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并，GitHub Actions 自动固定 digest。
+
+agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入 secrets，因此跳过。建议先观察一轮，再把 `quality` 与 `test` 设为 required checks；`build`、`security`、`agent-review` 先不 required，避免成本或误报阻塞合并。
 
 ## 包级文档
 

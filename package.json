@@ -36,8 +36,8 @@
     "lint:fix": "turbo run lint:fix",
     "format": "turbo run format",
     "format:fix": "turbo run format:fix",
-    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json",
-    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json"
+    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json",
+    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json"
   },
   "devDependencies": {
     "@fission-ai/openspec": "catalog:tooling",
