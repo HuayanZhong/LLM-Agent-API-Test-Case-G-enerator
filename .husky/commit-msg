@@ -1,0 +1,2 @@
+# 校验 conventional commits；临时跳过用 git commit --no-verify
+pnpm exec commitlint --edit "$1"

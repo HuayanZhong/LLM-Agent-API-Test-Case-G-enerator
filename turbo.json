@@ -61,7 +61,9 @@
         ".mcp.json",
         "skills-lock.json",
         ".github/**",
-        "renovate.json"
+        "renovate.json",
+        "lint-staged.config.mjs",
+        "commitlint.config.mjs"
       ]
     },
     "//#format:root:fix": {

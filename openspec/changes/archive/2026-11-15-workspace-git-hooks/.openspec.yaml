@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-15
+goal: 让暂存文件在提交前自动 lint 与格式化，并统一提交信息格式；不引入 pre-push 全量检查
+skip_specs: true

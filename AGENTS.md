@@ -17,6 +17,7 @@
 - 测试：`pnpm test`（Turbo，行覆盖率 ≥ 95%）、`pnpm test:watch`；profile 与测试文件约定见 [packages/vitest-config/CLAUDE.md](packages/vitest-config/CLAUDE.md)
 - Lint 与格式化：`pnpm lint` / `pnpm format`（Turbo，六个包并行）；根配置是 `.oxlintrc.json` / `.oxfmtrc.json`，根文件用 `pnpm format:root`（含 `.mcp.json`、`skills-lock.json`、`.github`、`renovate.json`），规则见 [CLAUDE.md](CLAUDE.md)
 - 构建：`pnpm build`（Turbo，三个 app）
+- 提交前 hook：`pre-commit` 只对暂存文件跑 `oxlint --fix` / `oxfmt`，`commit-msg` 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 `git commit --no-verify`，见 [CLAUDE.md](CLAUDE.md)
 - 设计文档索引：[doc/README.md](doc/README.md)
 
 修改规则时改上面三处，不要在多份文件里各写一套。

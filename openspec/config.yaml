@@ -29,6 +29,9 @@ context: |
   共用 .github/actions/setup；action 按 SHA 固定，permissions 默认 contents: read；
   agent review 跳过 draft 与 fork PR，需要 ANTHROPIC_API_KEY；renovate.json 周末运行、不自动合并。
 
+  提交门禁：husky 经 prepare 安装，pre-commit 用 lint-staged 只对暂存文件跑 oxlint --fix 与 oxfmt，
+  commit-msg 用 commitlint 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 git commit --no-verify。
+
   技术栈（部分已落地）：Electron（待接入）+ Next.js 16 / React 19 / Tailwind v4 / shadcn 桌面端（3000）；
   NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；
   Storybook 10.6（@storybook/react-vite）与 @storybook/addon-mcp（docs + development 工具集）；

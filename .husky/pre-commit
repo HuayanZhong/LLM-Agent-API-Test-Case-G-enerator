@@ -1,0 +1,2 @@
+# 只处理暂存文件；全量检查由 CI 的 quality workflow 负责
+pnpm exec lint-staged

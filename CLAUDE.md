@@ -37,6 +37,8 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
+**提交前 hook**：`pnpm install` 经 `prepare` 安装 husky（`core.hooksPath` = `.husky/_`）。`pre-commit` 跑 `lint-staged`，只对暂存文件执行 `oxlint --fix` 与 `oxfmt`，并覆盖根配置、`.github/`、`renovate.json`，不处理 Markdown；`commit-msg` 跑 `commitlint`，校验 conventional 的 `type(scope): subject`，scope 不设白名单。hook 只做本地提前检查：全量 `lint` / `format` / `check-types` / `test` 仍由 CI 的 `quality` 与 `test` workflow 判定。临时跳过用 `git commit --no-verify`。
+
 **环境变量**：根目录 `.env.example` 是唯一声明入口，当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）与 `NEXT_PUBLIC_BFF_URL`。实际值放 `.env`、`.env.development`、`.env.production`（均被忽略），加载顺序为后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。前端 `NEXT_PUBLIC_*` 的实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载。新增变量必须同时写进 `turbo.json` 对应任务的 `env`，否则 strict 模式会把它过滤掉。
 
 ## OpenSpec 工作流

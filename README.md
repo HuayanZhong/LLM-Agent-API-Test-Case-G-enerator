@@ -23,6 +23,9 @@
 ├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .github/             # CI 工作流、复合 action、协作模板
+├── .husky/              # pre-commit 与 commit-msg
+├── commitlint.config.mjs # 提交信息规则
+├── lint-staged.config.mjs # 暂存文件的 oxlint / oxfmt 分派
 ├── renovate.json        # 依赖升级与 GitHub Actions digest 固定
 ├── .env.example         # 环境变量声明入口
 ├── .env.development     # 本地开发 / 测试值（gitignored）
@@ -68,6 +71,17 @@ pnpm --filter frontend build
 ```
 
 `dev` / `test` / `test:watch` 通过 Node 依次加载 `.env` 与 `.env.development`，`build` 加载 `.env` 与 `.env.production`；文件不存在时只打印提示，不影响退出码，后加载的文件覆盖先加载的值。变量必须在 `turbo.json` 的 `env` 中声明，否则 Turbo 的 strict 模式不会把它传给任务。
+
+### 提交前 hook
+
+`pnpm install` 会通过 `prepare` 安装 husky，把 `core.hooksPath` 指向 `.husky/_`：
+
+| hook | 内容 | 作用范围 |
+|---|---|---|
+| `pre-commit` | `lint-staged` → `oxlint --fix` → `oxfmt` | 只处理暂存文件；根配置、`.github/`、`renovate.json` 也在覆盖内，Markdown 不处理 |
+| `commit-msg` | `commitlint --edit` | 校验 `type(scope): subject`，`type` 限 conventional 列表 |
+
+hook 只做本地提前检查，全量 `lint` / `format` / `check-types` / `test` 仍由 CI 的 `quality`、`test` workflow 负责。需要临时跳过时用 `git commit --no-verify`；Windows 上 hook 依赖 Git for Windows 自带的 `sh`（安装 Git 时保留 Git Bash）。
 
 ## 服务与前端骨架
 
