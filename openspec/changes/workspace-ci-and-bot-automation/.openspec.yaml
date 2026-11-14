@@ -1,0 +1,5 @@
+schema: spec-driven
+created: 2026-11-14
+goal: 建立 quality/test/build/security/agent-review 分文件工作流，采用 Renovate 与 Claude
+  Code Action
+skip_specs: true
