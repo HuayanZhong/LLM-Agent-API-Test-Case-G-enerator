@@ -9,6 +9,10 @@
     "check-types": "tsc --noEmit",
     "test": "vitest run --coverage",
     "test:watch": "vitest --watch",
+    "lint": "oxlint . --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint . --fix --no-error-on-unmatched-pattern",
+    "format": "oxfmt --check .",
+    "format:fix": "oxfmt .",
     "start": "next start -p 3000"
   },
   "dependencies": {

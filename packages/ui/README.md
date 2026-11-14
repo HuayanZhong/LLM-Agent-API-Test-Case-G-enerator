@@ -50,6 +50,8 @@ import "@workspace/ui/globals.css"
 ```bash
 pnpm --filter @workspace/ui storybook        # http://127.0.0.1:6006
 pnpm --filter @workspace/ui build-storybook  # 静态产物 storybook-static/
+pnpm --filter @workspace/ui lint             # oxlint .，根配置
+pnpm --filter @workspace/ui format           # oxfmt --check .，根配置
 ```
 
 - Storybook 10.6 使用 `@storybook/react-vite`，只读源码，不额外构建 UI 包。
@@ -62,7 +64,7 @@ pnpm --filter @workspace/ui build-storybook  # 静态产物 storybook-static/
 - 依赖走 `frontend` catalog；Storybook 相关走 `storybook` catalog；`shadcn` 走 `tooling`。
 - 不放页面、路由、业务组件；这些属于 `apps/frontend`。
 - `exports` 与 `src` 目录结构必须同步；新增顶层目录时补 export。`stories/` 不对外导出。
-- 当前没有独立构建、测试与 lint；Storybook 只承担预览、文档与 MCP。
+- 当前没有独立构建；测试与 lint / format 已接入，Storybook 只承担预览、文档与 MCP。
 
 ## 相关文档
 

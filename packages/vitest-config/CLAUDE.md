@@ -10,6 +10,7 @@
 
 - 无端口、无 dev/build 脚本。
 - `pnpm --filter @workspace/vitest-config check-types` 做本包类型检查。
+- `pnpm --filter @workspace/vitest-config lint` / `format` 检查本包源码，配置用根 `.oxlintrc.json` / `.oxfmtrc.json`。
 - 消费侧验证：`pnpm --filter backend test`、`pnpm --filter bff test`、`pnpm --filter frontend test`、`pnpm --filter @workspace/ui test`；仓库根是 `pnpm test`。
 
 ## 目录与入口
@@ -24,7 +25,7 @@
 - 覆盖率公共项只在这里：`provider: "v8"`、`reporter: ["text", "html"]`、`thresholds: { lines: 95 }`。`coverage.enabled` 不打开，交给各包 `test` 脚本的 `--coverage`。
 - 不把 `globals: true` 放进 profile。测试文件显式 `import`，也避免 `vitest/globals` 与 `nest build` 的老问题。
 - 本包以 `.ts` 源码加载，依赖 Node 26 类型剥离与 pnpm 符号链接；不要把包目录复制进 `node_modules`，也不要把 `exports` 改到 `dist`。
-- 不引入 `@storybook/addon-vitest`、Playwright、oxlint、Prettier；这些由后续变更处理。
+- 不引入 `@storybook/addon-vitest`、Playwright；Oxlint / Oxfmt 配置在仓库根，本包只提供 `lint` / `format` 脚本。
 
 ## 改动前读什么
 

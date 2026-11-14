@@ -5,6 +5,7 @@
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
 - BFF：[../bff/AGENTS.md](../bff/AGENTS.md)
+- Lint / 格式化：`pnpm --filter backend lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 项目工作流：`openspec/`（OpenSpec 2.0）
 

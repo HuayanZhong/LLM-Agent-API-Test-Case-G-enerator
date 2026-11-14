@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 骨架、`packages/ui` 的共享组件包，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块、测试与 lint 尚未实现。
+设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 骨架、`packages/ui` 的共享组件包，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块尚未实现，测试与 lint / format 已接入。
 
 ## 常用命令
 
@@ -16,16 +16,21 @@ pnpm dev          # 根脚本：turbo run dev
 pnpm check-types  # 根脚本：turbo run check-types
 pnpm test         # 根脚本：turbo run test（行覆盖率 < 95% 失败）
 pnpm test:watch   # 根脚本：turbo run test:watch
+pnpm lint         # 根脚本：turbo run lint（六个包并行 oxlint）
+pnpm lint:fix     # 根脚本：turbo run lint:fix
+pnpm format       # 根脚本：turbo run format（六个包并行 oxfmt --check）
+pnpm format:fix   # 根脚本：turbo run format:fix
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）与 `test:watch`（persistent、不缓存）；各 app 自己仍有 `build` / `start`，Turbo 的 build / lint 尚未接入。
-- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
+- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`，`globalDependencies` 纳入两个 Oxc 根配置。各 app 自己仍有 `build` / `start`，Turbo 的 build 尚未接入。
+- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn、Oxlint、Oxfmt）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 - 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.tsx`。
+- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 不在任何包内，格式化需手工保持。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
@@ -57,6 +62,8 @@ apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
 packages/typescript-config/  共享 tsconfig profile（@workspace/typescript-config）
 packages/vitest-config/      共享 Vitest profile（@workspace/vitest-config）
+.oxlintrc.json   共享 Oxlint 配置（不用 packages 包化）
+.oxfmtrc.json    共享 Oxfmt 配置
 doc/             当前设计的事实来源
 ```
 
@@ -77,7 +84,7 @@ doc/             当前设计的事实来源
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；四个包的 Vitest 配置与 `health` / 页面 / `Button` 冒烟测试，根 `pnpm test` 行覆盖率门槛 95%。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 骨架（3000，`src/`）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；四个包的 Vitest 配置与 `health` / 页面 / `Button` 冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与六个包的 lint / format 脚本。
 - 桌面端：Electron 壳待接入；Next.js 前端已可独立运行，通过 `@workspace/ui` 引用共享组件。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。
@@ -94,10 +101,10 @@ doc/             当前设计的事实来源
 
 ## JSON Schema 约定
 
-- 优先使用依赖包自带的本地 schema，例如 `turbo.json` 的 `./node_modules/turbo/schema.json`；升级依赖时 schema 随包同步升级。
+- 优先使用依赖包自带的本地 schema，例如 `turbo.json` 的 `./node_modules/turbo/schema.json`、`.oxlintrc.json` 的 `./node_modules/oxlint/configuration_schema.json`、`.oxfmtrc.json` 的 `./node_modules/oxfmt/configuration_schema.json`；升级依赖时 schema 随包同步升级。
 - 不要使用未版本化的远程 schema（如 `https://turbo.build/schema.json`）。远程地址会独立更新，容易和已安装 CLI 版本漂移；VSCode 还会因域名不受信任而报错。
 - 标准生态 schema（GitHub Actions、Docker Compose 等）可以用 schemastore 或版本化 URL；需要时把域名加入 VSCode 的 `json.schemaDownload.trustedDomains`。
-- `tsconfig.json`、ESLint、Prettier、Next/Nest 配置通常不需要 `$schema`，不要为了消警告硬加远程 schema。
+- `tsconfig.json` 与 Next/Nest 配置通常不需要 `$schema`，不要为了消警告硬加远程 schema；Oxc 的两个配置文件直接用本地 schema。
 
 ## 架构约束
 

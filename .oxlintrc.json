@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "react",
+    "jsx-a11y",
+    "nextjs",
+    "vitest",
+    "node",
+    "promise"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "options": {
+    "maxWarnings": 0
+  },
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    "doc/**",
+    "openspec/**",
+    "packages/ui/storybook-static/**"
+  ],
+  "settings": {
+    "next": {
+      "rootDir": "apps/frontend/"
+    }
+  },
+  "rules": {
+    "import/no-unassigned-import": "off"
+  },
+  "overrides": [
+    {
+      "files": ["packages/ui/**"],
+      "rules": {
+        "nextjs/no-html-link-for-pages": "off"
+      }
+    }
+  ]
+}

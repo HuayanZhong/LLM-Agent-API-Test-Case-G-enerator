@@ -6,6 +6,7 @@
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 消费示例：`apps/frontend`、`apps/backend`、`apps/bff`、`packages/ui` 各有一份 tsconfig
+- Lint / 格式化：`pnpm --filter @workspace/typescript-config lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`
 - 项目工作流：`openspec/`（OpenSpec 2.0）
 
 只提取无路径语义的 compilerOptions；`include` / `paths` / `outDir` / `types` / `plugins` 不要搬进来。

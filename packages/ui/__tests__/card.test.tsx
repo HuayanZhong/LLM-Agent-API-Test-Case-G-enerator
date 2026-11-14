@@ -29,9 +29,6 @@ describe("Card", () => {
     expect(screen.getByText("操作")).toBeInTheDocument()
     expect(screen.getByText("内容")).toBeInTheDocument()
     expect(screen.getByText("页脚")).toBeInTheDocument()
-    expect(screen.getByText("标题").closest("[data-slot=card]")).toHaveAttribute(
-      "data-size",
-      "sm",
-    )
+    expect(screen.getByText("标题").closest("[data-slot=card]")).toHaveAttribute("data-size", "sm")
   })
 })

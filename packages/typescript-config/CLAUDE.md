@@ -9,6 +9,7 @@
 ## 命令与端口
 
 - 无端口、无 dev/build 脚本。
+- `pnpm --filter @workspace/typescript-config lint` / `format` 检查本包 JSON 与文档，配置用根 `.oxlintrc.json` / `.oxfmtrc.json`。
 - 验证通过消费包进行：`pnpm exec tsc --showConfig -p apps/backend/tsconfig.json`，或仓库根 `pnpm check-types`。
 
 ## 目录与入口
@@ -26,7 +27,7 @@
 - Next 16 只要看到消费包 tsconfig 含 `extends` 就跳过自动写入，所以 `apps/frontend` 必须自己保留 `plugins`、`next-env.d.ts` 与 `.next/**/*.ts` 的 include。
 - 仓库根没有 `@types/node`，`types: ["node"]` 只能写在 `apps/backend` / `apps/bff` 各自的 tsconfig。
 - 不给 tsconfig 加远程 `$schema`，按 [../../CLAUDE.md](../../CLAUDE.md) 的 JSON Schema 约定。
-- 不把 ESLint / Prettier / Vitest 配置搬进来。
+- 不把 Vitest / Oxlint / Oxfmt 配置搬进来；这些在 `packages/vitest-config` 与仓库根。
 
 ## 改动前读什么
 

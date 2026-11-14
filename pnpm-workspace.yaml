@@ -13,6 +13,8 @@ catalogs:
   tooling:
     "@fission-ai/openspec": ^2.0.0
     turbo: ^2.11.11
+    oxlint: ^1.93.0
+    oxfmt: ^0.78.0
     typescript: ^6.0.3
     "@types/node": ^26.6.6
     shadcn: ^4.23.0
@@ -71,14 +73,14 @@ allowBuilds:
 
 # pnpm 供应链策略：安装 turbo 时自动加入的平台二进制放行项
 minimumReleaseAgeExclude:
-  - '@turbo/darwin-64@2.11.11'
-  - '@turbo/darwin-arm64@2.11.11'
-  - '@turbo/linux-64@2.11.11'
-  - '@turbo/linux-arm64@2.11.11'
-  - '@turbo/windows-64@2.11.11'
-  - '@turbo/windows-arm64@2.11.11'
+  - "@turbo/darwin-64@2.11.11"
+  - "@turbo/darwin-arm64@2.11.11"
+  - "@turbo/linux-64@2.11.11"
+  - "@turbo/linux-arm64@2.11.11"
+  - "@turbo/windows-64@2.11.11"
+  - "@turbo/windows-arm64@2.11.11"
   - turbo@2.11.11
-  - '@fission-ai/openspec@2.0.0'
+  - "@fission-ai/openspec@2.0.0"
   - "@nestjs/common@12.5.0"
   - "@nestjs/core@12.5.0"
   - "@nestjs/platform-express@12.5.0"

@@ -5,6 +5,7 @@
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 时可用
+- Lint / 格式化：`pnpm --filter @workspace/ui lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`
 - 前端应用：[../../apps/frontend/AGENTS.md](../../apps/frontend/AGENTS.md)
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 项目工作流：`openspec/`（OpenSpec 2.0）

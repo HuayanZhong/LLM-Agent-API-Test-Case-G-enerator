@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
+  "globalDependencies": [".oxlintrc.json", ".oxfmtrc.json"],
   "tasks": {
     "dev": {
       "description": "并行启动各工作区的开发服务；persistent 任务，不缓存",
@@ -20,6 +21,24 @@
       "description": "各工作区并行进入 watch 模式；persistent 任务，不缓存",
       "cache": false,
       "persistent": true
+    },
+    "lint": {
+      "description": "各工作区并行运行 oxlint；根配置变更会失效缓存",
+      "dependsOn": ["^lint"]
+    },
+    "lint:fix": {
+      "description": "各工作区并行运行 oxlint --fix；会写文件，不缓存",
+      "cache": false,
+      "dependsOn": ["^lint:fix"]
+    },
+    "format": {
+      "description": "各工作区并行运行 oxfmt --check；根配置变更会失效缓存",
+      "dependsOn": ["^format"]
+    },
+    "format:fix": {
+      "description": "各工作区并行运行 oxfmt；会写文件，不缓存",
+      "cache": false,
+      "dependsOn": ["^format:fix"]
     }
   }
 }

@@ -13,6 +13,8 @@ pnpm --filter bff dev     # 4000
 pnpm --filter bff build
 pnpm --filter bff test    # vitest run --coverage，行覆盖率 ≥ 95%
 pnpm --filter bff test:watch
+pnpm --filter bff lint    # oxlint .，根配置
+pnpm --filter bff format  # oxfmt --check .，根配置
 pnpm --filter bff start:prod
 ```
 
@@ -33,7 +35,8 @@ pnpm --filter bff start:prod
 - `nest build` 会先删 `dist/`（`deleteOutDir`）；`tsconfig.build.json` 的 `**/*spec.ts` 保证测试不进 dist。
 - BFF 只做聚合与会话：不要把用例生成、比对、知识沉淀写进本包。
 - 调 backend 用 HTTP，不直接 import `apps/backend` 的源码。
-- 当前没有鉴权、CORS、SSE 与 lint；测试已接入，但只有 `health` 冒烟用例。新增时先走 OpenSpec 提案。
+- 当前没有鉴权、CORS 与 SSE；测试与 lint / format 已接入，但只有 `health` 冒烟用例。新增时先走 OpenSpec 提案。
+- Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Nest 源文件已统一为双引号、无分号。
 
 ## 改动前读什么
 

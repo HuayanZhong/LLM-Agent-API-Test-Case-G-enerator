@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-14
+goal: 用 Oxc 质量工具替换缺失的 lint 与格式化能力，并保持现有 tsconfig / Vitest / Turbo 约定
+skip_specs: true

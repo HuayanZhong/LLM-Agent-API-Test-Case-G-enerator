@@ -17,6 +17,8 @@ pnpm --filter backend dev        # nest start --watch，5000
 pnpm --filter backend build      # nest build，输出 dist/
 pnpm --filter backend start      # nest start
 pnpm --filter backend start:prod # node dist/main
+pnpm --filter backend lint       # oxlint .，根配置
+pnpm --filter backend format     # oxfmt --check .，根配置
 ```
 
 ## 目录
@@ -35,7 +37,7 @@ apps/backend/
 
 - 依赖走 `pnpm-workspace.yaml` 的 `backend` catalog；`typescript`、`@types/node` 走 `tooling`。
 - 不直接 import `apps/bff` 或前端源码；跨进程只走 HTTP / A2A。
-- 当前没有数据库、Agent、测试与 lint。
+- 当前没有数据库、Agent；测试与 lint / format 已接入。
 
 ## 相关文档
 

@@ -8,10 +8,15 @@ workspace 共享 TypeScript 配置包。只放 `tsconfig` profile，不产出运
 
 ## 运行
 
-本包没有 scripts，也没有构建产物。消费方在 `package.json` 的 `devDependencies` 声明：
+本包没有构建产物；只提供 `lint` / `format` 脚本，用于检查本包的 JSON 与文档。消费方在 `package.json` 的 `devDependencies` 声明：
 
 ```json
 "@workspace/typescript-config": "workspace:*"
+```
+
+```bash
+pnpm --filter @workspace/typescript-config lint    # oxlint .，根配置
+pnpm --filter @workspace/typescript-config format  # oxfmt --check .，根配置
 ```
 
 然后在本包 `tsconfig.json` 里继承：
@@ -47,7 +52,7 @@ packages/typescript-config/
 
 - 不依赖任何 npm 包；TypeScript 版本由 `pnpm-workspace.yaml` 的 `catalog:tooling` 决定。
 - 只放无路径语义的 `compilerOptions`。`include` / `exclude` / `paths` / `outDir` / `rootDir` / `types` / `plugins` 必须留在消费包：`extends` 中的路径选项按声明它的文件解析。
-- 不负责 ESLint、Prettier、Vitest 配置；这些工具链后续单独接入。
+- 不负责 Vitest、Oxlint / Oxfmt 的配置：Vitest profile 在 `packages/vitest-config`，Oxc 配置在仓库根。
 
 ## 相关文档
 

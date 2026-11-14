@@ -13,6 +13,8 @@ pnpm --filter backend dev     # 5000
 pnpm --filter backend build
 pnpm --filter backend test    # vitest run --coverage，行覆盖率 ≥ 95%
 pnpm --filter backend test:watch
+pnpm --filter backend lint    # oxlint .，根配置
+pnpm --filter backend format  # oxfmt --check .，根配置
 pnpm --filter backend start:prod
 ```
 
@@ -32,7 +34,8 @@ pnpm --filter backend start:prod
 - 覆盖率只卡行覆盖率 95%（`coverage.thresholds.lines`）；`src/main.ts` 是 bootstrap 入口，已在 `coverage.exclude` 中排除。
 - `nest build` 会先删 `dist/`（`deleteOutDir`）；`tsconfig.build.json` 的 `**/*spec.ts` 保证测试不进 dist。
 - 系统红线：只诊断与复验，不改被测代码；测试报告是唯一交付物。业务实现时不要越界。
-- 当前没有数据库、Agent 与 lint；测试已接入，但只有 `health` 冒烟用例。新增能力先走 OpenSpec 提案。
+- 当前没有数据库与 Agent；测试与 lint / format 已接入，但只有 `health` 冒烟用例。新增能力先走 OpenSpec 提案。
+- Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Nest 源文件已统一为双引号、无分号。
 
 ## 改动前读什么
 

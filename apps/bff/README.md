@@ -17,6 +17,8 @@ pnpm --filter bff dev        # nest start --watch，4000
 pnpm --filter bff build      # nest build，输出 dist/
 pnpm --filter bff start      # nest start
 pnpm --filter bff start:prod # node dist/main
+pnpm --filter bff lint       # oxlint .，根配置
+pnpm --filter bff format     # oxfmt --check .，根配置
 ```
 
 ## 目录
@@ -35,7 +37,7 @@ apps/bff/
 
 - 依赖走 `pnpm-workspace.yaml` 的 `backend` catalog；`typescript`、`@types/node` 走 `tooling`。
 - 与 backend 之间用 HTTP 调用，不直接 import backend 的源码。
-- 当前没有鉴权、CORS、SSE 实现与测试 / lint。
+- 当前没有鉴权、CORS、SSE 实现；测试与 lint / format 已接入。
 
 ## 相关文档
 

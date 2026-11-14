@@ -8,7 +8,13 @@ workspace 共享 Vitest 配置包。只发源码、不做 build；各包在 `vit
 
 ## 运行
 
-本包没有 dev/build 脚本，只有 `check-types`。消费方在 `devDependencies` 声明：
+本包没有 dev/build 脚本；提供 `check-types`、`lint` 与 `format`。消费方在 `devDependencies` 声明：
+
+```bash
+pnpm --filter @workspace/vitest-config check-types
+pnpm --filter @workspace/vitest-config lint    # oxlint .，根配置
+pnpm --filter @workspace/vitest-config format  # oxfmt --check .，根配置
+```
 
 ```json
 "@workspace/vitest-config": "workspace:*"
@@ -50,7 +56,7 @@ packages/vitest-config/
 - `vitest` 只用于类型（`import type { ViteUserConfig }`）；运行时零依赖。
 - 只放无路径语义的 `test` 选项。`include` / `setupFiles` / `coverage.include` / `coverage.exclude` 必须留在消费包：Vitest 按包根解析这些路径，放进本包会指错位置。
 - 本包以 `.ts` 源码直接给 Node 加载，依赖 Node 26 的类型剥离与 pnpm 的 workspace 符号链接（`engines` 已锁 `>=26.12.1`）；不要把本包目录复制进 `node_modules`。
-- 不负责 Storybook `addon-vitest`、Playwright、oxlint、Prettier。
+- Oxlint / Oxfmt 配置在仓库根，本包只提供 `lint` / `format` 脚本；不负责 Storybook `addon-vitest` 与 Playwright。
 
 ## 相关文档
 

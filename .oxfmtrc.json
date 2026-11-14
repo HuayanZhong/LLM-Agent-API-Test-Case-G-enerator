@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 100,
+  "semi": false,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "sortPackageJson": false,
+  "sortImports": false,
+  "sortTailwindcss": false,
+  "ignorePatterns": [
+    ".agents/**",
+    ".claude/**",
+    "doc/**",
+    "openspec/**",
+    "packages/ui/storybook-static/**",
+    "**/*.md",
+    "**/*.mdx",
+    "apps/frontend/next-env.d.ts"
+  ]
+}

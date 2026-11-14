@@ -3,5 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "description": "Shared TypeScript configuration profiles for the workspace",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "lint": "oxlint . --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint . --fix --no-error-on-unmatched-pattern",
+    "format": "oxfmt --check .",
+    "format:fix": "oxfmt ."
+  }
 }

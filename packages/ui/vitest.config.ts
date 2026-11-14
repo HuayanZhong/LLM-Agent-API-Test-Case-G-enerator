@@ -1,4 +1,4 @@
-import { coverageConfigDefaults, defineConfig } from "vitest/config"
+import { defineConfig } from "vitest/config"
 import react from "@vitejs/plugin-react"
 import { react as reactProfile } from "@workspace/vitest-config"
 

@@ -30,6 +30,7 @@
 - stories 的 Tailwind 扫描由 `.storybook/storybook.css` 的 `@source "../stories/**/*.{ts,tsx}"` 负责；不要把这条塞进 `globals.css`，否则 app 构建也会扫 story。
 - MCP 端点 `http://127.0.0.1:6006/mcp`，只在 Storybook dev 运行时可用；工具集为 docs + development，暂不含 `test-run`。
 - 测试已接入：`pnpm --filter @workspace/ui test`（`vitest run --coverage`，行覆盖率 ≥ 95%）、`pnpm --filter @workspace/ui test:watch`；测试放 `__tests__/`，`src/` 只留发布源码。
+- Lint / format：`pnpm --filter @workspace/ui lint` / `format`，配置用根 `.oxlintrc.json` / `.oxfmtrc.json`；Next.js 规则不适用于本包，已在配置里 override。
 - 仍不引入 `@storybook/addon-vitest`、Playwright；MCP 工具集保持 docs + development。
 
 ## 测试

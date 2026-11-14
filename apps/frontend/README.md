@@ -16,6 +16,8 @@
 pnpm --filter frontend dev     # next dev -p 3000
 pnpm --filter frontend build   # next build
 pnpm --filter frontend start   # next start -p 3000
+pnpm --filter frontend lint    # oxlint .，根配置
+pnpm --filter frontend format  # oxfmt --check .，根配置
 ```
 
 ## 目录
@@ -37,7 +39,7 @@ apps/frontend/
 - 依赖版本统一走 `pnpm-workspace.yaml` 的 `frontend` catalog；`typescript`、`@types/node` 走 `tooling`。
 - UI 组件、`cn()` 与 Tailwind 主题都在 `packages/ui`，本包不放 `components/ui`。
 - 新增 shadcn 组件必须在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`。
-- 当前没有测试与 lint；Electron 壳尚未接入。
+- 测试与 lint / format 已接入；Electron 壳尚未接入。
 
 ## 相关文档
 
