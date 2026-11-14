@@ -5305,8 +5305,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
         <!-- Components -->
-        <g id="node-desktop" data-node-id="desktop" data-node-label="前端 / 桌面端（3000）" tabindex="0" role="button" aria-label="聚焦前端 / 桌面端（3000），Next.js 16 + React 19；Electron 待接入, 前端 · Next.js（3000）" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Next.js 16 + React 19；Electron 待接入" data-node-tag="桌面端" data-node-context="前端 · Next.js（3000）">
-          <title>前端 / 桌面端（3000） · Next.js 16 + React 19；Electron 待接入 · 前端 · Next.js（3000） · 桌面端</title>
+        <g id="node-desktop" data-node-id="desktop" data-node-label="前端 / 桌面端（3000）" tabindex="0" role="button" aria-label="聚焦前端 / 桌面端（3000），Next.js 16 + React 19；Electron 45 + Forge 8（静态托管）, 前端 · Next.js（3000）" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Next.js 16 + React 19；Electron 45 + Forge 8（静态托管）" data-node-tag="桌面端" data-node-context="前端 · Next.js（3000）">
+          <title>前端 / 桌面端（3000） · Next.js 16 + React 19；Electron 45 + Forge 8（静态托管） · 前端 · Next.js（3000） · 桌面端</title>
           <rect x="60" y="60" width="300" height="90" rx="8" class="c-mask"/>
           <rect x="60" y="60" width="300" height="90" rx="8" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(66 66) scale(0.6875)">
@@ -5316,7 +5316,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="210" y="103" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">前端 / 桌面端（3000）</text>
-        <text data-detail="context" x="210" y="119" class="t-muted" font-size="9" text-anchor="middle">Next.js 16 + React 19；Electron 待接入</text>
+        <text data-detail="context" x="210" y="119" class="t-muted" font-size="8.6" text-anchor="middle">Next.js 16 + React 19；Electron 45 + Forge 8（静态托管）</text>
         <text data-detail="fine" x="210" y="142" class="t-frontend" font-size="7" text-anchor="middle">桌面端</text>
         </g>
 
@@ -5730,9 +5730,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <h3>桌面端与本地进程</h3>
         </div>
         <ul>
-          <li>Electron 主进程管理窗口、密钥与本地进程；渲染进程只跑界面</li>
-          <li>Next.js 独立运行（3000）；BFF 是独立 NestJS 服务（4000），只做会话、SSE 与聚合</li>
-          <li>当前三个服务可独立启动（3000 / 4000 / 5000）；Electron 接入后由主进程统一拉起</li>
+          <li>Electron 主进程管理窗口与 app:// 静态资源，并预留本地进程与密钥管理；渲染进程只跑界面</li>
+          <li>开发态 Next.js 独立运行（3000）；打包后为静态导出，由 Electron 主进程托管；BFF 是独立 NestJS 服务（4000），只做会话、SSE 与聚合</li>
+          <li>当前三个服务可独立启动（3000 / 4000 / 5000）；Electron 主进程托管前端静态资源，BFF / backend / MCP 仍由各自脚本启动（后续再由主进程统一拉起）</li>
         </ul>
       </div>
 
@@ -5783,7 +5783,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <li>LangGraph 检查点落 Postgres；任务队列 + Worker 承担长任务与并发上限</li>
           <li>模型网关做供应商切换、降级、限流与 token 预算；Prompt / 模型版本要可追溯</li>
           <li>日志、请求 ID、Agent 轨迹与 token 成本；黄金集评测幻觉断言率与通过率</li>
-          <li>Electron 接入后，主进程管理 Next / NestJS / MCP 的启动顺序、端口与优雅退出</li>
+          <li>Electron 主进程托管前端静态资源；BFF / backend / MCP 的启动顺序、端口与优雅退出留到后续变更</li>
         </ul>
       </div>
     </div>

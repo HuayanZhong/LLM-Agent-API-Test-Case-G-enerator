@@ -1,6 +1,6 @@
 # AGENTS.md
 
-`apps/frontend` 是 Next.js 16 前端骨架，监听 3000；UI 组件在 `packages/ui`。
+`apps/frontend` 是 Next.js 16 前端骨架，开发态监听 3000，构建为静态导出（`out/`）后由 `apps/desktop` 托管；UI 组件在 `packages/ui`。
 
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)

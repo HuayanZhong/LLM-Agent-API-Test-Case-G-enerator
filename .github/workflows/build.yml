@@ -28,6 +28,8 @@ jobs:
           name: build-outputs
           path: |
             apps/frontend/.next
+            apps/frontend/out
+            apps/desktop/renderer
             apps/backend/dist
             apps/bff/dist
           retention-days: 7

@@ -10,13 +10,14 @@ Next.js 16 App Router 前端骨架：页面、布局、app 级 block。共享 UI
 
 ```bash
 pnpm --filter frontend dev     # 3000
-pnpm --filter frontend build
+pnpm --filter frontend build   # next build，产出 out/
 pnpm --filter frontend test    # vitest run --coverage，行覆盖率 ≥ 95%
 pnpm --filter frontend test:watch
 pnpm --filter frontend lint    # oxlint .，根配置
 pnpm --filter frontend format  # oxfmt --check .，根配置
-pnpm --filter frontend start
 ```
+
+`next start` 已移除：`output: "export"` 下没有 Next 运行时服务，生产桌面端由 `apps/desktop` 通过 `app://` 托管 `out/`。
 
 ## 目录与入口
 
@@ -39,7 +40,9 @@ pnpm --filter frontend start
 - 覆盖率只卡行覆盖率 95%；`src/app/layout.tsx` 是 Next 根布局（html/body/metadata），已在 `coverage.exclude` 中排除。
 - Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Next.js 规则只在本包生效，`packages/ui` 另有 override。
 - Vitest 不支持 async Server Components；遇到 `async` 页面用 e2e，不要在 `__tests__` 里强行渲染。
-- Electron 壳尚未接入；不要假设存在主进程或 IPC。
+- `next.config.ts` 的 `output: "export"`、`trailingSlash: true`、`images: { unoptimized: true }` 是桌面托管的前提，不要改回服务端模式。
+- 静态导出不支持 SSR、动态 Route Handler、Server Actions、cookies、rewrites / redirects / headers、proxy、ISR、默认图片优化与无 `generateStaticParams` 的动态路由；需要这些能力时先走 OpenSpec 变更，不要只在 `next dev` 里验证。
+- Electron 桌面壳在 `apps/desktop`；本包不直接 import Electron，页面只通过 HTTP / BFF 或 preload 暴露的接口与宿主交互。
 
 ## 改动前读什么
 
@@ -53,4 +56,4 @@ pnpm --filter frontend start
 - `pnpm --filter frontend dev` 后访问 `http://localhost:3000`，页面与组件正常渲染。
 - 改样式后确认 `.next` 产出的 CSS 同时包含 app 侧与 ui 侧类名。
 - `pnpm --filter frontend test` 用例通过，行覆盖率 ≥ 95%。
-- `pnpm --filter frontend check-types` 与 `pnpm --filter frontend build` 退出码 0。
+- `pnpm --filter frontend check-types` 与 `pnpm --filter frontend build` 退出码 0，且 `apps/frontend/out/index.html`、`out/404.html` 与 `out/_next` 存在。

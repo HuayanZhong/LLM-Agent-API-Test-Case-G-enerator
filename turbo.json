@@ -7,12 +7,17 @@
       "description": "并行启动各工作区的开发服务；persistent 任务，不缓存",
       "cache": false,
       "persistent": true,
-      "env": ["BACKEND_PORT", "BFF_PORT"]
+      "env": ["BACKEND_PORT", "BFF_PORT", "ELECTRON_RENDERER_URL"]
     },
     "build": {
       "description": "各工作区并行构建；产物进 Turbo 缓存",
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "out/**"]
+    },
+    "desktop#build": {
+      "description": "桌面包：先完成前端静态导出，再把 out 复制为 renderer；不触发 Electron 打包",
+      "dependsOn": ["frontend#build"],
+      "outputs": ["renderer/**"]
     },
     "check-types": {
       "description": "各工作区并行做类型检查",

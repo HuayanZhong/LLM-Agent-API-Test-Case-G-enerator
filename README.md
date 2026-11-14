@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库已有三个可运行的骨架：`apps/frontend`（Next.js）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest 与 Oxc 配置在 `packages/`；业务模块尚未实现。
+> 当前仓库已有四个可运行的应用骨架：`apps/frontend`（Next.js 静态导出前端）、`apps/desktop`（Electron 桌面壳）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest 与 Oxc 配置在 `packages/`；业务模块尚未实现。
 
 ## 目录结构
 
@@ -19,7 +19,7 @@
 ├── doc/                 # 业务架构、技术架构与数据模型图
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 与第三方技能；.claude/skills/ 是同步副本
-├── apps/                # backend（5000）、bff（4000）、frontend（3000）
+├── apps/                # desktop（Electron）、backend（5000）、bff（4000）、frontend（3000）
 ├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .github/             # CI 工作流、复合 action、协作模板
@@ -49,25 +49,26 @@
 - pnpm >= 12.18.0（仓库锁定 `pnpm@12.18.0`，见 `packageManager`）
 - Windows：执行 `git config --global core.longpaths true`，避免深层 `node_modules` 或 git worktree 路径触发 `Filename too long`
 
-依赖版本统一放在 `pnpm-workspace.yaml` 的 `catalogs` 中管理；根 `package.json` 通过 `catalog:tooling` 引用 Turbo、Oxlint 与 Oxfmt。
+依赖版本统一放在 `pnpm-workspace.yaml` 的 `catalogs` 中管理；根 `package.json` 通过 `catalog:tooling` 引用 Turbo、Oxlint 与 Oxfmt。`nodeLinker: hoisted` 是 Electron Forge 8 的硬性要求，不能改回 isolated；Electron 二进制按需下载，无法直连 GitHub Releases 时用 `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`。
 
 `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
 
 ```bash
 pnpm install
-pnpm dev                    # 加载 .env → .env.development 后 turbo run dev：并行启动 backend、bff 与 frontend
-pnpm build                  # 加载 .env → .env.production 后 turbo run build：构建三个 app，产物进 Turbo 缓存
-pnpm check-types            # turbo run check-types：五个包并行类型检查
-pnpm test                   # 加载 .env → .env.development 后 turbo run test：四个包并行跑 Vitest，行覆盖率 ≥ 95%
-pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：四个包并行 watch
-pnpm lint                   # turbo run lint：六个包并行 oxlint
+pnpm dev                    # 加载 .env → .env.development 后 turbo run dev：并行启动 backend、bff、frontend 与 desktop
+pnpm build                  # 加载 .env → .env.production 后 turbo run build：构建四个 app（desktop 复制 renderer）
+pnpm check-types            # turbo run check-types：六个包并行类型检查
+pnpm test                   # 加载 .env → .env.development 后 turbo run test：五个包并行跑 Vitest，行覆盖率 ≥ 95%
+pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：五个包并行 watch
+pnpm lint                   # turbo run lint：七个包并行 oxlint
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
-pnpm format                 # turbo run format：六个包并行 oxfmt --check
+pnpm format                 # turbo run format：七个包并行 oxfmt --check
 pnpm format:fix             # turbo run format:fix：写入格式化
 pnpm format:root            # 根配置文件 oxfmt --check（不属于任何 workspace 包）
 pnpm format:root:fix        # 写入根配置文件格式
 pnpm --filter frontend dev  # 只启动 Next 前端（3000）
 pnpm --filter frontend build
+pnpm --filter desktop make  # 生成 Windows x64 ZIP（需先有 apps/frontend/out）
 ```
 
 `dev` / `test` / `test:watch` 通过 Node 依次加载 `.env` 与 `.env.development`，`build` 加载 `.env` 与 `.env.production`；文件不存在时只打印提示，不影响退出码，后加载的文件覆盖先加载的值。变量必须在 `turbo.json` 的 `env` 中声明，否则 Turbo 的 strict 模式不会把它传给任务。
@@ -89,12 +90,13 @@ hook 只做本地提前检查，全量 `lint` / `format` / `check-types` / `test
 |---|---|---|---|
 | backend | `apps/backend` | 5000 | `GET /health` |
 | BFF | `apps/bff` | 4000 | `GET /health` |
-| 前端 | `apps/frontend` | 3000 | `/` |
+| 前端 | `apps/frontend` | 3000 | `/`（静态导出） |
+| 桌面壳 | `apps/desktop` | 无独立端口 | 开发态加载 3000；生产态 `app://bundle/` |
 | Storybook | `packages/ui` | 6006 | `pnpm --filter @workspace/ui storybook` |
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块；测试与 lint / format 已接入，只有一个 `health` 冒烟用例。
 
-前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。新增组件时必须让 CLI 以 app 工作区为目标：
+前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。前端使用 `output: "export"`，`pnpm --filter frontend build` 产出 `apps/frontend/out/`；`next start` 已移除。新增组件时必须让 CLI 以 app 工作区为目标：
 
 ```bash
 pnpm dlx shadcn@latest add <component> -c apps/frontend
@@ -102,15 +104,17 @@ pnpm dlx shadcn@latest add <component> -c apps/frontend
 
 UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/frontend/src/components`。
 
+桌面壳在 `apps/desktop`，使用 Electron Forge 8 + Electron 45：开发态加载 `http://localhost:3000`，生产态通过 `app://bundle/` 托管 `apps/frontend/out`，不启动 Next 服务。`pnpm build` 先完成前端静态导出，再由 Turbo 的 `desktop#build` 复制到 `apps/desktop/renderer`；`pnpm --filter desktop make` 生成 Windows x64 ZIP。BFF / backend / MCP 的进程托管不在本期范围。
+
 `packages/ui` 的 Storybook 在 6006 提供组件预览与 MCP 端点 `http://127.0.0.1:6006/mcp`；MCP 只在 Storybook dev 运行时可用，当前为 docs + development 工具集。
 
-四个包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
+前端、NestJS 与 UI 包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`；desktop 直接继承 `base` 并改 `moduleResolution: Bundler`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
 
 Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
 
 覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完七个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
 
 ## CI 与自动化
 
@@ -140,6 +144,7 @@ agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入
 | 包 | 说明 | AI 规则 | 跨工具入口 |
 |---|---|---|---|
 | `apps/frontend` | [README](apps/frontend/README.md) | [CLAUDE](apps/frontend/CLAUDE.md) | [AGENTS](apps/frontend/AGENTS.md) |
+| `apps/desktop` | [README](apps/desktop/README.md) | [CLAUDE](apps/desktop/CLAUDE.md) | [AGENTS](apps/desktop/AGENTS.md) |
 | `apps/bff` | [README](apps/bff/README.md) | [CLAUDE](apps/bff/CLAUDE.md) | [AGENTS](apps/bff/AGENTS.md) |
 | `apps/backend` | [README](apps/backend/README.md) | [CLAUDE](apps/backend/CLAUDE.md) | [AGENTS](apps/backend/AGENTS.md) |
 | `packages/ui` | [README](packages/ui/README.md) | [CLAUDE](packages/ui/CLAUDE.md) | [AGENTS](packages/ui/AGENTS.md) |
@@ -148,7 +153,7 @@ agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入
 
 ## 环境变量
 
-根目录 [.env.example](.env.example) 是唯一声明入口；实际值分别放 `.env`、`.env.development`、`.env.production`（均被忽略）。加载顺序是后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。变量还必须写进 `turbo.json` 的任务 `env` 才会传给任务。当前声明两个端口变量：`BACKEND_PORT`（默认 5000）与 `BFF_PORT`（默认 4000）。
+根目录 [.env.example](.env.example) 是唯一声明入口；实际值分别放 `.env`、`.env.development`、`.env.production`（均被忽略）。加载顺序是后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。变量还必须写进 `turbo.json` 的任务 `env` 才会传给任务。当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）、`ELECTRON_RENDERER_URL`（默认 `http://localhost:3000`）与 `NEXT_PUBLIC_BFF_URL`。
 
 前端浏览器可见变量用 `NEXT_PUBLIC_*`，实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载；变量名仍在根 `.env.example` 声明。
 

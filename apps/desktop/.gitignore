@@ -1,0 +1,7 @@
+# Forge / Vite 生成物
+.vite/
+renderer/
+out/
+
+# Vitest
+coverage/
