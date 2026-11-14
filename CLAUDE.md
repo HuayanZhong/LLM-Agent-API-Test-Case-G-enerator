@@ -12,11 +12,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 pnpm install
-pnpm dev          # 根脚本：turbo run dev
-pnpm build        # 根脚本：turbo run build（三个 app，产物进缓存）
+pnpm dev          # 加载 .env → .env.development 后 turbo run dev
+pnpm build        # 加载 .env → .env.production 后 turbo run build（三个 app，产物进缓存）
 pnpm check-types  # 根脚本：turbo run check-types
-pnpm test         # 根脚本：turbo run test（行覆盖率 < 95% 失败）
-pnpm test:watch   # 根脚本：turbo run test:watch
+pnpm test         # 加载 .env → .env.development 后 turbo run test（行覆盖率 < 95% 失败）
+pnpm test:watch   # 加载 .env → .env.development 后 turbo run test:watch
 pnpm lint         # 根脚本：turbo run lint（六个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
 pnpm format       # 根脚本：turbo run format（六个包并行 oxfmt --check）
@@ -26,24 +26,24 @@ pnpm format:root:fix  # 写入根配置文件格式
 ```
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
-- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`）、`build`（`dependsOn: ["^build"]`，产物 `.next/**`、`dist/**`、`storybook-static/**`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`，`globalDependencies` 纳入两个 Oxc 根配置、`.editorconfig` 与 `.nvmrc`。根配置文件由 `//#format:root` 根任务单独检查。
+- `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`、`env: ["BACKEND_PORT", "BFF_PORT"]`）、`build`（`dependsOn: ["^build"]`，产物 `.next/**`、`dist/**`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`。`globalDependencies` 只有 `.nvmrc`、`.env*` 与 `apps/frontend/.env*`；Oxlint / Oxfmt / `.editorconfig` 通过 `$TURBO_ROOT$` 进入 `lint` / `format` 的任务 `inputs`，改它们不会误伤 build / test 缓存。根配置文件由 `//#format:root` 根任务单独检查。
 - 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn、Oxlint、Oxfmt）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告。
-- 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（4000）与 backend（5000）。
+- 三个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（`BFF_PORT`，默认 4000）与 backend（`BACKEND_PORT`，默认 5000）。`dev` / `test` / `test:watch` 先用 Node 依次加载 `.env` 与 `.env.development`，`build` 加载 `.env` 与 `.env.production`，再由 Turbo 按 strict 模式把声明的变量传给任务。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑四个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
-- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 不在任何包内，格式化需手工保持。
+- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，六个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
 
-**环境变量**：根目录 `.env.example` 是唯一声明入口，当前保持为空；技术选型确认后再补变量。真实 `.env` / `.env.local` / `.env.*` 已被忽略。
+**环境变量**：根目录 `.env.example` 是唯一声明入口，当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）与 `NEXT_PUBLIC_BFF_URL`。实际值放 `.env`、`.env.development`、`.env.production`（均被忽略），加载顺序为后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。前端 `NEXT_PUBLIC_*` 的实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载。新增变量必须同时写进 `turbo.json` 对应任务的 `env`，否则 strict 模式会把它过滤掉。
 
 ## OpenSpec 工作流
 
 本项目用 OpenSpec 2.0 做规格驱动开发。新功能或行为变更先提案、再实现、最后归档；`openspec/specs/` 是行为事实来源。
 
-- 技能：`/openspec-explore`、`/openspec-propose <change>`、`/openspec-apply-change`、`/openspec-update-change`、`/openspec-archive-change`、`/openspec-sync-specs`（技能在 `.agents/skills/`，`.claude/skills/` 下是链接）。
+- 技能：`/openspec-explore`、`/openspec-propose <change>`、`/openspec-apply-change`、`/openspec-update-change`、`/openspec-archive-change`、`/openspec-sync-specs`（技能在 `.agents/skills/`，`.claude/skills/` 是同步副本；升级 OpenSpec 后比对两处）。
 - 快捷入口：`/opsx <explore|propose|apply|update|sync|archive>`，按第一个参数转发到上述技能。
 - CLI：`pnpm exec openspec list`、`show`、`validate --all`、`status`、`archive`。
 - 变更目录：`openspec/changes/<change>/`，含 proposal、specs、design、tasks；归档后进入 `changes/archive/`。
@@ -77,8 +77,8 @@ doc/             当前设计的事实来源
 进入某个包工作时，先读同目录 `CLAUDE.md`。包级文件只写本地事实（命令、端口、目录、坑），全局规则仍以本文件为准。
 
 - `apps/frontend/CLAUDE.md`：Next App Router、shadcn 安装位置、字体与主题、`AGENTS.md` 托管块。
-- `apps/bff/CLAUDE.md`：BFF 边界、ESM 导入后缀、端口 4000。
-- `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、端口 5000。
+- `apps/bff/CLAUDE.md`：BFF 边界、ESM 导入后缀、`BFF_PORT`（默认 4000）。
+- `apps/backend/CLAUDE.md`：领域服务边界、ESM 导入后缀、`BACKEND_PORT`（默认 5000）。
 - `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、Storybook 与 MCP、组件只能从 app 目录添加。
 - `packages/typescript-config/CLAUDE.md`：profile 分工、路径选项不能进共享包、Next 跳过自动写入、`types` 必须留在 app。
 - `packages/vitest-config/CLAUDE.md`：profile 与覆盖率门槛、路径项留在各包、`.ts` 源码加载与 Node 26 前提。

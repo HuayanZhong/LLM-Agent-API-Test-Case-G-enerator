@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-14
+goal: 修复 Turbo strict 环境变量与缓存键、补齐根文件格式化与元数据一致性；不扩展 CI 范围
+skip_specs: true

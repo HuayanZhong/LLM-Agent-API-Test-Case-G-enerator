@@ -30,7 +30,7 @@ pnpm --filter @workspace/typescript-config format  # oxfmt --check .，根配置
 
 | profile | 使用方 | 关键设置 |
 |---|---|---|
-| `base.json` | 被其余 profile 继承 | `ES2023`、`NodeNext`、`strict`、`noUncheckedIndexedAccess`、`incremental: false` |
+| `base.json` | 被其余 profile 继承 | `ES2023`、`NodeNext`、`strict`、`noUncheckedIndexedAccess`、`noFallthroughCasesInSwitch`、`noImplicitOverride`、`incremental: false` |
 | `nextjs.json` | `apps/frontend` | `ESNext` + `Bundler`、DOM lib、`react-jsx`、`allowJs`、`noEmit` |
 | `react-library.json` | `packages/ui` | `ESNext` + `Bundler`、DOM lib、`react-jsx`、`noEmit` |
 | `nestjs.json` | `apps/backend`、`apps/bff` | NodeNext + 装饰器、`declaration`、`sourceMap`、`incremental: true` |

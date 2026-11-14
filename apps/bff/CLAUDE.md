@@ -18,7 +18,7 @@ pnpm --filter bff format  # oxfmt --check .，根配置
 pnpm --filter bff start:prod
 ```
 
-端口读 `process.env.PORT ?? 4000`；不要硬编码到 3000 或 5000。
+端口读 `process.env.BFF_PORT ?? 4000`；不要硬编码到 3000 或 5000。根 `.env` / `.env.development` 里的 `BFF_PORT` 必须在 `turbo.json` 的 `dev.env` 声明后才会传入。
 
 ## 目录与入口
 

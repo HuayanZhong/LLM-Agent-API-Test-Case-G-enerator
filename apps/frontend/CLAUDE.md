@@ -34,6 +34,7 @@ pnpm --filter frontend start
 - 不使用 `next/font/google`；字体栈在 `globals.css` 的 `@theme inline` 里，避免构建时访问 Google Fonts。
 - `AGENTS.md` 的 `<!-- BEGIN:nextjs-agent-rules -->` 块由 `next dev` 重写；我们的内容放在标记上方，不要编辑标记内部。
 - `next-env.d.ts` 由 Next 生成，不要手改。
+- 环境变量：`apps/frontend/.env.development` / `.env.production` 由 Next 原生加载，放 `NEXT_PUBLIC_*`；变量声明见根 `.env.example`，不要提交真实值。
 - 测试配置继承 `@workspace/vitest-config/react`，用 `@vitejs/plugin-react` + Vite 8 原生 `resolve.tsconfigPaths`；`setupFiles` 指向 `__tests__/setup.ts`。
 - 覆盖率只卡行覆盖率 95%；`src/app/layout.tsx` 是 Next 根布局（html/body/metadata），已在 `coverage.exclude` 中排除。
 - Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Next.js 规则只在本包生效，`packages/ui` 另有 override。

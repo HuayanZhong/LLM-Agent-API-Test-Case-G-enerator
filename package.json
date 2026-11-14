@@ -1,6 +1,6 @@
 {
   "name": "LLM-Agent-API-Test-Case-G-enerator",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "description": "基于大模型智能体的接口测试用例辅助生成系统的设计与实现 (Design and Implementation of an LLM-Agent-Assisted API Test Case Generation System)",
   "keywords": [
@@ -27,17 +27,17 @@
     "pnpm": ">=12.18.0"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
+    "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run dev",
+    "build": "node --env-file-if-exists=.env --env-file-if-exists=.env.production node_modules/turbo/bin/turbo run build",
     "check-types": "turbo run check-types",
-    "test": "turbo run test",
-    "test:watch": "turbo run test:watch",
+    "test": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run test",
+    "test:watch": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run test:watch",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "format": "turbo run format",
     "format:fix": "turbo run format:fix",
-    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json",
-    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json"
+    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json",
+    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json"
   },
   "devDependencies": {
     "@fission-ai/openspec": "catalog:tooling",

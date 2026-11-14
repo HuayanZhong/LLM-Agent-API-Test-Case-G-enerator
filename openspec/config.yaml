@@ -14,9 +14,16 @@ context: |
   packages/typescript-config 提供 base / nextjs / react-library / nestjs 四个共享 tsconfig profile，
   根 pnpm check-types 经 Turbo 并行执行；packages/vitest-config 提供 base / react 两个 Vitest profile，
   覆盖率 reporter 为 text / lcov / json-summary，根 pnpm test 经 Turbo 并行执行并卡 95% 行覆盖率；
-  apps/backend 与 apps/bff 是 NestJS 12 + ESM 骨架，分别监听 5000 / 4000，只有 GET /health；
+  apps/backend 与 apps/bff 是 NestJS 12 + ESM 骨架，分别监听 BACKEND_PORT（默认 5000）
+  与 BFF_PORT（默认 4000），只有 GET /health；
   根 pnpm build 经 Turbo 构建三个 app；业务模块尚未接入；
   lint / format 已接入 Oxlint / Oxfmt（根配置 + 六个包脚本），根配置文件由 format:root 检查。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
+
+  环境变量：根 .env.example 是唯一声明入口，实际值放 .env / .env.development / .env.production；
+  dev / test / test:watch 按 .env → .env.development 顺序加载，build 按 .env → .env.production 加载，
+  再由 Turbo 启动任务；前端 NEXT_PUBLIC_* 的实际值放 apps/frontend/.env.development / .env.production，
+  由 Next 原生加载；变量必须同时写进 turbo.json 对应任务的 env，
+  否则 Turbo 默认 strict 模式不会传给任务；.env*、apps/frontend/.env* 与 .nvmrc 在 globalDependencies 中。
 
   技术栈（部分已落地）：Electron（待接入）+ Next.js 16 / React 19 / Tailwind v4 / shadcn 桌面端（3000）；
   NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；

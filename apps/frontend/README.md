@@ -20,10 +20,14 @@ pnpm --filter frontend lint    # oxlint .，根配置
 pnpm --filter frontend format  # oxfmt --check .，根配置
 ```
 
+Next 原生加载 `apps/frontend/.env.development` / `.env.production`；只有 `NEXT_PUBLIC_` 前缀会进入浏览器。变量声明以根 `.env.example` 为准，真实值不要提交。
+
 ## 目录
 
 ```text
 apps/frontend/
++-- .env.development         # 开发值，Next 自动加载（gitignored）
++-- .env.production          # 生产构建值，Next 自动加载（gitignored）
 +-- src/
 |   +-- app/                 # App Router：layout.tsx、page.tsx、favicon.ico
 |   +-- components/          # app 级组件；shadcn 的 block 会落到这里

@@ -1,6 +1,6 @@
 # apps/backend
 
-本地领域服务骨架：NestJS 12 + ESM，监听 5000。
+本地领域服务骨架：NestJS 12 + ESM，默认监听 5000（`BACKEND_PORT` 可覆盖）。
 
 ## 职责
 
@@ -21,12 +21,14 @@ pnpm --filter backend lint       # oxlint .，根配置
 pnpm --filter backend format     # oxfmt --check .，根配置
 ```
 
+端口读 `BACKEND_PORT`，未设置时用 5000。根 `pnpm dev` 会通过 Turbo 传入该变量。
+
 ## 目录
 
 ```text
 apps/backend/
 +-- src/
-|   +-- main.ts          # NestFactory；listen(PORT ?? 5000)
+|   +-- main.ts          # NestFactory；listen(BACKEND_PORT ?? 5000)
 |   +-- app.module.ts    # 根模块
 |   +-- app.controller.ts# GET /health
 +-- nest-cli.json        # sourceRoot: src，deleteOutDir

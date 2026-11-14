@@ -18,7 +18,7 @@ pnpm --filter backend format  # oxfmt --check .，根配置
 pnpm --filter backend start:prod
 ```
 
-端口读 `process.env.PORT ?? 5000`；不要占用 3000 或 4000。
+端口读 `process.env.BACKEND_PORT ?? 5000`；不要占用 3000 或 4000。根 `.env` / `.env.development` 里的 `BACKEND_PORT` 必须在 `turbo.json` 的 `dev.env` 声明后才会传入。
 
 ## 目录与入口
 

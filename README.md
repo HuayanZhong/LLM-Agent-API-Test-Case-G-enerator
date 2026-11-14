@@ -18,11 +18,13 @@
 .
 ├── doc/                 # 业务架构、技术架构与数据模型图
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
-├── .agents/skills/      # OpenSpec 技能；.claude/skills/ 下是链接
+├── .agents/skills/      # OpenSpec 与第三方技能；.claude/skills/ 是同步副本
 ├── apps/                # backend（5000）、bff（4000）、frontend（3000）
 ├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
 ├── .claude/             # 规则、技能与 /opsx 命令
-├── .env.example         # 环境变量统一声明入口（技术选型确认前保持为空）
+├── .env.example         # 环境变量声明入口
+├── .env.development     # 本地开发 / 测试值（gitignored）
+├── .env.production      # 生产构建值（gitignored）
 ├── .gitattributes       # 行尾与二进制文件约定
 ├── .nvmrc               # Node 版本（26.12.1），本地与 CI 共用
 ├── .editorconfig        # 编辑器缩进与行尾；Oxfmt 会读取
@@ -40,6 +42,7 @@
 
 - Node.js >= 26.12.1
 - pnpm >= 12.18.0（仓库锁定 `pnpm@12.18.0`，见 `packageManager`）
+- Windows：执行 `git config --global core.longpaths true`，避免深层 `node_modules` 或 git worktree 路径触发 `Filename too long`
 
 依赖版本统一放在 `pnpm-workspace.yaml` 的 `catalogs` 中管理；根 `package.json` 通过 `catalog:tooling` 引用 Turbo、Oxlint 与 Oxfmt。
 
@@ -47,11 +50,11 @@
 
 ```bash
 pnpm install
-pnpm dev                    # turbo run dev：并行启动 backend、bff 与 frontend
-pnpm build                  # turbo run build：构建三个 app，产物进 Turbo 缓存
+pnpm dev                    # 加载 .env → .env.development 后 turbo run dev：并行启动 backend、bff 与 frontend
+pnpm build                  # 加载 .env → .env.production 后 turbo run build：构建三个 app，产物进 Turbo 缓存
 pnpm check-types            # turbo run check-types：五个包并行类型检查
-pnpm test                   # turbo run test：四个包并行跑 Vitest，行覆盖率 ≥ 95%
-pnpm test:watch             # turbo run test:watch：四个包并行 watch
+pnpm test                   # 加载 .env → .env.development 后 turbo run test：四个包并行跑 Vitest，行覆盖率 ≥ 95%
+pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：四个包并行 watch
 pnpm lint                   # turbo run lint：六个包并行 oxlint
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
 pnpm format                 # turbo run format：六个包并行 oxfmt --check
@@ -61,6 +64,8 @@ pnpm format:root:fix        # 写入根配置文件格式
 pnpm --filter frontend dev  # 只启动 Next 前端（3000）
 pnpm --filter frontend build
 ```
+
+`dev` / `test` / `test:watch` 通过 Node 依次加载 `.env` 与 `.env.development`，`build` 加载 `.env` 与 `.env.production`；文件不存在时只打印提示，不影响退出码，后加载的文件覆盖先加载的值。变量必须在 `turbo.json` 的 `env` 中声明，否则 Turbo 的 strict 模式不会把它传给任务。
 
 ## 服务与前端骨架
 
@@ -89,7 +94,7 @@ Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile�
 
 覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json` 等不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 单独检查；`.editorconfig` 与 `.nvmrc` 已纳入 Turbo `globalDependencies`，改动会失效格式化缓存。
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完六个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
 
 ## 包级文档
 
@@ -106,13 +111,15 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 
 ## 环境变量
 
-根目录 [.env.example](.env.example) 是唯一声明入口，当前保持为空；等前端/后端框架、数据库和模型网关确认后再补变量。
+根目录 [.env.example](.env.example) 是唯一声明入口；实际值分别放 `.env`、`.env.development`、`.env.production`（均被忽略）。加载顺序是后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。变量还必须写进 `turbo.json` 的任务 `env` 才会传给任务。当前声明两个端口变量：`BACKEND_PORT`（默认 5000）与 `BFF_PORT`（默认 4000）。
 
-真实的 `.env`、`.env.local`、`.env.*` 已被 `.gitignore` 忽略，不要提交密钥。
+前端浏览器可见变量用 `NEXT_PUBLIC_*`，实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载；变量名仍在根 `.env.example` 声明。
+
+真实的 `.env`、`.env.local`、`.env.development`、`.env.production` 已被 `.gitignore` 忽略，不要提交密钥。
 
 ## OpenSpec 工作流
 
-本项目用 OpenSpec 2.0 做规格驱动开发：规格在 `openspec/specs/`，变更在 `openspec/changes/`，AI 技能在 `.agents/skills/`（`.claude/skills/` 下是链接）。
+本项目用 OpenSpec 2.0 做规格驱动开发：规格在 `openspec/specs/`，变更在 `openspec/changes/`，AI 技能在 `.agents/skills/`；`.claude/skills/` 是同步副本，升级 OpenSpec 后需要比对两处内容。
 
 ```bash
 pnpm exec openspec list          # 查看变更与规格

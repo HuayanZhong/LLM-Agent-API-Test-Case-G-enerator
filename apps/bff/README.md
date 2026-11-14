@@ -1,6 +1,6 @@
 # apps/bff
 
-独立 BFF 骨架：NestJS 12 + ESM，监听 4000。
+独立 BFF 骨架：NestJS 12 + ESM，默认监听 4000（`BFF_PORT` 可覆盖）。
 
 ## 职责
 
@@ -21,12 +21,14 @@ pnpm --filter bff lint       # oxlint .，根配置
 pnpm --filter bff format     # oxfmt --check .，根配置
 ```
 
+端口读 `BFF_PORT`，未设置时用 4000。根 `pnpm dev` 会通过 Turbo 传入该变量。
+
 ## 目录
 
 ```text
 apps/bff/
 +-- src/
-|   +-- main.ts          # NestFactory；listen(PORT ?? 4000)
+|   +-- main.ts          # NestFactory；listen(BFF_PORT ?? 4000)
 |   +-- app.module.ts    # 根模块
 |   +-- app.controller.ts# GET /health
 +-- nest-cli.json        # sourceRoot: src，deleteOutDir

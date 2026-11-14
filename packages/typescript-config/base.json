@@ -7,6 +7,8 @@
     "moduleDetection": "force",
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "isolatedModules": true,
