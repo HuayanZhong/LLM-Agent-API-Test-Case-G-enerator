@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "description": "Electron 桌面壳：开发态加载 Next dev server，生产态托管静态导出（Forge 8）",
