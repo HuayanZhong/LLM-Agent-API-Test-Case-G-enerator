@@ -7,7 +7,7 @@
 ## What Changes
 
 - 根 `devDependencies` 增加 `@changesets/cli`（`catalog:tooling`），提供 `pnpm changeset`（记录变更）、`pnpm changeset:version`（升版本并同步根版本）、`pnpm changeset:status`。
-- 新增 `.changeset/config.json`：`fixed` 组包含九个 workspace 包，`privatePackages: { version: true, tag: false }`，`changelog: false`（私有包不生成九份重复 CHANGELOG，发布说明由 Version Packages PR 承载），`commit: false`，`baseBranch: "main"`，`access: "restricted"`。
+- 新增 `.changeset/config.json`：`fixed` 组包含九个 workspace 包，`privatePackages: { version: true, tag: false }`，`changelog` 使用默认的 `@changesets/cli/changelog`（Version Packages PR 需要读取各包 CHANGELOG.md），`commit: false`，`baseBranch: "main"`，`access: "restricted"`。
 - 新增 `scripts/sync-version.mjs`：校验九个包版本一致后，把同一版本写回根 `package.json`；根包不在 Changesets 的 workspace 范围内，需要单独同步。
 - 新增 `.github/workflows/release.yml`：push 到 main 时用 `changesets/action` 开或更新 Version Packages PR；只升版本，不执行 npm publish。
 - `.changeset/config.json` 纳入 `pnpm format:root` / Turbo 根任务 inputs。

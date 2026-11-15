@@ -53,7 +53,7 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 日常流程：功能 PR 里执行 `pnpm changeset` 并提交 `.changeset/*.md`；合并到 `main` 后 `release` workflow 开/更新 Version Packages PR；再合并该 PR 版本才生效。
 - 根 `package.json` 不在 workspace 范围内，`pnpm changeset:version` 末尾用 `scripts/sync-version.mjs` 同步；九个包版本不一致时脚本直接失败。
 - `apps/desktop` 的版本决定 Electron Forge 的 ZIP / exe 版本，发交付物前确认版本 PR 已合并。
-- 不要让开发者手改各包 `version` 或手写 CHANGELOG；`changelog: false`，发布说明由 Version Packages PR 承载。
+- 不要让开发者手改各包 `version` 或手写 CHANGELOG；`changelog` 用默认的 `@changesets/cli/changelog`，Version Packages PR 会读取各包的 `CHANGELOG.md`。不要关闭 changelog，否则 `changesets/action` 会因找不到文件而失败。
 
 **环境变量**：根目录 `.env.example` 是唯一声明入口，当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）、`ELECTRON_RENDERER_URL`（默认 `http://localhost:3000`）与 `NEXT_PUBLIC_BFF_URL`。实际值放 `.env`、`.env.development`、`.env.production`（均被忽略），加载顺序为后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。前端 `NEXT_PUBLIC_*` 的实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载。新增变量必须同时写进 `turbo.json` 对应任务的 `env`，否则 strict 模式会把它过滤掉。
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   // 技能资产不是应用代码，不参与依赖图。
-  "ignore": [".agents/**"],
+  "ignore": [".agents/**", ".claude/**"],
   // 只通过 pnpm exec 使用的 CLI，没有源码 import。
   "ignoreDependencies": ["@fission-ai/openspec"],
 }

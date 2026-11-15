@@ -47,7 +47,7 @@
 "changelog": false
 ```
 
-`version: true` 让私有包参与版本计算；`tag: false` 避免为九个私有包创建 git tag；`commit: false` 因为版本变更由 CI 的 Version Packages PR 提交，本地 `changeset version` 不应自动 commit。`changelog: false` 避免固定组产生九份重复 CHANGELOG，发布说明由 Version Packages PR 的 changeset 内容承载；若以后需要逐包 changelog，再启用 `@changesets/cli/changelog`。
+`version: true` 让私有包参与版本计算；`tag: false` 避免为九个私有包创建 git tag；`commit: false` 因为版本变更由 CI 的 Version Packages PR 提交，本地 `changeset version` 不应自动 commit。`changelog` 保持默认的 `@changesets/cli/changelog`：`changesets/action` v2 会读取各包的 `CHANGELOG.md` 生成 PR 内容，关闭 changelog 会导致 release 报 `ENOENT`。固定组会产生九份 changelog，但这是 action 正常工作所需。
 
 ### 3. 根 `package.json` 版本用脚本同步
 
