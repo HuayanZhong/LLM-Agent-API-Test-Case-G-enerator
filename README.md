@@ -62,7 +62,7 @@ pnpm test                   # 加载 .env → .env.development 后 turbo run tes
 pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：六个包并行 watch
 pnpm changeset              # 交互式记录一次版本变更
 pnpm changeset:status       # 查看待发布的 changeset
-pnpm changeset:version      # 升版本并同步根 package.json（通常由 CI 调用）
+pnpm changeset:version      # 升版本、同步根 package.json、补 CHANGELOG 图标（通常由 CI 调用）
 pnpm lint                   # turbo run lint：九个包并行 oxlint
 pnpm sherif                 # 依赖版本 / 依赖类型 / workspace 一致性检查
 pnpm knip                   # 死依赖、死引用、死文件、死导出检查
@@ -158,6 +158,8 @@ agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入
 3. 合并 Version Packages PR 后，九个包与根 `package.json` 的版本一起更新，`apps/desktop` 的 Forge 产物名随之变化。
 
 不发布 npm、不打 git tag；根 `package.json` 不在 workspace 内，由 [scripts/sync-version.mjs](scripts/sync-version.mjs) 同步，九包版本不一致时脚本直接失败。
+
+CHANGELOG 由 [.changeset/changelog.mjs](.changeset/changelog.mjs) 生成（摘要 + 一个 PR/提交链接），分节标题的 💥 / ✨ / 🩹 图标由 [scripts/format-changelog.mjs](scripts/format-changelog.mjs) 在升版本后补齐。版本标题必须保持 `## x.y.z` 原样，`changesets/action` 靠它抓 Version Packages PR 正文。
 
 ## 包级文档
 

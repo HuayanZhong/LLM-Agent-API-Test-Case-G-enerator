@@ -1,6 +1,11 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@4/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "changelog": [
+    "./changelog.mjs",
+    {
+      "repo": "HuayanZhong/LLM-Agent-API-Test-Case-G-enerator"
+    }
+  ],
   "commit": false,
   "fixed": [
     [

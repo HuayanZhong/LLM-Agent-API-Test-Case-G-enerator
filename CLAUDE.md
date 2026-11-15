@@ -19,7 +19,7 @@ pnpm test         # 加载 .env → .env.development 后 turbo run test（行覆
 pnpm test:watch   # 加载 .env → .env.development 后 turbo run test:watch
 pnpm changeset    # 交互式记录一次版本变更
 pnpm changeset:status   # 查看待发布的 changeset
-pnpm changeset:version  # 升版本并同步根 package.json（通常由 CI 调用）
+pnpm changeset:version  # 升版本、同步根 package.json、补 CHANGELOG 图标（通常由 CI 调用）
 pnpm lint         # 根脚本：turbo run lint（九个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
 pnpm sherif       # 依赖版本 / 依赖类型 / workspace 一致性检查
@@ -53,7 +53,9 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 日常流程：功能 PR 里执行 `pnpm changeset` 并提交 `.changeset/*.md`；合并到 `main` 后 `release` workflow 开/更新 Version Packages PR；再合并该 PR 版本才生效。
 - 根 `package.json` 不在 workspace 范围内，`pnpm changeset:version` 末尾用 `scripts/sync-version.mjs` 同步；九个包版本不一致时脚本直接失败。
 - `apps/desktop` 的版本决定 Electron Forge 的 ZIP / exe 版本，发交付物前确认版本 PR 已合并。
-- 不要让开发者手改各包 `version` 或手写 CHANGELOG；`changelog` 用默认的 `@changesets/cli/changelog`，Version Packages PR 会读取各包的 `CHANGELOG.md`。不要关闭 changelog，否则 `changesets/action` 会因找不到文件而失败。
+- 不要让开发者手改各包 `version` 或手写 CHANGELOG。CHANGELOG 由 `.changeset/changelog.mjs` 生成：链接解析走 `@changesets/changelog-github`，行格式收敛成「摘要 + 一个 PR/提交引用」；分节标题的图标（💥 / ✨ / 🩹）由 `scripts/format-changelog.mjs` 在 `changeset version` 之后补齐，因为 Changesets 把标题写死在 `apply-release-plan` 里，生成器改不了。
+- `changesets/action` 用 `## x.y.z` 精确匹配版本标题来抓 Version Packages PR 正文，不要给版本标题加日期或前缀；分节标题带图标不影响匹配（它只按 `major|minor|patch` 关键字判断级别）。
+- 该生成器在 `changeset version` 时调用 GitHub API，必须提供 `GITHUB_TOKEN`：CI 由 `release.yml` 注入；本地执行 `pnpm changeset:version` 前先导出，或写进已被忽略的 `.env`（生成器会读）。缺 token 时版本命令直接失败，不是退化成短哈希。不要关闭 changelog，否则 `changesets/action` 会因找不到文件而失败。
 
 **环境变量**：根目录 `.env.example` 是唯一声明入口，当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）、`ELECTRON_RENDERER_URL`（默认 `http://localhost:3000`）与 `NEXT_PUBLIC_BFF_URL`。实际值放 `.env`、`.env.development`、`.env.production`（均被忽略），加载顺序为后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。前端 `NEXT_PUBLIC_*` 的实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载。新增变量必须同时写进 `turbo.json` 对应任务的 `env`，否则 strict 模式会把它过滤掉。
 

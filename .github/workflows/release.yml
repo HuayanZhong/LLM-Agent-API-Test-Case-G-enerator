@@ -10,6 +10,7 @@ on:
       - "apps/*/package.json"
       - "packages/*/package.json"
       - "scripts/sync-version.mjs"
+      - "scripts/format-changelog.mjs"
       - ".github/workflows/release.yml"
 
 permissions:
@@ -40,3 +41,6 @@ jobs:
           # 私有包不发 npm、不打 tag、不创建 GitHub Release
           create-github-releases: false
           push-git-tags: false
+        env:
+          # changelog-github 生成 CHANGELOG 时要查 PR / 提交作者，需要 token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

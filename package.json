@@ -32,7 +32,7 @@
     "check-types": "turbo run check-types",
     "changeset": "changeset",
     "changeset:status": "changeset status",
-    "changeset:version": "changeset version && node scripts/sync-version.mjs",
+    "changeset:version": "changeset version && node scripts/sync-version.mjs && node scripts/format-changelog.mjs",
     "test": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run test",
     "test:watch": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run test:watch",
     "lint": "turbo run lint",
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "catalog:tooling",
+    "@changesets/changelog-github": "catalog:tooling",
     "@commitlint/cli": "catalog:tooling",
     "@commitlint/config-conventional": "catalog:tooling",
     "@fission-ai/openspec": "catalog:tooling",
