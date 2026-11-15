@@ -35,6 +35,6 @@ jobs:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       # 当前 3 个漏洞均为 low / moderate，低于 high 门槛；出现不可修 high 时再进 ignoreCves
       - run: pnpm audit --audit-level=high
