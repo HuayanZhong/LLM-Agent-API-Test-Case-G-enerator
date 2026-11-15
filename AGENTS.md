@@ -15,6 +15,7 @@
 - Storybook 与 MCP：`packages/ui`（6006），端点为 `http://127.0.0.1:6006/mcp`，仅 dev 时可用；见 [packages/ui/CLAUDE.md](packages/ui/CLAUDE.md)
 - 类型检查：`pnpm check-types`（Turbo）；profile 与约束见 [packages/typescript-config/CLAUDE.md](packages/typescript-config/CLAUDE.md)，共享类型包边界见 [packages/types/CLAUDE.md](packages/types/CLAUDE.md)
 - 测试：`pnpm test`（Turbo，行覆盖率 ≥ 95%）、`pnpm test:watch`；profile 与测试文件约定见 [packages/vitest-config/CLAUDE.md](packages/vitest-config/CLAUDE.md)
+- 版本与发布：Changesets 固定组统一九个包版本；功能 PR 带 `pnpm changeset`，合并 main 后机器人开 Version Packages PR；根版本由 `scripts/sync-version.mjs` 同步，见 [CLAUDE.md](CLAUDE.md)
 - Lint 与格式化：`pnpm lint` / `pnpm format`（Turbo，九个包并行）；根配置是 `.oxlintrc.json` / `.oxfmtrc.json`，根文件用 `pnpm format:root`（含 `.mcp.json`、`skills-lock.json`、`.github`、`renovate.json`、`knip.jsonc`），规则见 [CLAUDE.md](CLAUDE.md)
 - 依赖与死代码：`pnpm sherif`（依赖一致性）与 `pnpm knip`（死依赖 / 死引用，配置在 `knip.jsonc`）都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用
 - 构建：`pnpm build`（Turbo，四个 app；desktop 复制前端静态导出）

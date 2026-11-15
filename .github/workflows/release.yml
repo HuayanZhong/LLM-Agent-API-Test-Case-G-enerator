@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    # 只有可能影响版本的改动才触发；纯文档 / OpenSpec 提交不会跑。
+    paths:
+      - ".changeset/**"
+      - "package.json"
+      - "apps/*/package.json"
+      - "packages/*/package.json"
+      - "scripts/sync-version.mjs"
+      - ".github/workflows/release.yml"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          # Changesets 需要完整历史来计算版本变更。
+          fetch-depth: 0
+          # changesets/action 要把版本提交推到 PR 分支，此处例外保留凭据。
+          persist-credentials: true
+      - uses: ./.github/actions/setup
+      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version: pnpm changeset:version
+          commit: "chore(release): 版本号更新"
+          title: "chore(release): 版本号更新"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

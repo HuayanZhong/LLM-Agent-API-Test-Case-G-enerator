@@ -60,6 +60,9 @@ pnpm build                  # 加载 .env → .env.production 后 turbo run buil
 pnpm check-types            # turbo run check-types：八个包并行类型检查
 pnpm test                   # 加载 .env → .env.development 后 turbo run test：六个包并行跑 Vitest，行覆盖率 ≥ 95%
 pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：六个包并行 watch
+pnpm changeset              # 交互式记录一次版本变更
+pnpm changeset:status       # 查看待发布的 changeset
+pnpm changeset:version      # 升版本并同步根 package.json（通常由 CI 调用）
 pnpm lint                   # turbo run lint：九个包并行 oxlint
 pnpm sherif                 # 依赖版本 / 依赖类型 / workspace 一致性检查
 pnpm knip                   # 死依赖、死引用、死文件、死导出检查
@@ -136,6 +139,7 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 |---|---|---|
 | `quality.yml` | `push: main`、PR、merge queue | `pnpm lint`、`format`、`format:root`、`check-types`、`sherif`、`knip` |
 | `test.yml` | 同上 | `pnpm test`，上传各包 `lcov.info` / `coverage-summary.json` |
+| `release.yml` | `push: main`（限定路径） | Changesets 开/更新 Version Packages PR；不发布 npm |
 | `build.yml` | 同上 | `pnpm build`，上传 `.next` / `dist`，保留 7 天 |
 | `security.yml` | `push: main`、PR、每周 | zizmor 扫 workflow；`pnpm audit --audit-level=high` |
 | `agent-review.yml` | PR（跳过 draft 与 fork） | Claude Code Action 只评论，不 approve、不改代码 |
@@ -144,6 +148,16 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 `renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并，GitHub Actions 自动固定 digest。
 
 agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入 secrets，因此跳过。建议先观察一轮，再把 `quality` 与 `test` 设为 required checks；`build`、`security`、`agent-review` 先不 required，避免成本或误报阻塞合并。
+
+## 版本与发布
+
+九个 workspace 包通过 Changesets 的 `fixed` 组共用同一个产品版本，配置在 [.changeset/config.json](.changeset/config.json)：
+
+1. 功能 PR 里执行 `pnpm changeset`，提交生成的 `.changeset/*.md`；
+2. 合并到 `main` 后，`release` workflow 运行 `pnpm changeset:version`，开或更新 Version Packages PR；
+3. 合并 Version Packages PR 后，九个包与根 `package.json` 的版本一起更新，`apps/desktop` 的 Forge 产物名随之变化。
+
+不发布 npm、不打 git tag；根 `package.json` 不在 workspace 内，由 [scripts/sync-version.mjs](scripts/sync-version.mjs) 同步，九包版本不一致时脚本直接失败。
 
 ## 包级文档
 

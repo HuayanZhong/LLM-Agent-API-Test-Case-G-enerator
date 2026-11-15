@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@4/schema.json",
+  "changelog": false,
+  "commit": false,
+  "fixed": [
+    [
+      "desktop",
+      "frontend",
+      "backend",
+      "bff",
+      "@workspace/ui",
+      "@workspace/types",
+      "@workspace/config",
+      "@workspace/typescript-config",
+      "@workspace/vitest-config"
+    ]
+  ],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "privatePackages": {
+    "version": true,
+    "tag": false
+  },
+  "ignore": []
+}

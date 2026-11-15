@@ -69,7 +69,8 @@
         "renovate.json",
         "lint-staged.config.mjs",
         "commitlint.config.mjs",
-        "knip.jsonc"
+        "knip.jsonc",
+        ".changeset/config.json"
       ]
     },
     "//#format:root:fix": {

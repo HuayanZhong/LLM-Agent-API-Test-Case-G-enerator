@@ -17,6 +17,9 @@ pnpm build        # 加载 .env → .env.production 后 turbo run build（四个
 pnpm check-types  # 根脚本：turbo run check-types
 pnpm test         # 加载 .env → .env.development 后 turbo run test（行覆盖率 < 95% 失败）
 pnpm test:watch   # 加载 .env → .env.development 后 turbo run test:watch
+pnpm changeset    # 交互式记录一次版本变更
+pnpm changeset:status   # 查看待发布的 changeset
+pnpm changeset:version  # 升版本并同步根 package.json（通常由 CI 调用）
 pnpm lint         # 根脚本：turbo run lint（九个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
 pnpm sherif       # 依赖版本 / 依赖类型 / workspace 一致性检查
@@ -44,6 +47,14 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 **提交前 hook**：`pnpm install` 经 `prepare` 安装 husky（`core.hooksPath` = `.husky/_`）。`pre-commit` 跑 `lint-staged`，只对暂存文件执行 `oxlint --fix` 与 `oxfmt`，并覆盖根配置、`.github/`、`renovate.json`，不处理 Markdown；`commit-msg` 跑 `commitlint`，校验 conventional 的 `type(scope): subject`，scope 不设白名单。hook 只做本地提前检查：全量 `lint` / `format` / `check-types` / `test` 仍由 CI 的 `quality` 与 `test` workflow 判定。临时跳过用 `git commit --no-verify`。
 
+## 版本管理
+
+- 九个 workspace 包通过 Changesets 的 `fixed` 组共用同一个版本；配置在 `.changeset/config.json`，`privatePackages: { version: true, tag: false }`，不发布 npm、不打 tag。
+- 日常流程：功能 PR 里执行 `pnpm changeset` 并提交 `.changeset/*.md`；合并到 `main` 后 `release` workflow 开/更新 Version Packages PR；再合并该 PR 版本才生效。
+- 根 `package.json` 不在 workspace 范围内，`pnpm changeset:version` 末尾用 `scripts/sync-version.mjs` 同步；九个包版本不一致时脚本直接失败。
+- `apps/desktop` 的版本决定 Electron Forge 的 ZIP / exe 版本，发交付物前确认版本 PR 已合并。
+- 不要让开发者手改各包 `version` 或手写 CHANGELOG；`changelog: false`，发布说明由 Version Packages PR 承载。
+
 **环境变量**：根目录 `.env.example` 是唯一声明入口，当前声明 `BACKEND_PORT`（默认 5000）、`BFF_PORT`（默认 4000）、`ELECTRON_RENDERER_URL`（默认 `http://localhost:3000`）与 `NEXT_PUBLIC_BFF_URL`。实际值放 `.env`、`.env.development`、`.env.production`（均被忽略），加载顺序为后者覆盖前者：`dev` / `test` / `test:watch` 用 `.env` + `.env.development`，`build` 用 `.env` + `.env.production`。前端 `NEXT_PUBLIC_*` 的实际值放 `apps/frontend/.env.development` / `.env.production`，由 Next 原生加载。新增变量必须同时写进 `turbo.json` 对应任务的 `env`，否则 strict 模式会把它过滤掉。
 
 ## OpenSpec 工作流
@@ -66,8 +77,9 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 ## CI 与自动化
 
-- `.github/workflows/` 按职责拆成 `quality`、`test`、`build`、`security`、`agent-review`、`labeler`；安装逻辑统一走 `.github/actions/setup/action.yml`（pnpm 12.18.0 + `.nvmrc` + `--frozen-lockfile`）。
-- 所有 action 按 SHA 固定，`permissions` 默认 `contents: read`，checkout 统一 `persist-credentials: false`；`push` 只跑 `main`，并响应 `merge_group`。
+- `.github/workflows/` 按职责拆成 `quality`、`test`、`build`、`security`、`agent-review`、`labeler`、`release`；安装逻辑统一走 `.github/actions/setup/action.yml`（pnpm 12.18.0 + `.nvmrc` + `--frozen-lockfile`）。
+- 所有 action 按 SHA 固定，`permissions` 默认 `contents: read`，checkout 统一 `persist-credentials: false`；唯一的例外是 `release.yml`：`changesets/action` 需要把版本提交推到 PR 分支，因此保留凭据。
+- `release.yml` 只响应 `main` 上限定路径的 push，用 `changesets/action` 开/更新 Version Packages PR；没有 `publish` 步骤。
 - `agent-review.yml` 只评论、不 approve、不改代码；跳过 draft 与 fork PR；需要仓库 Secrets 的 `ANTHROPIC_API_KEY`，fork PR 不注入。`labeler.yml` 用 `pull_request_target` 但不 checkout、不执行 PR 代码。
 - `renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并；GitHub Actions digest 由 `helpers:pinGitHubActionDigests` 固定。
 - required checks 先只开 `quality` 与 `test`，观察一轮再考虑 `build` / `security` / `agent-review`。
