@@ -61,6 +61,8 @@ pnpm check-types            # turbo run check-types：八个包并行类型检�
 pnpm test                   # 加载 .env → .env.development 后 turbo run test：六个包并行跑 Vitest，行覆盖率 ≥ 95%
 pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：六个包并行 watch
 pnpm lint                   # turbo run lint：九个包并行 oxlint
+pnpm sherif                 # 依赖版本 / 依赖类型 / workspace 一致性检查
+pnpm knip                   # 死依赖、死引用、死文件、死导出检查
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
 pnpm format                 # turbo run format：九个包并行 oxfmt --check
 pnpm format:fix             # turbo run format:fix：写入格式化
@@ -120,6 +122,8 @@ Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile�
 
 Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完九个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
 
+依赖与死代码检查：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 一致性；`pnpm knip` 检查未使用 / 未声明的依赖、死文件与死导出，配置在 `knip.jsonc`。两者都进入 `quality` workflow；`knip:fix` / `sherif:fix` 会直接改文件与依赖，只在本地人工确认后使用。
+
 ## CI 与自动化
 
 [![Quality](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/quality.yml/badge.svg)](https://github.com/HuayanZhong/LLM-Agent-API-Test-Case-G-enerator/actions/workflows/quality.yml)
@@ -130,7 +134,7 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 
 | 工作流 | 触发 | 内容 |
 |---|---|---|
-| `quality.yml` | `push: main`、PR、merge queue | `pnpm lint`、`format`、`format:root`、`check-types` |
+| `quality.yml` | `push: main`、PR、merge queue | `pnpm lint`、`format`、`format:root`、`check-types`、`sherif`、`knip` |
 | `test.yml` | 同上 | `pnpm test`，上传各包 `lcov.info` / `coverage-summary.json` |
 | `build.yml` | 同上 | `pnpm build`，上传 `.next` / `dist`，保留 7 天 |
 | `security.yml` | `push: main`、PR、每周 | zizmor 扫 workflow；`pnpm audit --audit-level=high` |

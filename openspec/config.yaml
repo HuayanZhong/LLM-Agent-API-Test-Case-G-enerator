@@ -40,6 +40,8 @@ context: |
 
   提交门禁：husky 经 prepare 安装，pre-commit 用 lint-staged 只对暂存文件跑 oxlint --fix 与 oxfmt，
   commit-msg 用 commitlint 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 git commit --no-verify。
+  质量检查新增 sherif（依赖版本 / 依赖类型 / workspace 一致性）与 knip（死依赖、死引用、死文件、死导出，
+  配置在根 knip.jsonc），两者都进 quality workflow；knip:fix / sherif:fix 只在本地人工确认后使用。
 
   技术栈（部分已落地）：Electron 45 + Electron Forge 8 + Next.js 16 / React 19 / Tailwind v4 / shadcn 桌面端（3000；生产态静态导出）；
   NestJS 12 的 BFF（4000）与本地服务（5000）；LangGraph.js + LangChain.js + Zod；

@@ -33,7 +33,6 @@
     "@nestjs/cli": "catalog:backend",
     "@nestjs/schematics": "catalog:backend",
     "@nestjs/testing": "catalog:backend",
-    "@types/express": "catalog:backend",
     "@types/node": "catalog:tooling",
     "@vitest/coverage-v8": "catalog:testing",
     "@workspace/types": "workspace:*",

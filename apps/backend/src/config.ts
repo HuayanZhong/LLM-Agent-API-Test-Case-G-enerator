@@ -1,6 +1,6 @@
 import { envIntString, parseEnv, z } from "@workspace/config"
 
-export const backendEnvSchema = z.object({
+const backendEnvSchema = z.object({
   BACKEND_PORT: envIntString().default(5000),
 })
 

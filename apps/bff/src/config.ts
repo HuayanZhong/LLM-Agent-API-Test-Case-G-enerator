@@ -1,6 +1,6 @@
 import { envIntString, parseEnv, z } from "@workspace/config"
 
-export const bffEnvSchema = z.object({
+const bffEnvSchema = z.object({
   BFF_PORT: envIntString().default(4000),
 })
 

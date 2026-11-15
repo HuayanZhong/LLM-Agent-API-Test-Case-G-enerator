@@ -22,7 +22,6 @@
   "dependencies": {
     "class-variance-authority": "catalog:frontend",
     "cn": "catalog:frontend",
-    "lucide-react": "catalog:frontend",
     "radix-ui": "catalog:frontend",
     "react": "catalog:frontend",
     "react-dom": "catalog:frontend"
@@ -45,6 +44,7 @@
     "@workspace/typescript-config": "workspace:*",
     "@workspace/vitest-config": "workspace:*",
     "jsdom": "catalog:testing",
+    "postcss-load-config": "catalog:frontend",
     "shadcn": "catalog:tooling",
     "storybook": "catalog:storybook",
     "tailwindcss": "catalog:frontend",
@@ -57,7 +57,6 @@
     "./globals.css": "./src/styles/globals.css",
     "./postcss.config": "./postcss.config.mjs",
     "./lib/*": "./src/lib/*.ts",
-    "./components/*": "./src/components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./components/*": "./src/components/*.tsx"
   }
 }

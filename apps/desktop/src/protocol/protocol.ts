@@ -4,7 +4,7 @@ import path from "node:path"
 import type { ProtocolHandlerOptions } from "../types"
 
 export const APP_SCHEME = "app"
-export const APP_HOST = "bundle"
+const APP_HOST = "bundle"
 
 // Next 静态导出含内联 hydration 脚本，因此 script-src 先允许 unsafe-inline。
 export const HTML_CSP =

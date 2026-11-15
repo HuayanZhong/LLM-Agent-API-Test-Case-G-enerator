@@ -13,7 +13,7 @@ export interface WaitForServerOptions {
   fetchImpl?: typeof fetch
 }
 
-export type WaitForServer = (url: string, options?: WaitForServerOptions) => Promise<boolean>
+type WaitForServer = (url: string, options?: WaitForServerOptions) => Promise<boolean>
 
 /** bootstrap 的测试注入点；生产路径传入默认实现。 */
 export interface BootstrapOptions {

@@ -7,7 +7,7 @@ import { configureNavigation } from "./navigation"
 import { APP_SCHEME, createProtocolHandler } from "../protocol/protocol"
 import type { BootstrapOptions, WaitForServerOptions } from "../types"
 
-export const WINDOW_TITLE = "接口测试用例辅助生成系统"
+const WINDOW_TITLE = "接口测试用例辅助生成系统"
 
 export function getWindowOptions(preloadPath: string): BrowserWindowConstructorOptions {
   return {

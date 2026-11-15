@@ -34,10 +34,14 @@
     "test:watch": "node --env-file-if-exists=.env --env-file-if-exists=.env.development node_modules/turbo/bin/turbo run test:watch",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
+    "knip": "knip",
+    "knip:fix": "knip --fix",
+    "sherif": "sherif",
+    "sherif:fix": "sherif --fix",
     "format": "turbo run format",
     "format:fix": "turbo run format:fix",
-    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json lint-staged.config.mjs commitlint.config.mjs",
-    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json lint-staged.config.mjs commitlint.config.mjs",
+    "format:root": "oxfmt --check package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json lint-staged.config.mjs commitlint.config.mjs knip.jsonc",
+    "format:root:fix": "oxfmt package.json pnpm-workspace.yaml turbo.json .oxlintrc.json .oxfmtrc.json .mcp.json skills-lock.json .github renovate.json lint-staged.config.mjs commitlint.config.mjs knip.jsonc",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -45,9 +49,11 @@
     "@commitlint/config-conventional": "catalog:tooling",
     "@fission-ai/openspec": "catalog:tooling",
     "husky": "catalog:tooling",
+    "knip": "catalog:tooling",
     "lint-staged": "catalog:tooling",
     "oxfmt": "catalog:tooling",
     "oxlint": "catalog:tooling",
+    "sherif": "catalog:tooling",
     "turbo": "catalog:tooling"
   },
   "devEngines": {

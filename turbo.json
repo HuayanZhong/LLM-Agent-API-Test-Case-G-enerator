@@ -68,7 +68,8 @@
         ".github/**",
         "renovate.json",
         "lint-staged.config.mjs",
-        "commitlint.config.mjs"
+        "commitlint.config.mjs",
+        "knip.jsonc"
       ]
     },
     "//#format:root:fix": {

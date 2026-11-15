@@ -27,3 +27,6 @@ jobs:
       - run: pnpm format
       - run: pnpm format:root
       - run: pnpm check-types
+      # 依赖一致性（sherif）与死依赖 / 死引用（knip）
+      - run: pnpm sherif
+      - run: pnpm knip

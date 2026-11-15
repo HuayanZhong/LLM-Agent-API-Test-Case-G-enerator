@@ -15,7 +15,8 @@
 - Storybook 与 MCP：`packages/ui`（6006），端点为 `http://127.0.0.1:6006/mcp`，仅 dev 时可用；见 [packages/ui/CLAUDE.md](packages/ui/CLAUDE.md)
 - 类型检查：`pnpm check-types`（Turbo）；profile 与约束见 [packages/typescript-config/CLAUDE.md](packages/typescript-config/CLAUDE.md)，共享类型包边界见 [packages/types/CLAUDE.md](packages/types/CLAUDE.md)
 - 测试：`pnpm test`（Turbo，行覆盖率 ≥ 95%）、`pnpm test:watch`；profile 与测试文件约定见 [packages/vitest-config/CLAUDE.md](packages/vitest-config/CLAUDE.md)
-- Lint 与格式化：`pnpm lint` / `pnpm format`（Turbo，九个包并行）；根配置是 `.oxlintrc.json` / `.oxfmtrc.json`，根文件用 `pnpm format:root`（含 `.mcp.json`、`skills-lock.json`、`.github`、`renovate.json`），规则见 [CLAUDE.md](CLAUDE.md)
+- Lint 与格式化：`pnpm lint` / `pnpm format`（Turbo，九个包并行）；根配置是 `.oxlintrc.json` / `.oxfmtrc.json`，根文件用 `pnpm format:root`（含 `.mcp.json`、`skills-lock.json`、`.github`、`renovate.json`、`knip.jsonc`），规则见 [CLAUDE.md](CLAUDE.md)
+- 依赖与死代码：`pnpm sherif`（依赖一致性）与 `pnpm knip`（死依赖 / 死引用，配置在 `knip.jsonc`）都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用
 - 构建：`pnpm build`（Turbo，四个 app；desktop 复制前端静态导出）
 - 提交前 hook：`pre-commit` 只对暂存文件跑 `oxlint --fix` / `oxfmt`，`commit-msg` 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 `git commit --no-verify`，见 [CLAUDE.md](CLAUDE.md)
 - 设计文档索引：[doc/README.md](doc/README.md)

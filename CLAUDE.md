@@ -19,6 +19,9 @@ pnpm test         # 加载 .env → .env.development 后 turbo run test（行覆
 pnpm test:watch   # 加载 .env → .env.development 后 turbo run test:watch
 pnpm lint         # 根脚本：turbo run lint（九个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
+pnpm sherif       # 依赖版本 / 依赖类型 / workspace 一致性检查
+pnpm knip         # 死依赖、死引用、死文件、死导出检查（配置在 knip.jsonc）
+pnpm knip:fix     # 本地人工确认后使用；会直接删依赖与导出
 pnpm format       # 根脚本：turbo run format（九个包并行 oxfmt --check）
 pnpm format:fix   # 根脚本：turbo run format:fix
 pnpm format:root      # 根配置文件 oxfmt --check
@@ -33,7 +36,8 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑六个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`、Electron 的 `__tests__/**/*.test.ts`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
-- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，九个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`。
+- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，九个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`、`knip.jsonc`。
+- 依赖与死代码：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 协议一致性；`pnpm knip` 检查未使用 / 未声明依赖、死文件与死导出，配置在根 `knip.jsonc`。两者都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用，不要自动运行。CLI-only 依赖（`@fission-ai/openspec`）与技能资产（`.agents/**`）在配置里显式豁免并注明原因。
 - 桌面壳：`apps/desktop`（Forge 8 + Electron 45）。`pnpm --filter desktop dev` 加载 3000；`package` / `make` 先生成 `renderer` 再打包；`make` 产出 `out/make/zip/win32/x64/`。Electron 二进制按需下载，网络不可直连 GitHub 时用 `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`。
 
 **版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
