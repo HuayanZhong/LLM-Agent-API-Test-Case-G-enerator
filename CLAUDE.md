@@ -129,10 +129,16 @@ doc/             当前设计的事实来源
 
 ## JSON Schema 约定
 
-- 优先使用依赖包自带的本地 schema，例如 `turbo.json` 的 `./node_modules/turbo/schema.json`、`.oxlintrc.json` 的 `./node_modules/oxlint/configuration_schema.json`、`.oxfmtrc.json` 的 `./node_modules/oxfmt/configuration_schema.json`；升级依赖时 schema 随包同步升级。
-- 不要使用未版本化的远程 schema（如 `https://turbo.build/schema.json`）。远程地址会独立更新，容易和已安装 CLI 版本漂移；VSCode 还会因域名不受信任而报错。
-- 标准生态 schema（GitHub Actions、Docker Compose 等）可以用 schemastore 或版本化 URL；需要时把域名加入 VSCode 的 `json.schemaDownload.trustedDomains`。
-- `tsconfig.json` 与 Next/Nest 配置通常不需要 `$schema`，不要为了消警告硬加远程 schema；Oxc 的两个配置文件直接用本地 schema。
+- 远程 schema 只使用官方文档给出的地址，不要自己拼 CDN 路径：
+  - `turbo.json`：`https://turborepo.dev/schema.json`
+  - `knip.jsonc`：`https://unpkg.com/knip@6/schema-jsonc.json`（官方按主版本提供，`.json` 配置用 `schema.json`）
+  - `renovate.json`：`https://docs.renovatebot.com/renovate-schema.json`
+  - `components.json`：`https://ui.shadcn.com/schema.json`
+- Oxlint 与 Oxfmt 官方文档只提供本地 schema：`.oxlintrc.json` 用 `./node_modules/oxlint/configuration_schema.json`，`.oxfmtrc.json` 用 `./node_modules/oxfmt/configuration_schema.json`，不要改成远程。
+- `$schema` 只服务编辑器补全与校验；工具实际读取的仍是本地配置。离线时远程 schema 不加载，但 lint / format / build 不受影响。
+- 项目 `.vscode/settings.json` 已信任 `https://turborepo.dev`、`https://unpkg.com`、`https://docs.renovatebot.com`、`https://ui.shadcn.com`；用户全局 `json.schemaDownload.trustedDomains` 另外覆盖 schemastore / raw / jsDelivr，供其他项目使用。新增域名时两处都要补。
+- 升级依赖导致 schema 主版本变化时（例如 knip 7），同步修改 URL；Renovate 的升级 PR 要带上这一行。
+- `tsconfig.json` 与 Next/Nest 配置通常不需要 `$schema`，不要为了消警告硬加。
 
 ## 架构约束
 

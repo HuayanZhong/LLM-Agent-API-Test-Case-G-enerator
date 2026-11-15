@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/knip/schema.json",
+  "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
   // 技能资产不是应用代码，不参与依赖图。
   "ignore": [".agents/**"],
   // 只通过 pnpm exec 使用的 CLI，没有源码 import。
