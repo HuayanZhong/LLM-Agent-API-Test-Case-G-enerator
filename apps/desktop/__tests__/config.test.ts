@@ -6,7 +6,7 @@ import {
   getAllowedOrigins,
   getNavigationOrigin,
   getRendererUrl,
-} from "../src/config"
+} from "../src/app/config"
 
 describe("getRendererUrl", () => {
   it("打包态固定返回 app://bundle/", () => {

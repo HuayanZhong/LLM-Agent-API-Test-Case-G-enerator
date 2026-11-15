@@ -1,6 +1,6 @@
 import { app, protocol } from "electron"
-import { APP_SCHEME } from "./protocol"
-import { bootstrap } from "./bootstrap"
+import { APP_SCHEME } from "./protocol/protocol"
+import { bootstrap } from "./app/bootstrap"
 
 // 必须在 app ready 之前注册；standard/secure 让 app:// 拥有 origin、相对路径与存储 API。
 protocol.registerSchemesAsPrivileged([

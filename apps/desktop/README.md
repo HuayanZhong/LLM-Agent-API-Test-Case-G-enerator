@@ -37,7 +37,8 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ pnpm --filter desktop ma
 
 - 开发态：`bootstrap` 先轮询 `ELECTRON_RENDERER_URL`（默认 `http://localhost:3000`），最多 30 秒；超时后窗口显示本地诊断页，含目标地址与重试链接。
 - 生产态：`main` 注册 `app` scheme，`protocol.handle` 从 `app.getAppPath()/renderer` 读取静态文件；`/` → `index.html`，`report/` → `report/index.html`，未知路径 → `404.html`，路径穿越一律 404。
-- 窗口：单实例锁；第二次启动聚焦已有窗口；关闭最后一个窗口时非 macOS 退出。
+- 窗口：单实例锁；初始 `1280×800`，最小 `1024×800`；移除 Electron 默认应用菜单；第二次启动聚焦已有窗口；关闭最后一个窗口时非 macOS 退出。
+- 调试：开发态按 `F12` 或 `Ctrl+Shift+I` 切换 DevTools，启动时不自动打开；打包态不注册快捷键，也没有菜单入口。
 - 安全：`sandbox` + `contextIsolation`，无 `nodeIntegration`；preload 只暴露 `platform` 与 `versions`；外链交给系统浏览器，非白名单导航与权限请求一律拒绝。
 - 生产态不启动 Next 进程，也不监听 3000。
 
@@ -48,12 +49,17 @@ apps/desktop/
 +-- forge.config.ts        # Vite 插件只编 main/preload；maker-zip、Fuses、ignore
 +-- src/
 |   +-- main.ts           # Electron 入口：注册 app scheme，调用 bootstrap
-|   +-- bootstrap.ts      # 单实例、窗口、等待开发服务器、app:// 加载
-|   +-- config.ts         # 开发 URL、app:// origin、允许 origin
-|   +-- navigation.ts     # 外链与导航白名单
-|   +-- protocol.ts       # app:// 路径解析、MIME、CSP、404
 |   +-- preload.ts        # 最小 contextBridge
-|   +-- global.d.ts       # preload 暴露对象的类型契约
+|   +-- app/
+|   |   +-- bootstrap.ts  # 单实例、窗口、等待开发服务器、app:// 加载
+|   |   +-- config.ts     # 开发 URL、app:// origin、允许 origin
+|   |   +-- devtools.ts   # 开发态 F12 / Ctrl+Shift+I 切换 DevTools
+|   |   +-- navigation.ts # 外链与导航白名单
+|   +-- protocol/
+|   |   +-- protocol.ts   # app:// 路径解析、MIME、CSP、404
+|   +-- types/
+|       +-- index.ts      # 共享契约类型
+|       +-- global.d.ts   # Window.desktop 全局声明
 +-- __tests__/            # config / navigation / protocol / bootstrap / preload
 +-- vite.main.config.mts
 +-- vite.preload.config.mts
@@ -86,7 +92,7 @@ node --input-type=module -e "import { getCurrentFuseWire, FuseV1Options } from '
 
 - Fuses 实测：RunAsNode=`0`、CookieEncryption=`1`、NodeOptions=`0`、NodeCliInspect=`0`、EmbeddedAsarIntegrityValidation=`0`、OnlyLoadAppFromAsar=`1`。
 - `EmbeddedAsarIntegrityValidation` 暂不启用：需要额外的 ASAR 完整性元数据与签名链路，当前 ZIP 未做代码签名；留到安全加固变更。
-- 生产态不调用 `openDevTools`；源码中无该调用。
+- 开发态通过 `F12` / `Ctrl+Shift+I` 切换 DevTools；生产态不注册快捷键，也不调用 `openDevTools`。
 - 渲染隔离实测（打包 exe + `--remote-debugging-port=9222`，CDP `Runtime.evaluate`）：`location.origin = app://bundle`；`window.desktop` 只有 `platform` / `versions`；`typeof require = undefined`、`typeof process = undefined`。
 - ZIP 已解压到独立目录并在无 dev server 时启动，首页、404 与静态资源正常。
 

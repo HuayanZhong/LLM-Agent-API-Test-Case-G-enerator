@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs"
 import { statSync } from "node:fs"
 import path from "node:path"
+import type { ProtocolHandlerOptions } from "../types"
 
 export const APP_SCHEME = "app"
 export const APP_HOST = "bundle"
@@ -31,12 +32,6 @@ const MIME_TYPES: Record<string, string> = {
   ".ttf": "font/ttf",
   ".otf": "font/otf",
   ".zip": "application/zip",
-}
-
-export interface ProtocolHandlerOptions {
-  rendererRoot: string
-  // 测试可注入失败读取；生产默认走 fs.readFile（Electron 已 patch asar）。
-  readFile?: (filePath: string) => Promise<Uint8Array>
 }
 
 export function getMimeType(filePath: string): string {

@@ -52,8 +52,9 @@ const electron = vi.hoisted(() => {
     defaultSession: { setPermissionRequestHandler: vi.fn<(handler: unknown) => void>() },
   }
   const shell = { openExternal: vi.fn<(url: string) => Promise<void>>(async () => {}) }
+  const Menu = { setApplicationMenu: vi.fn<(menu: unknown) => void>() }
 
-  return { app, protocol, session, shell, BrowserWindow: MockBrowserWindow, windows }
+  return { app, protocol, session, shell, Menu, BrowserWindow: MockBrowserWindow, windows }
 })
 
 vi.mock("electron", () => ({
@@ -62,6 +63,7 @@ vi.mock("electron", () => ({
   protocol: electron.protocol,
   session: electron.session,
   shell: electron.shell,
+  Menu: electron.Menu,
 }))
 
 import {
@@ -69,7 +71,7 @@ import {
   createStartupErrorPage,
   getWindowOptions,
   waitForServer,
-} from "../src/bootstrap"
+} from "../src/app/bootstrap"
 
 function decodedPage(dataUrl: string): string {
   return decodeURIComponent(dataUrl.slice(dataUrl.indexOf(",") + 1))
@@ -138,9 +140,13 @@ describe("createStartupErrorPage", () => {
 })
 
 describe("getWindowOptions", () => {
-  it("固定安全 webPreferences 与初始隐藏", () => {
+  it("固定初始/最小尺寸、安全 webPreferences 与初始隐藏", () => {
     const options = getWindowOptions("C:/tmp/preload.cjs")
     expect(options).toMatchObject({
+      width: 1280,
+      height: 800,
+      minWidth: 1024,
+      minHeight: 800,
       show: false,
       title: "接口测试用例辅助生成系统",
       webPreferences: {
@@ -185,6 +191,28 @@ describe("bootstrap", () => {
     expect(electron.protocol.handle).toHaveBeenCalledWith("app", expect.any(Function))
     expect(electron.windows[0]?.loadURL).toHaveBeenCalledWith("app://bundle/")
     expect(wait).not.toHaveBeenCalled()
+  })
+
+  it("移除默认应用菜单", async () => {
+    await bootstrap({ waitForServer: async () => true })
+    expect(electron.Menu.setApplicationMenu).toHaveBeenCalledWith(null)
+  })
+
+  it("开发态注册 DevTools 快捷键且不自动打开", async () => {
+    await bootstrap({ waitForServer: async () => true })
+    const registered = electron.windows[0]?.webContents.on.mock.calls.some(
+      ([event]) => event === "before-input-event",
+    )
+    expect(registered).toBe(true)
+  })
+
+  it("打包态不注册 DevTools 快捷键", async () => {
+    electron.app.isPackaged = true
+    await bootstrap({ waitForServer: async () => true })
+    const registered = electron.windows[0]?.webContents.on.mock.calls.some(
+      ([event]) => event === "before-input-event",
+    )
+    expect(registered).toBe(false)
   })
 
   it("第二次启动聚焦已有窗口", async () => {

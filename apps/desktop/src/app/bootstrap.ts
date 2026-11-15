@@ -1,9 +1,11 @@
-import { BrowserWindow, app, protocol, session, shell } from "electron"
+import { BrowserWindow, Menu, app, protocol, session, shell } from "electron"
 import type { BrowserWindowConstructorOptions } from "electron"
 import path from "node:path"
 import { APP_URL, getAllowedOrigins, getRendererUrl } from "./config"
+import { configureDevToolsShortcuts } from "./devtools"
 import { configureNavigation } from "./navigation"
-import { APP_SCHEME, createProtocolHandler } from "./protocol"
+import { APP_SCHEME, createProtocolHandler } from "../protocol/protocol"
+import type { BootstrapOptions, WaitForServerOptions } from "../types"
 
 export const WINDOW_TITLE = "接口测试用例辅助生成系统"
 
@@ -11,6 +13,9 @@ export function getWindowOptions(preloadPath: string): BrowserWindowConstructorO
   return {
     width: 1280,
     height: 800,
+    // 低于 1024×800 时前端布局会被挤压到不可操作，窗口拖拽到此为止。
+    minWidth: 1024,
+    minHeight: 800,
     show: false,
     title: WINDOW_TITLE,
     webPreferences: {
@@ -21,14 +26,6 @@ export function getWindowOptions(preloadPath: string): BrowserWindowConstructorO
       webSecurity: true,
     },
   }
-}
-
-export interface WaitForServerOptions {
-  timeoutMs?: number
-  intervalMs?: number
-  now?: () => number
-  sleep?: (ms: number) => Promise<void>
-  fetchImpl?: typeof fetch
 }
 
 /** 等待开发服务器可访问；轮询而不是启动 Next，避免与 Turbo 的开发进程重复。 */
@@ -83,10 +80,6 @@ export function createStartupErrorPage(targetUrl: string): string {
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
 }
 
-export interface BootstrapOptions {
-  waitForServer?: typeof waitForServer
-}
-
 /** 启动桌面壳。main.ts 已先注册 app scheme；这里负责窗口、协议与生命周期。 */
 export async function bootstrap(options: BootstrapOptions = {}): Promise<void> {
   if (!app.requestSingleInstanceLock()) {
@@ -101,6 +94,9 @@ export async function bootstrap(options: BootstrapOptions = {}): Promise<void> {
   const wait = options.waitForServer ?? waitForServer
 
   await app.whenReady()
+
+  // 默认菜单带调试快捷键；打包态不能留入口，开发态改由 before-input-event 切换。
+  Menu.setApplicationMenu(null)
 
   let devServerReady = true
   if (isPackaged) {
@@ -121,6 +117,8 @@ export async function bootstrap(options: BootstrapOptions = {}): Promise<void> {
         ? rendererUrl
         : createStartupErrorPage(rendererUrl)
     void win.loadURL(target)
+    // 仅开发态注册调试快捷键；打包态不注册、不自动打开。
+    if (!isPackaged) configureDevToolsShortcuts(win.webContents)
     return win
   }
 

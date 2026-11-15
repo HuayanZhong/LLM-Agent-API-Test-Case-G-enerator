@@ -1,4 +1,5 @@
 import { getNavigationOrigin } from "./config"
+import type { WebContentsLike } from "../types"
 
 /** 只有 http(s) 才交给系统浏览器；app://、file://、mailto 等不按外链处理。 */
 export function isExternalHttpUrl(rawUrl: string): boolean {
@@ -14,14 +15,6 @@ export function isExternalHttpUrl(rawUrl: string): boolean {
 export function isAllowedNavigation(rawUrl: string, allowedOrigins: string[]): boolean {
   const origin = getNavigationOrigin(rawUrl)
   return origin !== null && allowedOrigins.includes(origin)
-}
-
-export interface WebContentsLike {
-  setWindowOpenHandler(handler: (details: { url: string }) => { action: "deny" }): void
-  on(
-    event: "will-navigate",
-    listener: (event: { preventDefault(): void }, url: string) => void,
-  ): void
 }
 
 /** 统一挂载新窗口与页面内导航策略：应用内放行，http(s) 交给系统浏览器，其余拦截。 */

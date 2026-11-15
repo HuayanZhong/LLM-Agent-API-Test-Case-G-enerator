@@ -1,11 +1,8 @@
+import type { RendererOptions } from "../types"
+
 export const DEFAULT_DEV_RENDERER_URL = "http://localhost:3000"
 export const APP_ORIGIN = "app://bundle"
 export const APP_URL = "app://bundle/"
-
-export interface RendererOptions {
-  isPackaged: boolean
-  devUrl?: string
-}
 
 /**
  * URL 的稳定 origin。

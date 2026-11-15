@@ -10,7 +10,8 @@ export default defineConfig({
       ...baseProfile.test.coverage,
       include: ["src/**/*.ts"],
       // main.ts 只做组合与生命周期接线；行为在 bootstrap / protocol / navigation 中测试。
-      exclude: [...coverageConfigDefaults.exclude, "src/main.ts", "src/global.d.ts"],
+      // types/ 是纯类型，V8 覆盖不到，纳入统计会产生空文件。
+      exclude: [...coverageConfigDefaults.exclude, "src/main.ts", "src/types/**"],
     },
   },
 })

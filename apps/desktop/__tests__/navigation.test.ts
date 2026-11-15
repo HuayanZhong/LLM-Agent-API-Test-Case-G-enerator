@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest"
-import { configureNavigation, isAllowedNavigation, isExternalHttpUrl } from "../src/navigation"
+import { configureNavigation, isAllowedNavigation, isExternalHttpUrl } from "../src/app/navigation"
 
 describe("isExternalHttpUrl", () => {
   it("识别 http 与 https", () => {

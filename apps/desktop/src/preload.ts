@@ -1,4 +1,5 @@
 import { contextBridge } from "electron"
+import type { DesktopBridge } from "./types"
 
 // 沙箱 preload 只暴露静态信息；后续需要 IPC 时逐个显式加白名单接口，不暴露通用通道。
 const versions = process.versions as NodeJS.ProcessVersions & {
@@ -6,11 +7,13 @@ const versions = process.versions as NodeJS.ProcessVersions & {
   chrome?: string
 }
 
-contextBridge.exposeInMainWorld("desktop", {
+const bridge: DesktopBridge = {
   platform: process.platform,
   versions: {
     electron: versions.electron ?? "",
     chrome: versions.chrome ?? "",
     node: versions.node,
   },
-})
+}
+
+contextBridge.exposeInMainWorld("desktop", bridge)

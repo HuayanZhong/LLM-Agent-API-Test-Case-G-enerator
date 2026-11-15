@@ -2,7 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
-import { HTML_CSP, createProtocolHandler, getMimeType, resolveAssetPath } from "../src/protocol"
+import {
+  HTML_CSP,
+  createProtocolHandler,
+  getMimeType,
+  resolveAssetPath,
+} from "../src/protocol/protocol"
 
 let root = ""
 
