@@ -29,8 +29,8 @@ pnpm --filter desktop format
 - `src/protocol/protocol.ts`：`app://` 路径解析、MIME、404、CSP 与缓存头。
 - `src/app/config.ts` / `src/app/navigation.ts`：开发 URL、允许 origin、外链判断。
 - `src/app/devtools.ts`：开发态 `before-input-event` 快捷键（F12 / Ctrl+Shift+I）切换 DevTools。
-- `src/types/index.ts`：`RendererOptions`、`WaitForServerOptions`、`BootstrapOptions`、`ProtocolHandlerOptions`、`WebContentsLike`、`DevToolsShortcutTarget`、`DesktopBridge`。
-- `src/types/global.d.ts`：`Window.desktop` 的全局声明，从 `types/index.ts` 导入契约。
+- `src/types/index.ts`：`RendererOptions`、`WaitForServerOptions`、`BootstrapOptions`、`ProtocolHandlerOptions`、`WebContentsLike`、`DevToolsShortcutTarget`；这些都是主进程内部契约，留在本包。
+- `src/types/global.d.ts`：`Window.desktop` 的全局声明，从 `@workspace/types` 导入 `DesktopBridge`。
 - `scripts/copy-renderer.mjs`：检查并复制 `apps/frontend/out`。
 
 ## 本包约束
@@ -40,7 +40,7 @@ pnpm --filter desktop format
 - `forge.config.ts` 的 `packagerConfig.ignore` 必须保留 `/.vite`、`/renderer` 与 `/package.json`；Vite 插件默认会丢掉 renderer。
 - 窗口初始 `1280×800`、最小 `1024×800`；默认应用菜单必须保持移除（`Menu.setApplicationMenu(null)`），不要加回自定义菜单。
 - DevTools 只在未打包时通过 `F12` / `Ctrl+Shift+I` 切换；打包态不得注册快捷键或调用 `openDevTools`，也不要恢复默认菜单的调试入口。
-- 共享接口类型集中在 `src/types/index.ts`；`Window.desktop` 声明在 `src/types/global.d.ts`，不要在实现文件里重复定义。
+- 共享接口类型集中在 `src/types/index.ts`；`Window.desktop` 声明在 `src/types/global.d.ts`，不要在实现文件里重复定义。渲染进程可见的 `DesktopBridge` 来自 `@workspace/types`，只允许 `import type`，并放在 `devDependencies`；本包继续保持零运行时依赖。
 - 渲染进程：`sandbox: true`、`contextIsolation: true`、`nodeIntegration: false`；preload 不暴露通用 IPC 或文件系统入口。
 - 开发态等待 `ELECTRON_RENDERER_URL` 最多 30 秒；失败必须落到诊断页（含地址与重试），不能留空白窗口。
 - 权限请求默认拒绝；新增摄像头、通知等能力前先改这里并评估安全边界。

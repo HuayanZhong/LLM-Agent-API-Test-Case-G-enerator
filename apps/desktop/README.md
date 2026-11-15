@@ -58,8 +58,8 @@ apps/desktop/
 |   +-- protocol/
 |   |   +-- protocol.ts   # app:// 路径解析、MIME、CSP、404
 |   +-- types/
-|       +-- index.ts      # 共享契约类型
-|       +-- global.d.ts   # Window.desktop 全局声明
+|       +-- index.ts      # 主进程内部契约类型（窗口、协议、测试注入）
+|       +-- global.d.ts   # Window.desktop 全局声明，引用 @workspace/types
 +-- __tests__/            # config / navigation / protocol / bootstrap / preload
 +-- vite.main.config.mts
 +-- vite.preload.config.mts
@@ -99,6 +99,7 @@ node --input-type=module -e "import { getCurrentFuseWire, FuseV1Options } from '
 ## 依赖与边界
 
 - 本包没有运行时 `dependencies`；Electron、Forge、Vite 全在 `devDependencies`，打包时被 prune。
+- `DesktopBridge` 来自 `@workspace/types`（`devDependencies`，只做 `import type`）；窗口、协议与测试注入等主进程内部契约仍留在 `src/types/index.ts`，不上移到共享包。
 - 版本走 `pnpm-workspace.yaml` 的 `desktop` catalog；`@types/node` 固定 24.x，对齐 Electron 45 内置的 Node 24.22.2。
 - Next、React、`@workspace/ui` 只属于 `apps/frontend` 的构建期依赖，不进入桌面包。
 - Vite 插件默认 `ignore` 只保留 `.vite`；`forge.config.ts` 必须显式保留 `renderer` 与 `package.json`。

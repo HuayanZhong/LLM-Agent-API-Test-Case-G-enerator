@@ -23,6 +23,7 @@ pnpm --filter bff start:prod
 ## 目录与入口
 
 - 启动：`src/main.ts`；根模块：`src/app.module.ts`；现有路由：`src/app.controller.ts`。
+- `GET /health` 的返回形状来自 `@workspace/types` 的 `HealthResponse`，只做 `import type` 标注；入参 DTO 与校验规则留在本包。
 - 单元测试：`src/**/*.spec.ts`，与源码同目录；e2e 后续放 `test/**/*.e2e-spec.ts`。
 - 新增模块放 `src/<module>/`，并在 `AppModule` 里注册。
 
@@ -34,6 +35,7 @@ pnpm --filter bff start:prod
 - 覆盖率只卡行覆盖率 95%（`coverage.thresholds.lines`）；`src/main.ts` 已在 `coverage.exclude` 中排除。
 - `nest build` 会先删 `dist/`（`deleteOutDir`）；`tsconfig.build.json` 的 `**/*spec.ts` 保证测试不进 dist。
 - BFF 只做聚合与会话：不要把用例生成、比对、知识沉淀写进本包。
+- 跨应用共享类型只从 `@workspace/types` 用 `import type` 引用；controller 入参 DTO、`class-validator` 规则与装饰器类一律留在本包，不进共享包。
 - 调 backend 用 HTTP，不直接 import `apps/backend` 的源码。
 - 当前没有鉴权、CORS 与 SSE；测试与 lint / format 已接入，但只有 `health` 冒烟用例。新增时先走 OpenSpec 提案。
 - Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Nest 源文件已统一为双引号、无分号。

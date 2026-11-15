@@ -35,6 +35,7 @@
     "@types/express": "catalog:backend",
     "@types/node": "catalog:tooling",
     "@vitest/coverage-v8": "catalog:testing",
+    "@workspace/types": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "@workspace/vitest-config": "workspace:*",
     "typescript": "catalog:tooling",

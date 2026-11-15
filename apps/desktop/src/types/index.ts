@@ -51,13 +51,3 @@ export interface DevToolsShortcutTarget {
   ): void
   toggleDevTools(): void
 }
-
-/** preload 暴露给渲染进程的唯一桥接对象；新增字段必须先评估安全边界。 */
-export interface DesktopBridge {
-  platform: NodeJS.Platform
-  versions: {
-    electron: string
-    chrome: string
-    node: string
-  }
-}

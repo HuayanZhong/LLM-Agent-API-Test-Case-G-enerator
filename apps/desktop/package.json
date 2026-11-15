@@ -31,6 +31,7 @@
     "@electron/fuses": "catalog:desktop",
     "@types/node": "catalog:desktop",
     "@vitest/coverage-v8": "catalog:testing",
+    "@workspace/types": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "@workspace/vitest-config": "workspace:*",
     "electron": "catalog:desktop",

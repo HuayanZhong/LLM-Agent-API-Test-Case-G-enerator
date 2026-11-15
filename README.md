@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库已有四个可运行的应用骨架：`apps/frontend`（Next.js 静态导出前端）、`apps/desktop`（Electron 桌面壳）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest 与 Oxc 配置在 `packages/`；业务模块尚未实现。
+> 当前仓库已有四个可运行的应用骨架：`apps/frontend`（Next.js 静态导出前端）、`apps/desktop`（Electron 桌面壳）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest 与跨应用类型契约在 `packages/`；业务模块尚未实现。
 
 ## 目录结构
 
@@ -20,7 +20,7 @@
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 与第三方技能；.claude/skills/ 是同步副本
 ├── apps/                # desktop（Electron）、backend（5000）、bff（4000）、frontend（3000）
-├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile
+├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile；types：跨应用类型契约
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .github/             # CI 工作流、复合 action、协作模板
 ├── .husky/              # pre-commit 与 commit-msg
@@ -57,12 +57,12 @@
 pnpm install
 pnpm dev                    # 加载 .env → .env.development 后 turbo run dev：并行启动 backend、bff、frontend 与 desktop
 pnpm build                  # 加载 .env → .env.production 后 turbo run build：构建四个 app（desktop 复制 renderer）
-pnpm check-types            # turbo run check-types：六个包并行类型检查
+pnpm check-types            # turbo run check-types：七个包并行类型检查
 pnpm test                   # 加载 .env → .env.development 后 turbo run test：五个包并行跑 Vitest，行覆盖率 ≥ 95%
 pnpm test:watch             # 加载 .env → .env.development 后 turbo run test:watch：五个包并行 watch
-pnpm lint                   # turbo run lint：七个包并行 oxlint
+pnpm lint                   # turbo run lint：八个包并行 oxlint
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
-pnpm format                 # turbo run format：七个包并行 oxfmt --check
+pnpm format                 # turbo run format：八个包并行 oxfmt --check
 pnpm format:fix             # turbo run format:fix：写入格式化
 pnpm format:root            # 根配置文件 oxfmt --check（不属于任何 workspace 包）
 pnpm format:root:fix        # 写入根配置文件格式
@@ -110,11 +110,13 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 
 前端、NestJS 与 UI 包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`；desktop 直接继承 `base` 并改 `moduleResolution: Bundler`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
 
+四个 app 之间不直接 import；跨应用共享的类型契约放在 `packages/types`（`@workspace/types`），只发类型、没有运行时产物，消费方用 `import type`。controller 入参 DTO 与桌面壳主进程内部契约留在各自包内，见 [packages/types/README.md](packages/types/README.md)。
+
 Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
 
 覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完七个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完八个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
 
 ## CI 与自动化
 
@@ -150,6 +152,7 @@ agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入
 | `packages/ui` | [README](packages/ui/README.md) | [CLAUDE](packages/ui/CLAUDE.md) | [AGENTS](packages/ui/AGENTS.md) |
 | `packages/typescript-config` | [README](packages/typescript-config/README.md) | [CLAUDE](packages/typescript-config/CLAUDE.md) | [AGENTS](packages/typescript-config/AGENTS.md) |
 | `packages/vitest-config` | [README](packages/vitest-config/README.md) | [CLAUDE](packages/vitest-config/CLAUDE.md) | [AGENTS](packages/vitest-config/AGENTS.md) |
+| `packages/types` | [README](packages/types/README.md) | [CLAUDE](packages/types/CLAUDE.md) | [AGENTS](packages/types/AGENTS.md) |
 
 ## 环境变量
 
