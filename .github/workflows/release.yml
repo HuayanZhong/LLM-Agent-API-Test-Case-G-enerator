@@ -29,13 +29,14 @@ jobs:
         with:
           # Changesets 需要完整历史来计算版本变更。
           fetch-depth: 0
-          # changesets/action 要把版本提交推到 PR 分支，此处例外保留凭据。
-          persist-credentials: true
+          persist-credentials: false
       - uses: ./.github/actions/setup
       - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          version: pnpm changeset:version
-          commit: "chore(release): 版本号更新"
-          title: "chore(release): 版本号更新"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version-script: pnpm changeset:version
+          commit-message: "chore(release): 版本号更新"
+          pr-title: "chore(release): 版本号更新"
+          # 私有包不发 npm、不打 tag、不创建 GitHub Release
+          create-github-releases: false
+          push-git-tags: false

@@ -65,7 +65,7 @@ Changesets 只管理 workspace 包，根包不在 `packages/*` 中。`scripts/sy
 - CI：push 到 main 后，`.github/workflows/release.yml` 用 `changesets/action@v2.1.2`（按仓库约定固定 SHA）运行 `pnpm changeset:version`，开或更新 Version Packages PR；不提供 `publish` 命令，因此不会发布 npm 包。工作流用 `paths` 过滤，只在 `.changeset/**`、各 `package.json`、`scripts/sync-version.mjs` 与 workflow 自身变化时触发，并加 `concurrency: release-${{ github.ref }}` 避免并发开 PR。
 - Version Packages PR 同样跑 `quality` 与 `test`；合并后才完成版本更新。
 
-### 5. Release workflow 的权限与 checkout 例外
+### 5. Release workflow 的权限
 
 ```yaml
 permissions:
@@ -73,7 +73,7 @@ permissions:
   pull-requests: write
 ```
 
-机器人需要创建分支与 PR、推送提交。checkout 保持 `fetch-depth: 0` 以便 Changesets 读取历史；`persist-credentials` 在这个 workflow 里设为默认（true），因为 action 需要 push，这与其它 workflow 的 `false` 约定不同，会在注释里说明。`GITHUB_TOKEN` 通过 `env` 传入。
+机器人需要创建分支与 PR、推送版本提交。v2 的 `changesets/action` 默认通过 GitHub API 推送（`push-with-git-cli: false`），因此 checkout 保持 `fetch-depth: 0`、`persist-credentials: false`，不需要为它开例外。action 使用 v2 的输入名：`version-script`、`commit-message`、`pr-title`；`create-github-releases` 与 `push-git-tags` 设为 `false`，与「不发布、不打 tag」一致。
 
 ### 6. 配置与工具链的接入点
 
