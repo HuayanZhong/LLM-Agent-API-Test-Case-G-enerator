@@ -191,6 +191,9 @@ catalogs:
     rxjs:
       specifier: ^7.8.2
       version: 7.8.2
+    zod:
+      specifier: ^4.6.7
+      version: 4.6.7
   desktop:
     '@electron-forge/cli':
       specifier: ^8.0.1
@@ -375,6 +378,9 @@ importers:
       '@nestjs/platform-express':
         specifier: catalog:backend
         version: 12.5.0(@nestjs/common@12.5.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.5.0)(rxjs@7.8.2)
+      '@workspace/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       reflect-metadata:
         specifier: catalog:backend
         version: 0.2.2
@@ -430,6 +436,9 @@ importers:
       '@nestjs/platform-express':
         specifier: catalog:backend
         version: 12.5.0(@nestjs/common@12.5.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.5.0)(rxjs@7.8.2)
+      '@workspace/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       reflect-metadata:
         specifier: catalog:backend
         version: 0.2.2
@@ -576,6 +585,31 @@ importers:
       jsdom:
         specifier: catalog:testing
         version: 31.0.1
+      typescript:
+        specifier: catalog:tooling
+        version: 6.0.3
+      vite:
+        specifier: catalog:tooling
+        version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(jsdom@31.0.1)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+
+  packages/config:
+    dependencies:
+      zod:
+        specifier: catalog:backend
+        version: 4.6.7
+    devDependencies:
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.1.0(vitest@5.1.0)
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@workspace/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       typescript:
         specifier: catalog:tooling
         version: 6.0.3

@@ -25,6 +25,7 @@
     "@nestjs/common": "catalog:backend",
     "@nestjs/core": "catalog:backend",
     "@nestjs/platform-express": "catalog:backend",
+    "@workspace/config": "workspace:*",
     "reflect-metadata": "catalog:backend",
     "rxjs": "catalog:backend"
   },

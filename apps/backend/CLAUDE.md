@@ -23,6 +23,7 @@ pnpm --filter backend start:prod
 ## 目录与入口
 
 - 启动：`src/main.ts`；根模块：`src/app.module.ts`；现有路由：`src/app.controller.ts`。
+- 环境变量：`src/config.ts` 定义 `backendEnvSchema` 与 `loadConfig()`，测试在 `src/config.spec.ts`；端口只从这里取。
 - `GET /health` 的返回形状来自 `@workspace/types` 的 `HealthResponse`，只做 `import type` 标注；入参 DTO 与校验规则留在本包。
 - 单元测试：`src/**/*.spec.ts`，与源码同目录（Nest 官方模板口径）；e2e 后续放 `test/**/*.e2e-spec.ts`。
 - 业务模块按领域放 `src/<domain>/`，在 `AppModule` 注册；跨模块依赖用 Nest provider，不直接 import 其他 app。
@@ -35,6 +36,7 @@ pnpm --filter backend start:prod
 - 覆盖率只卡行覆盖率 95%（`coverage.thresholds.lines`）；`src/main.ts` 是 bootstrap 入口，已在 `coverage.exclude` 中排除。
 - `nest build` 会先删 `dist/`（`deleteOutDir`）；`tsconfig.build.json` 的 `**/*spec.ts` 保证测试不进 dist。
 - 系统红线：只诊断与复验，不改被测代码；测试报告是唯一交付物。业务实现时不要越界。
+- `@workspace/config` 是运行时依赖，放在 `dependencies`；环境变量统一走 `loadConfig()`，不要在 `main.ts` 或业务代码里直接读 `process.env`。非法端口会在启动阶段抛 `EnvError` 并中止，这是预期行为。
 - 跨应用共享类型只从 `@workspace/types` 用 `import type` 引用；controller 入参 DTO、`class-validator` 规则与装饰器类一律留在本包，不进共享包。
 - 当前没有数据库与 Agent；测试与 lint / format 已接入，但只有 `health` 冒烟用例。新增能力先走 OpenSpec 提案。
 - Lint / format 用根 `.oxlintrc.json` / `.oxfmtrc.json`，本包只提供 `lint` / `format` 脚本；Nest 源文件已统一为双引号、无分号。

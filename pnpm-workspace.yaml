@@ -64,7 +64,7 @@ catalogs:
     "@storybook/addon-themes": ^10.6.7
     "@storybook/addon-mcp": ^10.6.7
 
-  # 后端：NestJS 服务（backend / bff）；LangGraph、Zod、MikroORM 等后续加入
+  # 后端：NestJS 服务（backend / bff）；LangGraph、MikroORM 等后续加入
   backend:
     "@nestjs/common": ^12.5.0
     "@nestjs/core": ^12.5.0
@@ -75,6 +75,7 @@ catalogs:
     "@types/express": ^5.0.6
     reflect-metadata: ^0.2.2
     rxjs: ^7.8.2
+    zod: ^4.6.7
 
   # 测试与质量：Vitest、覆盖率、Testing Library
   testing:
