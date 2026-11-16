@@ -79,12 +79,12 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 ## CI 与自动化
 
-- `.github/workflows/` 按职责拆成 `quality`、`test`、`build`、`security`、`agent-review`、`labeler`、`release`；安装逻辑统一走 `.github/actions/setup/action.yml`（pnpm 12.18.0 + `.nvmrc` + `--frozen-lockfile`）。
+- `.github/workflows/` 按职责拆成 `quality`、`test`、`build`、`security`、`labeler`、`release`；安装逻辑统一走 `.github/actions/setup/action.yml`（pnpm 12.18.0 + `.nvmrc` + `--frozen-lockfile`）。
 - 所有 action 按 SHA 固定，`permissions` 默认 `contents: read`，checkout 统一 `persist-credentials: false`。
 - `release.yml` 只响应 `main` 上限定路径的 push，用 `changesets/action@v2.1.2` 开/更新 Version Packages PR；v2 通过 GitHub API 推送提交，因此 checkout 不需要保留凭据，workflow 单独声明 `contents: write` / `pull-requests: write`。没有 `publish` 步骤，`create-github-releases` 与 `push-git-tags` 都关闭。
-- `agent-review.yml` 只评论、不 approve、不改代码；跳过 draft 与 fork PR；需要仓库 Secrets 的 `ANTHROPIC_API_KEY`，fork PR 不注入。`labeler.yml` 用 `pull_request_target` 但不 checkout、不执行 PR 代码。
+- 不接 AI PR 审查。`anthropics/claude-code-action` 只认官方 `ANTHROPIC_API_KEY` 或 Bedrock / Vertex，第三方中转在 CI 里不可用；而这类审查只评论、不阻断合并，单人仓库的维护成本高于收益。需要时用仓库 Rulesets 的 Copilot code review（零 secret、零 workflow），`.github/copilot-instructions.md` 供它和手动审查参考。`labeler.yml` 用 `pull_request_target` 但不 checkout、不执行 PR 代码。
 - `renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并；GitHub Actions digest 由 `helpers:pinGitHubActionDigests` 固定。
-- required checks 先只开 `quality` 与 `test`，观察一轮再考虑 `build` / `security` / `agent-review`。
+- required checks 先只开 `quality` 与 `test`，观察一轮再考虑 `build` / `security`。
 - `.github/` 与 `renovate.json` 由 `pnpm format:root` 检查。
 
 ## 仓库结构

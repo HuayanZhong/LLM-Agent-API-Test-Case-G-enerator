@@ -7,7 +7,7 @@
 - 文档同步规则：[.claude/rules/doc-sync.md](.claude/rules/doc-sync.md)
 - OpenSpec 工作流：`openspec/`，技能在 `.agents/skills/openspec-*`；`.claude/skills/` 是同步副本，升级 OpenSpec 后比对两处；命令 `/openspec-propose` 等，快捷入口 `/opsx`
 - MCP 配置：`.mcp.json`（chrome-devtools 固定版本；Storybook 端点在 dev 时按需临时加入）
-- CI 与自动化：`.github/workflows/` 按职责拆分，共用 `.github/actions/setup`；agent review 只评论不 approve，需 `ANTHROPIC_API_KEY`；`renovate.json` 周末运行、不自动合并；见 [CLAUDE.md](CLAUDE.md)
+- CI 与自动化：`.github/workflows/` 按职责拆分，共用 `.github/actions/setup`；不接 AI PR 审查（第三方中转在 CI 不可用，改用 Ruleset 的 Copilot review）；`renovate.json` 周末运行、不自动合并；见 [CLAUDE.md](CLAUDE.md)
 - 应用骨架：`apps/frontend`（3000，Next.js 静态导出，`src/`）、`apps/desktop`（Electron Forge 8 桌面壳，开发态加载 3000、生产态 `app://`）、`apps/bff`（`BFF_PORT`，默认 4000）、`apps/backend`（`BACKEND_PORT`，默认 5000）；共享 UI 在 `packages/ui`（`@workspace/ui`），跨应用类型契约在 `packages/types`（`@workspace/types`），env 解析与校验在 `packages/config`（`@workspace/config`），共享 tsconfig 在 `packages/typescript-config`，共享 Vitest 配置在 `packages/vitest-config`，见 [CLAUDE.md](CLAUDE.md)
 - 环境变量：根 `.env.example` 是唯一声明入口；`dev` / `test` / `test:watch` 经 Node 加载 `.env` + `.env.development`，`build` 加载 `.env` + `.env.production`，前端 `NEXT_PUBLIC_*` 放 `apps/frontend/.env.development` / `.env.production`，变量必须写进 `turbo.json` 对应任务的 `env`；校验在应用启动时由 `@workspace/config` 完成，见 [CLAUDE.md](CLAUDE.md)
 - 编辑器：`.vscode/extensions.json` 推荐 `oxc.oxc-vscode`，`.vscode/settings.json` 配置默认格式化器与 `ui.shadcn.com` schema 信任域

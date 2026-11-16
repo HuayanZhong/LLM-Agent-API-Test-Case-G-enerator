@@ -34,9 +34,10 @@ context: |
   变量必须同时写进 turbo.json 对应任务的 env，
   否则 Turbo 默认 strict 模式不会传给任务；.env*、apps/frontend/.env* 与 .nvmrc 在 globalDependencies 中。
 
-  CI：.github/workflows 按 quality / test / build / security / agent-review / labeler 拆分，
+  CI：.github/workflows 按 quality / test / build / security / labeler / release 拆分，
   共用 .github/actions/setup；action 按 SHA 固定，permissions 默认 contents: read；
-  agent review 跳过 draft 与 fork PR，需要 ANTHROPIC_API_KEY；renovate.json 周末运行、不自动合并。
+  不接 AI PR 审查（claude-code-action 只认官方 key 或 Bedrock / Vertex，第三方中转在 CI 不可用；
+  需要时用仓库 Rulesets 的 Copilot code review）；renovate.json 周末运行、不自动合并。
 
   提交门禁：husky 经 prepare 安装，pre-commit 用 lint-staged 只对暂存文件跑 oxlint --fix 与 oxfmt，
   commit-msg 用 commitlint 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 git commit --no-verify。

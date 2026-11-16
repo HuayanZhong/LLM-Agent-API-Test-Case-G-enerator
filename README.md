@@ -142,12 +142,11 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 | `release.yml` | `push: main`（限定路径） | Changesets 开/更新 Version Packages PR；不发布 npm |
 | `build.yml` | 同上 | `pnpm build`，上传 `.next` / `dist`，保留 7 天 |
 | `security.yml` | `push: main`、PR、每周 | zizmor 扫 workflow；`pnpm audit --audit-level=high` |
-| `agent-review.yml` | PR（跳过 draft 与 fork） | Claude Code Action 只评论，不 approve、不改代码 |
 | `labeler.yml` | `pull_request_target` | 按 `apps/frontend`、`packages`、`.github`、文档等路径打标签 |
 
 `renovate.json` 周末运行，`minimumReleaseAge: "3 days"`，按 react / nestjs / testing / github-actions 分组，不自动合并，GitHub Actions 自动固定 digest。
 
-agent review 需要仓库 Secrets 配置 `ANTHROPIC_API_KEY`；fork PR 不注入 secrets，因此跳过。建议先观察一轮，再把 `quality` 与 `test` 设为 required checks；`build`、`security`、`agent-review` 先不 required，避免成本或误报阻塞合并。
+不接 AI PR 审查：这类工具只评论、不阻断合并，且 `claude-code-action` 只认官方 key 或 Bedrock / Vertex，第三方中转在 CI 不可用。需要时用仓库 Rulesets 的 Copilot code review。建议先观察一轮，再把 `quality` 与 `test` 设为 required checks；`build`、`security` 先不 required，避免误报阻塞合并。
 
 ## 版本与发布
 
