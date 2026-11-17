@@ -1,5 +1,12 @@
 # bff
 
+## 0.1.0
+
+### 🩹 Patch Changes
+
+- Updated dependencies []:
+  - @workspace/config@0.1.0
+
 ## 0.0.1
 
 ### 🩹 Patch Changes
