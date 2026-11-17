@@ -48,8 +48,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@changesets/cli": "catalog:tooling",
     "@changesets/changelog-github": "catalog:tooling",
+    "@changesets/cli": "catalog:tooling",
     "@commitlint/cli": "catalog:tooling",
     "@commitlint/config-conventional": "catalog:tooling",
     "@fission-ai/openspec": "catalog:tooling",

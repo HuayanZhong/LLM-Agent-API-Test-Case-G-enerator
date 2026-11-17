@@ -39,6 +39,12 @@
       "rules": {
         "nextjs/no-html-link-for-pages": "off"
       }
+    },
+    {
+      "files": ["packages/ui/src/components/input-otp.tsx"],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
     }
   ]
 }

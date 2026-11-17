@@ -21,10 +21,12 @@
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
+    "lucide-react": "catalog:frontend",
     "next": "catalog:frontend",
     "next-themes": "catalog:frontend",
     "react": "catalog:frontend",
-    "react-dom": "catalog:frontend"
+    "react-dom": "catalog:frontend",
+    "sonner": "catalog:frontend"
   },
   "devDependencies": {
     "@testing-library/dom": "catalog:testing",

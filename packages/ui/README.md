@@ -17,10 +17,16 @@ packages/ui/
 |   +-- preview.tsx        # 导入 storybook.css、明暗主题
 |   +-- storybook.css      # globals.css + stories 的 @source
 +-- stories/
-|   +-- button.stories.tsx # 组件展示与交互示例
+|   +-- alert.stories.tsx
+|   +-- button.stories.tsx
 |   +-- card.stories.tsx
+|   +-- checkbox.stories.tsx
+|   +-- input.stories.tsx
+|   +-- input-otp.stories.tsx
+|   +-- label.stories.tsx
+|   +-- sonner.stories.tsx
 +-- src/
-|   +-- components/        # button.tsx、card.tsx 等
+|   +-- components/        # button.tsx、card.tsx、input.tsx、input-otp.tsx、label.tsx、checkbox.tsx、alert.tsx、sonner.tsx 等
 |   +-- lib/utils.ts       # cn()，re-export 自 cn 包
 |   +-- hooks/             # 按需创建；exports 已预留
 |   +-- styles/globals.css # Tailwind v4 入口、主题变量、@source

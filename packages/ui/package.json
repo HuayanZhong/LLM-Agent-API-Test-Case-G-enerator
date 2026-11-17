@@ -22,9 +22,13 @@
   "dependencies": {
     "class-variance-authority": "catalog:frontend",
     "cn": "catalog:frontend",
+    "input-otp": "catalog:frontend",
+    "lucide-react": "catalog:frontend",
+    "next-themes": "catalog:frontend",
     "radix-ui": "catalog:frontend",
     "react": "catalog:frontend",
-    "react-dom": "catalog:frontend"
+    "react-dom": "catalog:frontend",
+    "sonner": "catalog:frontend"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "catalog:storybook",

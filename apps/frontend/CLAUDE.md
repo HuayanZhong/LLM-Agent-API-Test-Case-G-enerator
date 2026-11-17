@@ -21,14 +21,23 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 
 ## 目录与入口
 
-- 页面：`src/app/layout.tsx`、`src/app/page.tsx`。
-- app 级组件：`src/components/`；`@/*` 指向 `./src/*`。
-- 测试：`__tests__/**/*.test.tsx`（Next 官方 Vitest 指南的 `__tests__` 约定），setup 在 `__tests__/setup.ts`。
-- 共享组件：`@workspace/ui/components/*`；`cn()` 在 `@workspace/ui/lib/utils`。
+- 页面：`src/app/layout.tsx`、`src/app/page.tsx`（客户端跳转 `/login/`）、`src/app/(auth)/login/page.tsx`、`src/app/(auth)/register/page.tsx`。
+- 认证布局：`src/app/(auth)/layout.tsx`（品牌栏、移动端标识、右上角主题按钮、Toaster）；路由组目录带括号，不进入 URL。
+- 认证私有代码：`src/app/(auth)/_components/`（登录/注册表单、字段、品牌栏、产品标记）、`_hooks/use-remembered-email.ts`、`_lib/auth-constants.ts` 与 `validate-auth.ts`；下划线前缀目录不参与路由。
+- 全局 app 级组件：`src/components/`（`theme-provider.tsx`、`theme-toggle.tsx`）；`@/*` 指向 `./src/*`。
+- 测试：`__tests__/**/*.test.{ts,tsx}`（Next 官方 Vitest 指南的 `__tests__` 约定；纯逻辑用 `.test.ts`，组件用 `.test.tsx`），setup 在 `__tests__/setup.ts`。
+- 共享组件：`@workspace/ui/components/*`；`cn()` 在 `@workspace/ui/lib/utils`；表单级 Toast 用 `sonner`。
 
 ## 本包约束
 
 - 新增 shadcn 组件时在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件会写入 `packages/ui`，不要手动放到本包。
+- 登录 / 注册页是纯客户端 UI 演示：只做邮箱格式、密码长度、6 位验证码校验与 Toast 反馈；不接 Supabase / BFF / backend，不伪造认证结果，不创建真实账号；`/workspace` 工作台属于后续变更。
+- 认证专属组件、hook、纯函数分别放 `src/app/(auth)/_components`、`_hooks`、`_lib`；不要把这些塞回全局 `src/components` / `src/lib`。
+- 认证数值常量（密码长度、验证码长度、演示延时、验证码冷却、邮箱存储键、编号宽度）集中在 `src/app/(auth)/_lib/auth-constants.ts`；不要在组件里写裸数字或 `text-[10px]` 这类任意值类，尺寸优先用 Tailwind 的比例 / 间距 token。
+- 记住邮箱只允许把邮箱写入 `interface-test-agent:last-email`，密码不得进入任何本地存储。
+- 主题切换只通过页面上的可见按钮（固定在认证布局右上角）；不要在 `ThemeProvider` 或全局监听里恢复键盘快捷键，避免与输入框和桌面快捷键冲突。
+- 表单级错误与成功提示用 `sonner` Toast；字段错误仍留在输入框下方，不要退回页面内 Alert 汇总。
+- Radix Checkbox 依赖 `ResizeObserver`；`__tests__/setup.ts` 已补 polyfill，新增 Radix 组件时不要删除。
 - `components.json` 的 `ui` / `utils` 必须保持指向 `@workspace/ui`；改 alias 会让 `add` 落错位置。
 - `next.config.ts` 的 `transpilePackages: ["@workspace/ui"]` 不能删；UI 包只发源码。
 - 不要在 `src/app` 里直接改主题色；颜色用语义 token（`bg-background`、`text-muted-foreground` 等），主题变量在 `packages/ui/src/styles/globals.css`。
@@ -53,7 +62,7 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 
 ## 验证
 
-- `pnpm --filter frontend dev` 后访问 `http://localhost:3000`，页面与组件正常渲染。
+- `pnpm --filter frontend dev` 后访问 `http://localhost:3000`，根路径跳转到 `/login/`；`/login/` 与 `/register/` 在 1024+ 为等宽双栏、768–1023 为窄双栏、<768 为单栏；全局根字号 `clamp(16px, 1vw, 20px)` 在 2560 下把 rem 尺寸放大 1.25 倍，页面无横向溢出。
 - 改样式后确认 `.next` 产出的 CSS 同时包含 app 侧与 ui 侧类名。
 - `pnpm --filter frontend test` 用例通过，行覆盖率 ≥ 95%。
-- `pnpm --filter frontend check-types` 与 `pnpm --filter frontend build` 退出码 0，且 `apps/frontend/out/index.html`、`out/404.html` 与 `out/_next` 存在。
+- `pnpm --filter frontend check-types` 与 `pnpm --filter frontend build` 退出码 0，且 `apps/frontend/out/index.html`、`out/login/index.html`、`out/register/index.html`、`out/404.html` 与 `out/_next` 存在。

@@ -17,5 +17,14 @@ if (!window.matchMedia) {
     }) as MediaQueryList
 }
 
+// jsdom 不实现 ResizeObserver，Radix Checkbox 的尺寸观测需要它。
+if (!globalThis.ResizeObserver) {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
+
 // globals 关闭后 RTL 不会再自动 cleanup，这里显式注册。
 afterEach(() => cleanup())

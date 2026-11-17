@@ -95,13 +95,13 @@ hook 只做本地提前检查，全量 `lint` / `format` / `check-types` / `test
 |---|---|---|---|
 | backend | `apps/backend` | 5000 | `GET /health` |
 | BFF | `apps/bff` | 4000 | `GET /health` |
-| 前端 | `apps/frontend` | 3000 | `/`（静态导出） |
+| 前端 | `apps/frontend` | 3000 | `/` 跳转 `/login/`；`/login/`、`/register/`（静态导出） |
 | 桌面壳 | `apps/desktop` | 无独立端口 | 开发态加载 3000；生产态 `app://bundle/` |
 | Storybook | `packages/ui` | 6006 | `pnpm --filter @workspace/ui storybook` |
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块；测试与 lint / format 已接入，只有一个 `health` 冒烟用例。
 
-前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。前端使用 `output: "export"`，`pnpm --filter frontend build` 产出 `apps/frontend/out/`；`next start` 已移除。新增组件时必须让 CLI 以 app 工作区为目标：
+前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。前端使用 `output: "export"`，`pnpm --filter frontend build` 产出 `apps/frontend/out/`；`next start` 已移除。当前 `/` 通过客户端跳转进入 `/login/`；`/login/` 与 `/register/` 共用认证布局，只做邮箱、密码、验证码的前端校验与 Toast 反馈，不调用 Supabase / BFF / backend，也不创建真实账号。新增组件时必须让 CLI 以 app 工作区为目标：
 
 ```bash
 pnpm dlx shadcn@latest add <component> -c apps/frontend

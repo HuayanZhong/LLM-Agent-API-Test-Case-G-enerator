@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 静态导出前端、`apps/desktop` 的 Electron 桌面壳、`packages/ui` 的共享组件包、`packages/types` 的跨应用类型契约、`packages/config` 的环境变量校验，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块尚未实现，测试与 lint / format 已接入。
+设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 静态导出前端（含 `/login/` 邮箱登录、`/register/` 验证码注册的 UI 演示与根路径跳转）、`apps/desktop` 的 Electron 桌面壳、`packages/ui` 的共享组件包、`packages/types` 的跨应用类型契约、`packages/config` 的环境变量校验，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块尚未实现，测试与 lint / format 已接入。
 
 ## 常用命令
 
@@ -126,7 +126,7 @@ doc/             当前设计的事实来源
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；六个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与九个包的 lint / format 脚本。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`；`/` 跳转 `/login/`，`/login/` 与 `/register/` 为邮箱 + 密码 + 验证码的 UI 演示，Toast 反馈，不接 Supabase / 后端）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；六个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与九个包的 lint / format 脚本。
 - 桌面端：Electron 主进程负责窗口、`app://` 协议与安全边界；渲染进程只跑 Next 静态导出。BFF / backend / MCP 的进程托管仍是后续变更。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。

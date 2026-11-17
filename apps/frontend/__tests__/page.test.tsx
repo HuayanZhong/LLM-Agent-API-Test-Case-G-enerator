@@ -1,12 +1,22 @@
-import { render, screen } from "@testing-library/react"
-import { describe, expect, it } from "vitest"
+import { render } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import Page from "@/app/page"
 
+// 根页面只做客户端跳转；mock router 后断言目标路径，不真正导航。
+const replace = vi.hoisted(() => vi.fn<(href: string) => void>())
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace }),
+}))
+
+beforeEach(() => {
+  replace.mockClear()
+})
+
 describe("Page", () => {
-  it("渲染骨架标题与入口按钮", () => {
+  it("把根路径跳转到登录页", () => {
     render(<Page />)
 
-    expect(screen.getByText("前端骨架已就绪")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "开始" })).toBeInTheDocument()
+    expect(replace).toHaveBeenCalledWith("/login/")
   })
 })
