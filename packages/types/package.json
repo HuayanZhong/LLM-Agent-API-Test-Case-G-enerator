@@ -1,6 +1,6 @@
 {
   "name": "@workspace/types",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "跨应用共享的只读类型契约（纯类型，无运行时产物）",
