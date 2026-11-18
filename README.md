@@ -31,7 +31,7 @@
 ├── .env.development     # 本地开发 / 测试值（gitignored）
 ├── .env.production      # 生产构建值（gitignored）
 ├── .gitattributes       # 行尾与二进制文件约定
-├── .nvmrc               # Node 版本锚点（26.13 部分版本号，解析到最新已装的 26.13.x；>= 门槛由 engines 把守）
+├── .nvmrc               # Node 版本锚点（26.13.1），本地与 CI 共用；>= 门槛由 engines 把守
 ├── .editorconfig        # 编辑器缩进与行尾；Oxfmt 会读取
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
 ├── .oxfmtrc.json        # 共享 Oxfmt 格式化配置
@@ -45,7 +45,7 @@
 
 ## 开发环境
 
-- Node.js >= 26.12.1
+- Node.js >= 26.13.1
 - pnpm >= 12.18.0（仓库锁定 `pnpm@12.18.0`，见 `packageManager`）
 - Windows：执行 `git config --global core.longpaths true`，避免深层 `node_modules` 或 git worktree 路径触发 `Filename too long`
 

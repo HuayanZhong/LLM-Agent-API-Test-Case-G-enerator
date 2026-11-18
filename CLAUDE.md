@@ -43,7 +43,7 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 依赖与死代码：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 协议一致性；`pnpm knip` 检查未使用 / 未声明依赖、死文件与死导出，配置在根 `knip.jsonc`。两者都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用，不要自动运行。CLI-only 依赖（`@fission-ai/openspec`）与技能资产（`.agents/**`）在配置里显式豁免并注明原因。
 - 桌面壳：`apps/desktop`（Forge 8 + Electron 45）。`pnpm --filter desktop dev` 加载 3000；`package` / `make` 先生成 `renderer` 再打包；`make` 产出 `out/make/zip/win32/x64/`。Electron 二进制按需下载，网络不可直连 GitHub 时用 `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`。
 
-**版本口径**：Node.js >= 26.12.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）。
+**版本口径**：Node.js >= 26.13.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）；`.nvmrc` 精确锚定 26.13.1。
 
 **提交前 hook**：`pnpm install` 经 `prepare` 安装 husky（`core.hooksPath` = `.husky/_`）。`pre-commit` 跑 `lint-staged`，只对暂存文件执行 `oxlint --fix` 与 `oxfmt`，并覆盖根配置、`.github/`、`renovate.json`，不处理 Markdown；`commit-msg` 跑 `commitlint`，校验 conventional 的 `type(scope): subject`，scope 不设白名单。hook 只做本地提前检查：全量 `lint` / `format` / `check-types` / `test` 仍由 CI 的 `quality` 与 `test` workflow 判定。临时跳过用 `git commit --no-verify`。
 
