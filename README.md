@@ -31,7 +31,7 @@
 ├── .env.development     # 本地开发 / 测试值（gitignored）
 ├── .env.production      # 生产构建值（gitignored）
 ├── .gitattributes       # 行尾与二进制文件约定
-├── .nvmrc               # Node 版本（26.12.1），本地与 CI 共用
+├── .nvmrc               # Node 版本锚点（26.13 部分版本号，解析到最新已装的 26.13.x；>= 门槛由 engines 把守）
 ├── .editorconfig        # 编辑器缩进与行尾；Oxfmt 会读取
 ├── .mcp.json            # chrome-devtools MCP（固定版本）
 ├── .oxfmtrc.json        # 共享 Oxfmt 格式化配置
