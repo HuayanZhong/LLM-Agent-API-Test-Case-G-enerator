@@ -1,0 +1,34 @@
+{
+  "name": "@workspace/request",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "跨端共享的 HTTP 请求基础设施（ky 实例工厂与浏览器 preset，无构建）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=26.12.1"
+  },
+  "exports": {
+    ".": "./src/request-client.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "lint": "oxlint . --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint . --fix --no-error-on-unmatched-pattern",
+    "format": "oxfmt --check .",
+    "format:fix": "oxfmt ."
+  },
+  "dependencies": {
+    "ky": "catalog:shared"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "catalog:testing",
+    "@workspace/typescript-config": "workspace:*",
+    "@workspace/vitest-config": "workspace:*",
+    "typescript": "catalog:tooling",
+    "vite": "catalog:tooling",
+    "vitest": "catalog:testing"
+  }
+}

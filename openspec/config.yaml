@@ -20,6 +20,9 @@ context: |
   packages/config 提供环境变量解析与校验（@workspace/config；运行时工具、无构建，
   各应用在自己的 src/config.ts 定义 schema 并调用 loadConfig，非法值启动即失败；
   .env 加载仍由根脚本负责）；
+  packages/request 提供 HTTP 请求基础设施（@workspace/request；ky 2 实例工厂 + 浏览器 preset，
+  源码包、无构建，baseURL 由调用方传入，包内不读环境变量，错误类型直接暴露 ky 2 原生类，
+  不含业务接口封装）；
   packages/typescript-config 提供 base / nextjs / react-library / nestjs 四个共享 tsconfig profile，
   根 pnpm check-types 经 Turbo 并行执行；packages/vitest-config 提供 base / react 两个 Vitest profile，
   覆盖率 reporter 为 text / lcov / json-summary，根 pnpm test 经 Turbo 并行执行并卡 95% 行覆盖率；
@@ -27,7 +30,7 @@ context: |
   与 BFF_PORT（默认 4000），只有 GET /health；业务模块尚未接入；
   根 pnpm build 经 Turbo 构建四个 app（desktop 先复制前端 out 到 renderer）；
   pnpm-workspace.yaml 设 nodeLinker: hoisted（Forge 8 要求）；
-  lint / format 已接入 Oxlint / Oxfmt（根配置 + 九个包脚本），根配置文件由 format:root 检查。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
+  lint / format 已接入 Oxlint / Oxfmt（根配置 + 十个包脚本），根配置文件由 format:root 检查。设计文档在 doc/，OpenSpec 规格在 openspec/specs。
 
   环境变量：根 .env.example 是唯一声明入口，实际值放 .env / .env.development / .env.production；
   dev / test / test:watch 按 .env → .env.development 顺序加载，build 按 .env → .env.production 加载，
@@ -45,7 +48,7 @@ context: |
   commit-msg 用 commitlint 校验 conventional 提交信息；全量检查仍由 CI 负责，跳过用 git commit --no-verify。
   质量检查新增 sherif（依赖版本 / 依赖类型 / workspace 一致性）与 knip（死依赖、死引用、死文件、死导出，
   配置在根 knip.jsonc），两者都进 quality workflow；knip:fix / sherif:fix 只在本地人工确认后使用。
-  版本管理：Changesets 固定组统一九个 workspace 包版本，配置在 .changeset/config.json；
+  版本管理：Changesets 固定组统一十个 workspace 包版本，配置在 .changeset/config.json；
   功能 PR 带 changeset，合并 main 后 release workflow 用 changesets/action 开/更新 Version Packages PR；
   不发布 npm、不打 tag；根 package.json 由 scripts/sync-version.mjs 同步。
 

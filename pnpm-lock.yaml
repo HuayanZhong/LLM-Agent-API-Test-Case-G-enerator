@@ -265,6 +265,10 @@ catalogs:
     tw-animate-css:
       specifier: ^1.4.0
       version: 1.4.0
+  shared:
+    ky:
+      specifier: ^2.2.0
+      version: 2.2.0
   storybook:
     '@storybook/addon-a11y':
       specifier: ^10.6.7
@@ -627,6 +631,31 @@ importers:
       zod:
         specifier: catalog:backend
         version: 4.6.7
+    devDependencies:
+      '@vitest/coverage-v8':
+        specifier: catalog:testing
+        version: 5.1.0(vitest@5.1.0)
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@workspace/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      typescript:
+        specifier: catalog:tooling
+        version: 6.0.3
+      vite:
+        specifier: catalog:tooling
+        version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
+      vitest:
+        specifier: catalog:testing
+        version: 5.1.0(@types/node@26.6.6)(@vitest/coverage-v8@5.1.0)(jsdom@31.0.1)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
+
+  packages/request:
+    dependencies:
+      ky:
+        specifier: catalog:shared
+        version: 2.2.0
     devDependencies:
       '@vitest/coverage-v8':
         specifier: catalog:testing
@@ -4974,6 +5003,10 @@ packages:
     resolution: {integrity: sha512-zp3zXKy2cZWiIttdlWU5fisKxVQaLSU6471ej0KGz1GdHdaHxpzTAO/LIyFNc3gU3v1W7LJaqvYumoO3l/u+6A==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
+
+  ky@2.2.0:
+    resolution: {integrity: sha512-4+B63kyZt+Y8snQiUGydK1vgY9xYQJZEh9K/nIAIEts+gYJzy1EiAw3BbK8xpWRuWUpN70SNCMjqRGTm75xxIA==}
+    engines: {node: '>=22'}
 
   launch-editor@2.14.2:
     resolution: {integrity: sha512-NHJEb30MGBCkmZXLZwz25t37QR4aY03ZzPYUJXOJaOa92uWwExI9SBQUuIznBYc1xkD7cJNGX7oc3Nl3sq2kQQ==}
@@ -10383,6 +10416,8 @@ snapshots:
       tinyglobby: 0.2.17
       unbash: 6.0.4
       yaml: 2.9.1
+
+  ky@2.2.0: {}
 
   launch-editor@2.14.2:
     dependencies:

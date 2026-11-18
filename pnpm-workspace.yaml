@@ -71,6 +71,10 @@ catalogs:
     "@storybook/addon-themes": ^10.6.7
     "@storybook/addon-mcp": ^10.6.7
 
+  # 跨端共享运行时依赖：frontend 现用、backend 规划使用；ky 为 HTTP 客户端
+  shared:
+    ky: ^2.2.0
+
   # 后端：NestJS 服务（backend / bff）；LangGraph、MikroORM 等后续加入
   backend:
     "@nestjs/common": ^12.5.0

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库现状
 
-设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 静态导出前端（含 `/login/` 邮箱登录、`/register/` 验证码注册的 UI 演示与根路径跳转）、`apps/desktop` 的 Electron 桌面壳、`packages/ui` 的共享组件包、`packages/types` 的跨应用类型契约、`packages/config` 的环境变量校验，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块尚未实现，测试与 lint / format 已接入。
+设计优先的本科毕设项目：基于大模型智能体的接口测试用例辅助生成系统。当前仓库已有 `apps/frontend` 的 Next.js 16 静态导出前端（含 `/login/` 邮箱登录、`/register/` 验证码注册的 UI 演示与根路径跳转）、`apps/desktop` 的 Electron 桌面壳、`packages/ui` 的共享组件包、`packages/types` 的跨应用类型契约、`packages/config` 的环境变量校验、`packages/request` 的 ky 请求基础设施，以及 `apps/backend`、`apps/bff` 两个 NestJS 12 骨架；业务模块尚未实现，测试与 lint / format 已接入。
 
 ## 常用命令
 
@@ -20,12 +20,12 @@ pnpm test:watch   # 加载 .env → .env.development 后 turbo run test:watch
 pnpm changeset    # 交互式记录一次版本变更
 pnpm changeset:status   # 查看待发布的 changeset
 pnpm changeset:version  # 升版本、同步根 package.json、补 CHANGELOG 图标（通常由 CI 调用）
-pnpm lint         # 根脚本：turbo run lint（九个包并行 oxlint）
+pnpm lint         # 根脚本：turbo run lint（十个包并行 oxlint）
 pnpm lint:fix     # 根脚本：turbo run lint:fix
 pnpm sherif       # 依赖版本 / 依赖类型 / workspace 一致性检查
 pnpm knip         # 死依赖、死引用、死文件、死导出检查（配置在 knip.jsonc）
 pnpm knip:fix     # 本地人工确认后使用；会直接删依赖与导出
-pnpm format       # 根脚本：turbo run format（九个包并行 oxfmt --check）
+pnpm format       # 根脚本：turbo run format（十个包并行 oxfmt --check）
 pnpm format:fix   # 根脚本：turbo run format:fix
 pnpm format:root      # 根配置文件 oxfmt --check
 pnpm format:root:fix  # 写入根配置文件格式
@@ -33,13 +33,13 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 - 工作区命令：`pnpm --filter <workspace-name> <script>`。
 - `turbo.json` 与根 `package.json` 暴露 `dev`（`persistent: true`、`cache: false`、`env: ["BACKEND_PORT", "BFF_PORT", "ELECTRON_RENDERER_URL"]`）、`build`（`dependsOn: ["^build"]`，产物 `.next/**`、`dist/**`、`out/**`）、`desktop#build`（`dependsOn: ["frontend#build"]`、产物 `renderer/**`）、`check-types`（`dependsOn: ["^check-types"]`）、`test`（`outputs: ["coverage/**"]`）、`test:watch`（persistent、不缓存）、`lint` / `format` 与其 fix 任务；fix 任务 `cache: false`。`globalDependencies` 只有 `.nvmrc`、`.env*` 与 `apps/frontend/.env*`；Oxlint / Oxfmt / `.editorconfig` 通过 `$TURBO_ROOT$` 进入 `lint` / `format` 的任务 `inputs`，改它们不会误伤 build / test 缓存。根配置文件由 `//#format:root` 根任务单独检查。
-- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn、Oxlint、Oxfmt）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`desktop`（Electron、Forge、`@electron/fuses`、Node 24 类型）、`backend`（NestJS）。包内用 `catalog:<name>` 引用。
+- 依赖版本统一放 `pnpm-workspace.yaml` 的 `catalogs`：`tooling`（Turbo、TypeScript、OpenSpec、shadcn、Oxlint、Oxfmt）、`frontend`（Next、React、Tailwind 与 UI 依赖）、`desktop`（Electron、Forge、`@electron/fuses`、Node 24 类型）、`backend`（NestJS）、`shared`（ky 等跨端运行时依赖）。包内用 `catalog:<name>` 引用。
 - `pnpm-workspace.yaml` 的 `engineStrict: true` 会让 Node/pnpm 版本不符时直接失败，而不是只发警告；`nodeLinker: hoisted` 是 Electron Forge 8 的硬性要求，pnpm 12 只从该文件读取，不能写回 `.npmrc`。
 - 四个 app 都定义了 `dev`；根 `pnpm dev` 通过 Turbo 并行启动 frontend（3000）、bff（`BFF_PORT`，默认 4000）、backend（`BACKEND_PORT`，默认 5000）与 desktop（Electron 加载 3000）。`dev` / `test` / `test:watch` 先用 Node 依次加载 `.env` 与 `.env.development`，`build` 加载 `.env` 与 `.env.production`，再由 Turbo 按 strict 模式把声明的变量传给任务。
 - 前端组件安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；UI 组件写入 `packages/ui`，不要手动放到 `apps/frontend`。
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑六个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`、Electron 的 `__tests__/**/*.test.ts`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
-- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，九个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`、`knip.jsonc`。
+- Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，十个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`、`knip.jsonc`。
 - 依赖与死代码：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 协议一致性；`pnpm knip` 检查未使用 / 未声明依赖、死文件与死导出，配置在根 `knip.jsonc`。两者都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用，不要自动运行。CLI-only 依赖（`@fission-ai/openspec`）与技能资产（`.agents/**`）在配置里显式豁免并注明原因。
 - 桌面壳：`apps/desktop`（Forge 8 + Electron 45）。`pnpm --filter desktop dev` 加载 3000；`package` / `make` 先生成 `renderer` 再打包；`make` 产出 `out/make/zip/win32/x64/`。Electron 二进制按需下载，网络不可直连 GitHub 时用 `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`。
 
@@ -49,9 +49,9 @@ pnpm format:root:fix  # 写入根配置文件格式
 
 ## 版本管理
 
-- 九个 workspace 包通过 Changesets 的 `fixed` 组共用同一个版本；配置在 `.changeset/config.json`，`privatePackages: { version: true, tag: false }`，不发布 npm、不打 tag。
+- 十个 workspace 包通过 Changesets 的 `fixed` 组共用同一个版本；配置在 `.changeset/config.json`，`privatePackages: { version: true, tag: false }`，不发布 npm、不打 tag。
 - 日常流程：功能 PR 里执行 `pnpm changeset` 并提交 `.changeset/*.md`；合并到 `main` 后 `release` workflow 开/更新 Version Packages PR；再合并该 PR 版本才生效。
-- 根 `package.json` 不在 workspace 范围内，`pnpm changeset:version` 末尾用 `scripts/sync-version.mjs` 同步；九个包版本不一致时脚本直接失败。
+- 根 `package.json` 不在 workspace 范围内，`pnpm changeset:version` 末尾用 `scripts/sync-version.mjs` 同步；十个包版本不一致时脚本直接失败。
 - `apps/desktop` 的版本决定 Electron Forge 的 ZIP / exe 版本，发交付物前确认版本 PR 已合并。
 - 不要让开发者手改各包 `version` 或手写 CHANGELOG。CHANGELOG 由 `.changeset/changelog.mjs` 生成：链接解析走 `@changesets/changelog-github`，行格式收敛成「摘要 + 一个 PR/提交引用」；分节标题的图标（💥 / ✨ / 🩹）由 `scripts/format-changelog.mjs` 在 `changeset version` 之后补齐，因为 Changesets 把标题写死在 `apply-release-plan` 里，生成器改不了。
 - `changesets/action` 用 `## x.y.z` 精确匹配版本标题来抓 Version Packages PR 正文，不要给版本标题加日期或前缀；分节标题带图标不影响匹配（它只按 `major|minor|patch` 关键字判断级别）。
@@ -97,6 +97,7 @@ apps/backend/    NestJS 12 本地服务骨架（5000，GET /health）
 packages/ui/     共享 shadcn 组件、cn() 与 Tailwind 样式（@workspace/ui）
 packages/types/  跨应用只读类型契约（@workspace/types；纯类型、无运行时产物）
 packages/config/ 环境变量解析与校验（@workspace/config；运行时工具、无构建）
+packages/request/ ky 请求基础设施（@workspace/request；实例工厂 + 浏览器 preset，无构建）
 packages/typescript-config/  共享 tsconfig profile（@workspace/typescript-config）
 packages/vitest-config/      共享 Vitest profile（@workspace/vitest-config）
 .github/         CI 工作流、复合 action、Copilot 指令与协作模板
@@ -119,6 +120,7 @@ doc/             当前设计的事实来源
 - `packages/ui/CLAUDE.md`：源码包、`exports`、`@source`、Storybook 与 MCP、组件只能从 app 目录添加。
 - `packages/types/CLAUDE.md`：共享类型准入边界、只允许 `import type`、controller 入参不进包。
 - `packages/config/CLAUDE.md`：env 解析与工厂语义、app schema 留在各自包、包内不写相对 import。
+- `packages/request/CLAUDE.md`：单文件自包含、不读环境变量、baseURL 用 ky 的 `prefix` 语义、ky 2 与 1.x 差异注意点。
 - `packages/typescript-config/CLAUDE.md`：profile 分工、路径选项不能进共享包、Next 跳过自动写入、`types` 必须留在 app。
 - `packages/vitest-config/CLAUDE.md`：profile 与覆盖率门槛、路径项留在各包、`.ts` 源码加载与 Node 26 前提。
 
@@ -126,7 +128,7 @@ doc/             当前设计的事实来源
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`；`/` 跳转 `/login/`，`/login/` 与 `/register/` 为邮箱 + 密码 + 验证码的 UI 演示，Toast 反馈，不接 Supabase / 后端）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；六个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与九个包的 lint / format 脚本。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`；`/` 跳转 `/login/`，`/login/` 与 `/register/` 为邮箱 + 密码 + 验证码的 UI 演示，Toast 反馈，不接 Supabase / 后端）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`packages/request` 的 ky 2 请求基础设施（实例工厂 + 浏览器 preset）；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；七个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与十个包的 lint / format 脚本。
 - 桌面端：Electron 主进程负责窗口、`app://` 协议与安全边界；渲染进程只跑 Next 静态导出。BFF / backend / MCP 的进程托管仍是后续变更。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。

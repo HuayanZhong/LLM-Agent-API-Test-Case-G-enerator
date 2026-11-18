@@ -10,7 +10,7 @@
 
 系统红线：只诊断与复验，不改代码；报告是唯一交付物；AI 干活、人拍板。
 
-> 当前仓库已有四个可运行的应用骨架：`apps/frontend`（Next.js 静态导出前端）、`apps/desktop`（Electron 桌面壳）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest、类型契约与环境变量校验在 `packages/`；业务模块尚未实现。
+> 当前仓库已有四个可运行的应用骨架：`apps/frontend`（Next.js 静态导出前端）、`apps/desktop`（Electron 桌面壳）、`apps/bff` 与 `apps/backend`（NestJS）；共享 UI、tsconfig、Vitest、类型契约、环境变量校验与请求基础设施在 `packages/`；业务模块尚未实现。
 
 ## 目录结构
 
@@ -20,7 +20,7 @@
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 与第三方技能；.claude/skills/ 是同步副本
 ├── apps/                # desktop（Electron）、backend（5000）、bff（4000）、frontend（3000）
-├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile；types：跨应用类型契约；config：env 解析与校验
+├── packages/            # ui：共享组件与样式；typescript-config：共享 tsconfig；vitest-config：共享 Vitest profile；types：跨应用类型契约；config：env 解析与校验；request：ky 请求基础设施
 ├── .claude/             # 规则、技能与 /opsx 命令
 ├── .github/             # CI 工作流、复合 action、协作模板
 ├── .husky/              # pre-commit 与 commit-msg
@@ -63,11 +63,11 @@ pnpm test:watch             # 加载 .env → .env.development 后 turbo run tes
 pnpm changeset              # 交互式记录一次版本变更
 pnpm changeset:status       # 查看待发布的 changeset
 pnpm changeset:version      # 升版本、同步根 package.json、补 CHANGELOG 图标（通常由 CI 调用）
-pnpm lint                   # turbo run lint：九个包并行 oxlint
+pnpm lint                   # turbo run lint：十个包并行 oxlint
 pnpm sherif                 # 依赖版本 / 依赖类型 / workspace 一致性检查
 pnpm knip                   # 死依赖、死引用、死文件、死导出检查
 pnpm lint:fix               # turbo run lint:fix：自动修复可修复项
-pnpm format                 # turbo run format：九个包并行 oxfmt --check
+pnpm format                 # turbo run format：十个包并行 oxfmt --check
 pnpm format:fix             # turbo run format:fix：写入格式化
 pnpm format:root            # 根配置文件 oxfmt --check（不属于任何 workspace 包）
 pnpm format:root:fix        # 写入根配置文件格式
@@ -119,11 +119,13 @@ UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/fro
 
 环境变量由 `packages/config`（`@workspace/config`）提供解析与校验：各应用在自己的 `src/config.ts` 定义 schema，启动时非法值直接失败；`.env` 仍由根脚本加载。见 [packages/config/README.md](packages/config/README.md)。
 
+HTTP 请求基础设施由 `packages/request`（`@workspace/request`）提供：ky 2 实例工厂与浏览器 preset，baseURL 由调用方传入（前端传 `NEXT_PUBLIC_BFF_URL` 字面量），错误类型直接暴露 ky 2 原生的 `HTTPError` / `NetworkError` / `TimeoutError`；不含业务接口封装。见 [packages/request/README.md](packages/request/README.md)。
+
 Vitest 配置统一继承 `packages/vitest-config` 的 `base` / `react` profile，测试用 `pnpm test`；测试文件按各栈官方约定放置（Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`），行覆盖率门槛 95%，见 [packages/vitest-config/README.md](packages/vitest-config/README.md)。
 
 覆盖率默认 reporter 是 `text` + `lcov` + `json-summary`，各包 `coverage/` 下会生成 `lcov.info` 与 `coverage-summary.json`；需要可视化 HTML 时用 `pnpm test -- --coverage.reporter=html` 或单包 `vitest run --coverage --coverage.reporter=html`。
 
-Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完九个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
+Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintrc.json` / `.oxfmtrc.json`；每个 workspace 包提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 通过 Turbo 一次跑完十个包。根目录的 `package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json` 不属于任何 workspace 包，由 `pnpm format:root` / `format:root:fix` 检查；`.nvmrc`、`.env*` 与 `apps/frontend/.env*` 在 Turbo 的 `globalDependencies` 中，`.editorconfig` 只在 `format` 任务的 `inputs` 中。
 
 依赖与死代码检查：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 一致性；`pnpm knip` 检查未使用 / 未声明的依赖、死文件与死导出，配置在 `knip.jsonc`。两者都进入 `quality` workflow；`knip:fix` / `sherif:fix` 会直接改文件与依赖，只在本地人工确认后使用。
 
@@ -150,11 +152,11 @@ Lint 与格式化统一用 Oxc 的 Oxlint / Oxfmt，配置在根目录 `.oxlintr
 
 ## 版本与发布
 
-九个 workspace 包通过 Changesets 的 `fixed` 组共用同一个产品版本，配置在 [.changeset/config.json](.changeset/config.json)：
+十个 workspace 包通过 Changesets 的 `fixed` 组共用同一个产品版本，配置在 [.changeset/config.json](.changeset/config.json)：
 
 1. 功能 PR 里执行 `pnpm changeset`，提交生成的 `.changeset/*.md`；
 2. 合并到 `main` 后，`release` workflow 运行 `pnpm changeset:version`，开或更新 Version Packages PR；
-3. 合并 Version Packages PR 后，九个包与根 `package.json` 的版本一起更新，`apps/desktop` 的 Forge 产物名随之变化。
+3. 合并 Version Packages PR 后，十个包与根 `package.json` 的版本一起更新，`apps/desktop` 的 Forge 产物名随之变化。
 
 不发布 npm、不打 git tag；根 `package.json` 不在 workspace 内，由 [scripts/sync-version.mjs](scripts/sync-version.mjs) 同步，九包版本不一致时脚本直接失败。
 
@@ -175,6 +177,7 @@ CHANGELOG 由 [.changeset/changelog.mjs](.changeset/changelog.mjs) 生成（摘�
 | `packages/vitest-config` | [README](packages/vitest-config/README.md) | [CLAUDE](packages/vitest-config/CLAUDE.md) | [AGENTS](packages/vitest-config/AGENTS.md) |
 | `packages/types` | [README](packages/types/README.md) | [CLAUDE](packages/types/CLAUDE.md) | [AGENTS](packages/types/AGENTS.md) |
 | `packages/config` | [README](packages/config/README.md) | [CLAUDE](packages/config/CLAUDE.md) | [AGENTS](packages/config/AGENTS.md) |
+| `packages/request` | [README](packages/request/README.md) | [CLAUDE](packages/request/CLAUDE.md) | [AGENTS](packages/request/AGENTS.md) |
 
 ## 环境变量
 
