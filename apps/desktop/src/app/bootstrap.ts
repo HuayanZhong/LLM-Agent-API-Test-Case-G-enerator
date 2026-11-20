@@ -13,9 +13,9 @@ export function getWindowOptions(preloadPath: string): BrowserWindowConstructorO
   return {
     width: 1280,
     height: 800,
-    // 低于 1024×800 时前端布局会被挤压到不可操作，窗口拖拽到此为止。
-    minWidth: 1024,
-    minHeight: 800,
+    // 低于 800×600 时前端布局会被挤压到不可操作，窗口拖拽到此为止。
+    minWidth: 800,
+    minHeight: 600,
     show: false,
     title: WINDOW_TITLE,
     webPreferences: {

@@ -128,7 +128,7 @@ doc/             当前设计的事实来源
 
 ## 技术栈与当前实现
 
-- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`；`/` 跳转 `/login/`，`/login/` 与 `/register/` 为邮箱 + 密码 + 验证码的 UI 演示，Toast 反馈，不接 Supabase / 后端）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`packages/request` 的 ky 2 请求基础设施（实例工厂 + 浏览器 preset）；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；七个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与十个包的 lint / format 脚本。
+- 已实现：`apps/frontend` 的 Next.js 16 + React 19 + Tailwind v4 前端（3000，`output: "export"`；`/` 跳转 `/login/`，`/login/` 与 `/register/` 为邮箱 + 密码 + 验证码的 UI 演示，Toast 反馈，不接 Supabase / 后端；根 layout 挂全局点击火花特效，颜色随主题令牌切换）；`apps/desktop` 的 Electron 45 + Forge 8 桌面壳（开发态加载 3000，生产态 `app://` 托管静态导出，Windows x64 ZIP）；`packages/ui` 的 shadcn `radix-nova` 组件与样式；`packages/types` 的跨应用只读类型契约；`packages/config` 的环境变量解析与校验；`packages/request` 的 ky 2 请求基础设施（实例工厂 + 浏览器 preset）；`apps/backend` 与 `apps/bff` 的 NestJS 12 + ESM 骨架（5000 / 4000，只有 `GET /health`）；七个包的 Vitest 配置与 `health` / 页面 / 桌面运行时冒烟测试，根 `pnpm test` 行覆盖率门槛 95%；根 Oxlint / Oxfmt 配置与十个包的 lint / format 脚本。
 - 桌面端：Electron 主进程负责窗口、`app://` 协议与安全边界；渲染进程只跑 Next 静态导出。BFF / backend / MCP 的进程托管仍是后续变更。
 - 后端：NestJS 本地运行；LangGraph.js 编排 Agent，LangChain.js 接模型，Zod 定义 Case IR 与结构化输出。
 - 执行：`ky` 发请求 + Vitest 断言；`chrome-devtools` MCP 只做页面采集，不承担批量接口执行。

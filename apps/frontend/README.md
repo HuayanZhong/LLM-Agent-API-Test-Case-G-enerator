@@ -35,8 +35,9 @@ apps/frontend/
 |   |       +-- _components/ # 登录/注册表单、字段、品牌栏（下划线目录不参与路由）
 |   |       +-- _hooks/      # 记住邮箱
 |   |       +-- _lib/        # 常量与校验
-|   +-- components/          # 全局 app 级组件：theme-provider.tsx、theme-toggle.tsx
-+-- components.json          # shadcn 配置：ui 指向 @workspace/ui
+|   +-- components/          # 全局 app 级组件：theme-provider.tsx、theme-toggle.tsx、click-spark-provider.tsx
+|   +-- lib/                 # 全局纯逻辑：spark-color.ts（主题令牌 → rgb 色值）
++-- components.json          # shadcn 配置：ui 指向 @workspace/ui；registries 含 @react-bits
 +-- next.config.ts           # output: "export"；transpilePackages: ["@workspace/ui"]
 +-- out/                     # next build 的静态导出产物（gitignored）
 +-- postcss.config.mjs       # re-export @workspace/ui/postcss.config
@@ -53,6 +54,7 @@ apps/frontend/
 - 登录 / 注册页是纯客户端演示：只做邮箱格式、密码长度、6 位验证码校验、本地邮箱记忆和 Toast 提示；验证码使用 shadcn `InputOTP`；不调用 Supabase / BFF / backend，不伪造认证结果，也不创建 `/workspace` 路由。
 - 认证私有代码放在 `src/app/(auth)/_components`、`_hooks`、`_lib`；路由组与下划线前缀目录都不参与 URL。跨页面复用的组件才放 `src/components`。
 - 主题切换按钮固定在认证布局右上角，`ThemeProvider` 不再注册全局键盘快捷键。
+- 全局点击火花：根 layout 挂 `ClickSparkProvider`（`src/components/click-spark-provider.tsx`），组件本体是 CLI 拉入的 `@workspace/ui/components/click-spark`（canvas 渲染）。火花颜色经 `src/lib/spark-color.ts` 把 `--primary` / `--foreground` 令牌解析成 rgb 色值并随主题切换跟随；默认参数在适配层集中定义（sparkCount=9、duration=350、spring 缓动、star 形等），调用方可整体覆盖。
 - 测试在 `__tests__/`，覆盖登录、注册、验证码冷却、记住邮箱、主题切换、布局与根路径跳转；Electron 桌面壳在 `apps/desktop`，本包不直接依赖 Electron。
 
 ## 相关文档

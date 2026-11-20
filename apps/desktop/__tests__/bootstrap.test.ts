@@ -145,8 +145,8 @@ describe("getWindowOptions", () => {
     expect(options).toMatchObject({
       width: 1280,
       height: 800,
-      minWidth: 1024,
-      minHeight: 800,
+      minWidth: 800,
+      minHeight: 600,
       show: false,
       title: "接口测试用例辅助生成系统",
       webPreferences: {
