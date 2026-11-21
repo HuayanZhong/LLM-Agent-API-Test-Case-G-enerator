@@ -7,6 +7,7 @@
     "https://docs.renovatebot.com": true,
     "https://turborepo.dev": true,
     "https://ui.shadcn.com": true,
-    "https://unpkg.com": true
+    "https://unpkg.com": true,
+    "https://unpkg.com/knip@6/schema-jsonc.json": true
   }
 }

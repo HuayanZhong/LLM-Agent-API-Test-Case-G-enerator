@@ -9,7 +9,7 @@
   "sortTailwindcss": false,
   "ignorePatterns": [
     ".agents/**",
-    ".claude/**",
+    "**/.claude/**",
     "doc/**",
     "openspec/**",
     "packages/ui/storybook-static/**",

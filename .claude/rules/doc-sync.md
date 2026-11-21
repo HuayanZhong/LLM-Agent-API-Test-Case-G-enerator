@@ -1,3 +1,14 @@
+---
+paths:
+  - "**/CLAUDE.md"
+  - "**/README.md"
+  - "**/AGENTS.md"
+  - "openspec/**"
+  - "doc/**"
+  - ".github/**"
+  - ".claude/rules/**"
+---
+
 # 文档同步规则
 
 目标：代码、配置、文档不脱节。文档过期按 bug 处理，不按“以后补”处理。

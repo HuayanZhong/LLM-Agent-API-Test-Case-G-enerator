@@ -22,7 +22,7 @@ const DEFAULT_SPARK_PROPS = {
   ring: true,
 } satisfies Partial<ClickSparkProps>
 
-export type ClickSparkProviderProps = Omit<ClickSparkProps, "layer">
+type ClickSparkProviderProps = Omit<ClickSparkProps, "layer">
 
 /**
  * 全站点击火花适配层:挂根布局、包住全部页面内容。

@@ -40,7 +40,7 @@ pnpm format:root:fix  # 写入根配置文件格式
 - Storybook：`pnpm --filter @workspace/ui storybook`（6006）；MCP 端点 `http://127.0.0.1:6006/mcp` 仅 dev 运行时可用，当前为 docs + development 工具集。
 - 测试框架是 Vitest 5：根 `pnpm test` 经 Turbo 并行跑六个包，行覆盖率门槛 95%（`coverage.thresholds.lines`）。单包 `pnpm --filter <pkg> test`，watch 用 `test:watch`。配置继承 `packages/vitest-config`，测试文件按官方约定：Nest 的 `src/**/*.spec.ts`、React 的 `__tests__/**/*.test.{ts,tsx}`、Electron 的 `__tests__/**/*.test.ts`。覆盖率 reporter 为 `text` + `lcov` + `json-summary`，HTML 按需用 `--coverage.reporter=html`。
 - Lint 与格式化是 Oxc：根 `.oxlintrc.json` / `.oxfmtrc.json` 是唯一配置，十个包各提供 `lint` / `format` 脚本，根 `pnpm lint` / `pnpm format` 经 Turbo 一次跑完；单包用 `pnpm --filter <pkg> lint` / `format`。根配置文件由 `pnpm format:root` 检查：`package.json`、`pnpm-workspace.yaml`、`turbo.json`、两个 Oxc 配置、`.mcp.json`、`skills-lock.json`、`.github/`、`renovate.json`、`knip.jsonc`。
-- 依赖与死代码：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 协议一致性；`pnpm knip` 检查未使用 / 未声明依赖、死文件与死导出，配置在根 `knip.jsonc`。两者都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用，不要自动运行。CLI-only 依赖（`@fission-ai/openspec`）与技能资产（`.agents/**`）在配置里显式豁免并注明原因。
+- 依赖与死代码：`pnpm sherif` 校验依赖版本、依赖类型与 workspace 协议一致性；`pnpm knip` 检查未使用 / 未声明依赖、死文件与死导出，配置在根 `knip.jsonc`。两者都进 `quality` workflow；`knip:fix` / `sherif:fix` 只在本地人工确认后使用，不要自动运行。CLI-only 依赖（`@fission-ai/openspec`）与技能资产（各 agent 目录 `.agents/**` / `.claude/**`，配置写成 `**/.claude/**`）在配置里显式豁免并注明原因。
 - 桌面壳：`apps/desktop`（Forge 8 + Electron 45）。`pnpm --filter desktop dev` 加载 3000；`package` / `make` 先生成 `renderer` 再打包；`make` 产出 `out/make/zip/win32/x64/`。Electron 二进制按需下载，网络不可直连 GitHub 时用 `ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/`。
 
 **版本口径**：Node.js >= 26.13.1、pnpm >= 12.18.0，以 `package.json` 的 `engines` 为准（README 已对齐）；`.nvmrc` 精确锚定 26.13.1。
@@ -76,6 +76,8 @@ pnpm format:root:fix  # 写入根配置文件格式
 - `.claude/commands/opsx.md`：`/opsx` 快捷入口。
 - `.github/copilot-instructions.md`：Copilot review 的项目红线、注释与测试约定。
 - 不配置项目级 `.claude/settings.json`，权限沿用默认模式与全局设置。
+- `.claude/rules/` 的两个规则带 `paths:` 前置元数据、按文件命中按需加载：`code-comments.md` 命中代码文件（`*.ts` / `*.tsx` / `*.mts` / `*.cts` / `*.js` / `*.jsx` / `*.mjs` / `*.cjs`），`doc-sync.md` 命中文档文件（`**/CLAUDE.md` / `README.md` / `AGENTS.md`、`openspec/**`、`doc/**`、`.github/**`、`.claude/rules/**`）。规则语义对所有包统一，只是加载时机不同；编辑 `turbo.json` 等触发文件时规则全文不在场，同步义务由本文件「文档同步」节兜底。
+- `shadcn` 与 `migrate-radix-to-base` 两个 skill 下沉在 `packages/ui/.claude/skills/`，只在 `packages/ui` 子树会话按需加载，根会话不可见；二者已从 `skills-lock.json` 与 `.agents/skills/` 移除。升级流程：`pnpm exec skills add shadcn-ui/ui`（重装到 `.agents/skills/`）→ 手动把新版目录搬到 `packages/ui/.claude/skills/` → `pnpm exec skills remove <skill>` 清掉 `.agents` 副本与锁条目。
 
 ## CI 与自动化
 
