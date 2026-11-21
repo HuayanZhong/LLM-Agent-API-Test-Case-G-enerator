@@ -78,6 +78,7 @@ pnpm format:root:fix  # 写入根配置文件格式
 - 不配置项目级 `.claude/settings.json`，权限沿用默认模式与全局设置。
 - `.claude/rules/` 的两个规则带 `paths:` 前置元数据、按文件命中按需加载：`code-comments.md` 命中代码文件（`*.ts` / `*.tsx` / `*.mts` / `*.cts` / `*.js` / `*.jsx` / `*.mjs` / `*.cjs`），`doc-sync.md` 命中文档文件（`**/CLAUDE.md` / `README.md` / `AGENTS.md`、`openspec/**`、`doc/**`、`.github/**`、`.claude/rules/**`）。规则语义对所有包统一，只是加载时机不同；编辑 `turbo.json` 等触发文件时规则全文不在场，同步义务由本文件「文档同步」节兜底。
 - `shadcn` 与 `migrate-radix-to-base` 两个 skill 下沉在 `packages/ui/.claude/skills/`，只在 `packages/ui` 子树会话按需加载，根会话不可见；二者已从 `skills-lock.json` 与 `.agents/skills/` 移除。升级流程：`pnpm exec skills add shadcn-ui/ui`（重装到 `.agents/skills/`）→ 手动把新版目录搬到 `packages/ui/.claude/skills/` → `pnpm exec skills remove <skill>` 清掉 `.agents` 副本与锁条目。
+- `find-skills`（`vercel-labs/skills`）装在 `.agents/skills/` 并在 `.claude/skills/` 保留普通文件副本，用于按需求发现可安装 skill。安装 skill 时必须加 `--agent claude-code`：默认行为会给 Claude Code 建符号链接，而 Windows `core.symlinks=false` 的干净克隆会把链接退化成文本文件，`.claude/skills/` 必须是普通文件。
 
 ## CI 与自动化
 

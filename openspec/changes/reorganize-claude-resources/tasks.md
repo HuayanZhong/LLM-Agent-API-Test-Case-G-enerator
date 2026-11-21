@@ -26,7 +26,7 @@
 
 - [x] 5.1 开新会话验证加载时机：读代码文件时 `code-comments` 生效、读文档文件时 `doc-sync` 生效、`packages/ui` 子树会话可见两个下沉 skill 且仓库根会话不可见。验证：三项观察结果逐一记录。
 - [x] 5.2 `pnpm format:root` 与 `pnpm knip` 通过。验证：两条命令退出码 0。
-- [ ] 5.3 `pnpm exec openspec validate --all` 通过。验证：退出码 0。
+- [x] 5.3 `pnpm exec openspec validate --all` 通过。验证：退出码 0。
 
 ## Workflow follow-up
 
