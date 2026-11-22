@@ -120,9 +120,9 @@ function LoginForm() {
   return (
     <div className="w-full">
       {/* 主题切换按钮由 auth layout 固定在页面右上角，表单这里不再重复。 */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">登录工作台</h1>
-        <p className="mt-1 text-sm text-muted-foreground">使用邮箱登录。</p>
+      <div className="mb-8">
+        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">登录工作台</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">使用邮箱登录。</p>
       </div>
 
       {/* noValidate 关闭浏览器原生校验，保持错误文案和焦点顺序由前端统一控制。 */}

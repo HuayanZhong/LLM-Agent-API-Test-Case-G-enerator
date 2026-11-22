@@ -175,9 +175,9 @@ function RegisterForm() {
 
   return (
     <div className="w-full">
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">注册工作台</h1>
-        <p className="mt-1 text-sm text-muted-foreground">使用邮箱验证码创建账号。</p>
+      <div className="mb-8">
+        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">注册工作台</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">使用邮箱验证码创建账号。</p>
       </div>
 
       <form

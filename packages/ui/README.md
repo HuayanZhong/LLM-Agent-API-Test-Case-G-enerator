@@ -1,12 +1,13 @@
 # packages/ui
 
-共享 UI 包：`@workspace/ui`，承载 shadcn 组件、`cn()` 与 Tailwind v4 全局样式。
+共享 UI 包：`@workspace/ui`，承载 shadcn / ReactBits 组件、`cn()` 与 Tailwind v4 全局样式。
 
 ## 职责
 
 - 提供可复用的 UI 组件与主题变量，供 `apps/frontend` 引用。
 - 只发源码，不构建 `dist`；由 Next 的 `transpilePackages` 转译。
-- 组件通过 shadcn CLI 安装，保持 registry 原样，便于后续更新。
+- 组件通过 shadcn CLI 安装（含 ReactBits 自定义 registry），保持 registry 原样，便于后续更新。
+- ReactBits 条目类型是 `registry:component`，CLI 默认落到 `apps/frontend/src/components/`；共享组件安装后移到本包 `src/components/`，现有 `./components/*` 导出无需改动。
 
 ## 目录
 
@@ -26,7 +27,7 @@ packages/ui/
 |   +-- label.stories.tsx
 |   +-- sonner.stories.tsx
 +-- src/
-|   +-- components/        # button.tsx、card.tsx、input.tsx、input-otp.tsx、label.tsx、checkbox.tsx、alert.tsx、sonner.tsx 等
+|   +-- components/        # button.tsx、card.tsx、input.tsx、input-otp.tsx、label.tsx、checkbox.tsx、alert.tsx、sonner.tsx、scanner.tsx 等
 |   +-- lib/utils.ts       # cn()，re-export 自 cn 包
 |   +-- hooks/             # 按需创建；exports 已预留
 |   +-- styles/globals.css # Tailwind v4 入口、主题变量、@source

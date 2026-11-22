@@ -10,4 +10,4 @@
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 项目工作流：`openspec/`（OpenSpec 2.0）
 
-组件只通过 `shadcn add`（在 `apps/frontend` 下执行）写入，不要手工复制。story 放 `stories/`，不要放回 `src/`。
+组件只通过 `shadcn add`（在 `apps/frontend` 下执行）写入，不要手工复制。ReactBits 自定义 registry 的条目先落到 `apps/frontend/src/components/`，共享组件再移到本包 `src/components/`。story 放 `stories/`，不要放回 `src/`。

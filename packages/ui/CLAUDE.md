@@ -4,7 +4,7 @@
 
 ## 本包职责
 
-`@workspace/ui`：shadcn 组件、`cn()`、Tailwind v4 样式与主题变量。只发源码，由 Next 转译。
+`@workspace/ui`：shadcn / ReactBits 组件、`cn()`、Tailwind v4 样式与主题变量。只发源码，由 Next 转译。
 
 ## 目录与入口
 
@@ -15,6 +15,7 @@
 ## 本包约束
 
 - 组件只用 CLI 安装：在仓库根执行 `pnpm dlx shadcn@latest add <component> -c apps/frontend`；不要手工新建 `src/components/*` 冒充 registry 组件。
+- ReactBits 组件走自定义 registry：`pnpm dlx shadcn@latest add @react-bits/<Name>-TS-TW -c apps/frontend`。其条目类型是 `registry:component`，CLI 会落盘到 `apps/frontend/src/components/`；共享组件再移到本包 `src/components/`，现有 `./components/*` 导出已覆盖，不要改 registry 内部逻辑，只补必要的 TypeScript 严格模式修复。
 - 不要把页面、路由、业务逻辑放进本包；这些属于 `apps/frontend`。
 - `globals.css` 的 `@source` 相对于样式表解析：`../../../../apps/frontend/src/**/*.{ts,tsx}` 与 `../**/*.{ts,tsx}`；改了前端目录要同步。
 - 颜色用语义 token；不要在组件里写死 `bg-blue-500` 之类的原始颜色。
@@ -40,7 +41,7 @@
 
 - 配置：`vitest.config.ts` 继承 `@workspace/vitest-config/react`，`plugins: [react()]`，路径别名用 Vite 8 原生 `resolve.tsconfigPaths`。
 - 目录：`__tests__/**/*.test.{ts,tsx}`；纯逻辑用 `.test.ts`，组件渲染用 `.test.tsx`；setup 在 `__tests__/setup.ts`（引入 jest-dom 并显式 `afterEach(cleanup)`）。
-- 覆盖率：只卡行覆盖率 95%，`coverage.include` 覆盖 `src` 下全部 ts/tsx；报告在 `coverage/`。例外：`src/components/click-spark.tsx`（CLI 拉入的第三方 canvas 动效实现，jsdom 不可测）已在 `coverage.exclude` 中排除，交互行为由 `apps/frontend` 的适配层测试覆盖。
+- 覆盖率：只卡行覆盖率 95%，`coverage.include` 覆盖 `src` 下全部 ts/tsx；报告在 `coverage/`。例外：`src/components/click-spark.tsx` 与 `src/components/scanner.tsx`（CLI 拉入的第三方 canvas / WebGL 动效实现，jsdom 不可测）已在 `coverage.exclude` 中排除，交互行为由 `apps/frontend` 的适配层测试覆盖。
 - 组件测试直接 import `@workspace/ui/components/*`，走包 `exports` 或 tsconfig paths，不要复制组件到测试目录。
 
 ## 改动前读什么

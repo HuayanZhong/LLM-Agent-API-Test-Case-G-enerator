@@ -4,6 +4,7 @@ import packageJson from "../../../../package.json"
 
 import { STEP_INDEX_WIDTH } from "../_lib/auth-constants"
 import { ProductMark } from "./product-mark"
+import { ScannerBackdrop } from "./scanner-backdrop"
 
 // 四步对应产品的真实闭环：生成 → 执行 → 比对 → 报告；顺序是规格的一部分。
 const steps = [
@@ -27,20 +28,24 @@ function LoginBrandPanel({ className }: { className?: string }) {
     // md 起显示左栏；宽度由 (auth)/layout.tsx 的网格列控制，2xl 放大后仍保持可滚动。
     <aside
       className={cn(
-        "hidden h-full min-h-0 flex-col overflow-y-auto border-r border-border bg-sidebar px-8 py-8 md:flex",
+        "relative hidden h-full min-h-0 flex-col overflow-y-auto border-r border-border bg-sidebar px-8 py-8 md:flex",
         className,
       )}
     >
+      {/* 扫描线只做背景底纹：绝对铺满、先做一层失焦，内容层始终压在它上面。 */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 blur-xs">
+        <ScannerBackdrop />
+      </div>
       {/* 内容列单独限宽、水平居中并整体垂直居中；引语紧随轨道，不钉在视口底部。 */}
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-10 xl:max-w-lg">
+      <div className="relative mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-10 xl:max-w-lg">
         {/* 产品标识与名称：移动端由 (auth)/layout.tsx 重复一份，这里只负责 md 以上。 */}
         <div className="flex items-center gap-3">
-          <ProductMark className="size-8 xl:size-10" />
-          <div>
-            <p className="text-sm font-semibold tracking-tight xl:text-base">
+          <ProductMark className="size-9 xl:size-10" />
+          <div className="min-w-0">
+            <p className="text-sm leading-tight font-semibold tracking-tight xl:text-base">
               接口测试用例辅助生成系统
             </p>
-            <p className="mt-0.5 text-xs tracking-widest text-muted-foreground">
+            <p className="mt-1 text-xs leading-none tracking-widest text-muted-foreground">
               接口测试 · 智能体辅助
             </p>
           </div>
@@ -59,12 +64,12 @@ function LoginBrandPanel({ className }: { className?: string }) {
                 01—04
               </p>
             </div>
-            {/* 题头固定断成两行：第二行落在“可复验的闭环”上，让主张单独成句。 */}
-            <h2 className="font-title mt-6 text-3xl leading-snug text-foreground xl:text-4xl">
+            {/* 题头固定断成两行：第二行落在“可复验的闭环”上，让主张单独成句；用 p 而不是 h2，页面主标题留给登录表单。 */}
+            <p className="font-title mt-6 text-3xl leading-snug text-foreground xl:text-4xl">
               把接口测试做成
               <br />
               可复验的闭环
-            </h2>
+            </p>
             <p className="mt-4 text-sm leading-6 text-muted-foreground xl:text-base xl:leading-7">
               从接口生成用例，由 Agent 执行，与正常现场比对；不一致时重放复现，最后交付测试报告。
             </p>

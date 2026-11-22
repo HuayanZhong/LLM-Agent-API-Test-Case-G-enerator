@@ -29,9 +29,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           {/* 移动端产品标识：md 起由左栏承担，这里隐藏。 */}
           <div className="mb-6 flex items-center gap-3 sm:mb-8 md:hidden">
             <ProductMark className="size-8 sm:size-9" />
-            <div>
-              <p className="text-sm font-semibold tracking-tight">接口测试用例辅助生成系统</p>
-              <p className="mt-0.5 text-xs tracking-widest text-muted-foreground">
+            <div className="min-w-0">
+              <p className="text-sm leading-tight font-semibold tracking-tight">
+                接口测试用例辅助生成系统
+              </p>
+              <p className="mt-1 text-xs leading-none tracking-widest text-muted-foreground">
                 接口测试 · 智能体辅助
               </p>
             </div>

@@ -23,9 +23,10 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 
 - 页面：`src/app/layout.tsx`、`src/app/page.tsx`（客户端跳转 `/login/`）、`src/app/(auth)/login/page.tsx`、`src/app/(auth)/register/page.tsx`。
 - 认证布局：`src/app/(auth)/layout.tsx`（品牌栏、移动端标识、右上角主题按钮、Toaster）；路由组目录带括号，不进入 URL。
-- 认证私有代码：`src/app/(auth)/_components/`（登录/注册表单、字段、品牌栏、产品标记）、`_hooks/use-remembered-email.ts`、`_lib/auth-constants.ts` 与 `validate-auth.ts`；下划线前缀目录不参与路由。
+- 认证私有代码：`src/app/(auth)/_components/`（登录/注册表单、字段、品牌栏、产品标记、左栏扫描线背景适配）、`_hooks/use-remembered-email.ts`、`_lib/auth-constants.ts` 与 `validate-auth.ts`；下划线前缀目录不参与路由。
 - 全局 app 级组件：`src/components/`（`theme-provider.tsx`、`theme-toggle.tsx`、`click-spark-provider.tsx`）；全局纯逻辑 `src/lib/spark-color.ts`；`@/*` 指向 `./src/*`。
 - 全局点击火花：根 layout 的 `ClickSparkProvider` 包住全部页面；组件本体在 `@workspace/ui/components/click-spark`（CLI 拉入、canvas 渲染、jsdom 不可测，ui 包 coverage 已排除），火花颜色由 `src/lib/spark-color.ts` 解析主题令牌并随 `resolvedTheme` 跟随；默认参数集中在适配层，不要把动效调参散进页面。
+- 左栏扫描线背景：组件本体在 `@workspace/ui/components/scanner`（ReactBits 自定义 registry 拉入、WebGL 渲染、jsdom 不可测，ui 包 coverage 已排除）；灰度配色、扫掠速度与低透明度集中在 `_components/scanner-backdrop.tsx`，不要在品牌栏里重复调参。
 - 测试：`__tests__/**/*.test.{ts,tsx}`（Next 官方 Vitest 指南的 `__tests__` 约定；纯逻辑用 `.test.ts`，组件用 `.test.tsx`），setup 在 `__tests__/setup.ts`。
 - 共享组件：`@workspace/ui/components/*`；`cn()` 在 `@workspace/ui/lib/utils`；表单级 Toast 用 `sonner`。
 
