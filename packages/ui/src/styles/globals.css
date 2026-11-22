@@ -46,8 +46,20 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --font-sans: "Segoe UI", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Cascadia Code", Consolas, ui-monospace, monospace;
+  /* 正文优先 Segoe UI Variable 与雅黑 UI；光学尺寸让大字号自动收细，避免系统默认字重显钝。 */
+  --font-sans:
+    "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC",
+    "Hiragino Sans GB", ui-sans-serif, system-ui, sans-serif;
+  /* 标题用等线 Light：Windows 自带、可离线，轻字重把中文题头从“应用标题”拉回“刊头”。 */
+  --font-title:
+    "DengXian Light", "等线 Light", "DengXian", "等线", "Microsoft YaHei UI Light",
+    "Microsoft YaHei UI", "PingFang SC", ui-sans-serif, system-ui, sans-serif;
+  /* 眉标与编号用 Bahnschrift：DIN 血统的窄体仪表字，只出现在拉丁字母与数字上。 */
+  --font-label:
+    "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", "Microsoft YaHei UI", ui-sans-serif,
+    system-ui, sans-serif;
+  /* 状态与版本用 Cascadia Mono；比 Cascadia Code 少连字，读短标签更稳。 */
+  --font-mono: "Cascadia Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
 }
 
 :root {

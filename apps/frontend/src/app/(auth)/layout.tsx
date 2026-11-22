@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             <ProductMark className="size-8 sm:size-9" />
             <div>
               <p className="text-sm font-semibold tracking-tight">接口测试用例辅助生成系统</p>
-              <p className="mt-0.5 font-mono text-xs tracking-widest text-muted-foreground">
+              <p className="mt-0.5 text-xs tracking-widest text-muted-foreground">
                 接口测试 · 智能体辅助
               </p>
             </div>

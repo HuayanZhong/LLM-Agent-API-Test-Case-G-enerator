@@ -32,7 +32,7 @@ function LoginBrandPanel({ className }: { className?: string }) {
       )}
     >
       {/* 内容列单独限宽、水平居中并整体垂直居中；引语紧随轨道，不钉在视口底部。 */}
-      <div className="mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-8 xl:max-w-lg">
+      <div className="mx-auto flex min-h-full w-full max-w-md flex-col justify-center gap-10 xl:max-w-lg">
         {/* 产品标识与名称：移动端由 (auth)/layout.tsx 重复一份，这里只负责 md 以上。 */}
         <div className="flex items-center gap-3">
           <ProductMark className="size-8 xl:size-10" />
@@ -40,7 +40,7 @@ function LoginBrandPanel({ className }: { className?: string }) {
             <p className="text-sm font-semibold tracking-tight xl:text-base">
               接口测试用例辅助生成系统
             </p>
-            <p className="mt-0.5 font-mono text-xs tracking-widest text-muted-foreground">
+            <p className="mt-0.5 text-xs tracking-widest text-muted-foreground">
               接口测试 · 智能体辅助
             </p>
           </div>
@@ -49,45 +49,72 @@ function LoginBrandPanel({ className }: { className?: string }) {
         <div>
           {/* md 只保留标识与轨道，lg 起才展开完整定位文案，避免窄栏拥挤。 */}
           <div className="hidden lg:block">
-            <p className="font-mono text-xs tracking-widest text-muted-foreground">VERIFY LOOP</p>
-            <h2 className="mt-4 text-2xl leading-tight font-semibold tracking-tight text-balance xl:text-3xl 2xl:text-4xl">
-              把接口测试做成可复验的闭环
+            {/* 眉标一行给出观察范围（01–04）与右侧延伸线，像报告页的栏头。 */}
+            <div className="flex items-center gap-3">
+              <p className="font-label text-xs font-semibold tracking-widest text-muted-foreground">
+                VERIFY LOOP
+              </p>
+              <span aria-hidden="true" className="h-px flex-1 bg-border" />
+              <p className="font-label text-xs tabular-nums tracking-widest text-muted-foreground">
+                01—04
+              </p>
+            </div>
+            {/* 题头固定断成两行：第二行落在“可复验的闭环”上，让主张单独成句。 */}
+            <h2 className="font-title mt-6 text-3xl leading-snug text-foreground xl:text-4xl">
+              把接口测试做成
+              <br />
+              可复验的闭环
             </h2>
             <p className="mt-4 text-sm leading-6 text-muted-foreground xl:text-base xl:leading-7">
               从接口生成用例，由 Agent 执行，与正常现场比对；不一致时重放复现，最后交付测试报告。
             </p>
           </div>
 
-          {/* 左侧竖线串起四步，是页面的签名元素；状态用等宽字强化“工具感”。 */}
-          <ol className="mt-0 border-l border-border lg:mt-8 xl:mt-12">
+          {/* 左侧竖线串起四步，是页面的签名元素；状态右对齐成台账，索引与状态分列两端。 */}
+          <ol className="mt-0 border-l border-foreground/20 lg:mt-10 xl:mt-12">
             {steps.map((step, index) => (
-              <li key={step.title} className="relative pb-5 pl-6 last:pb-0 xl:pb-7">
+              <li key={step.title} className="relative py-3 pl-6 first:pt-1 last:pb-1">
                 <span
                   aria-hidden="true"
-                  className="absolute top-1.5 -left-1 size-2 rounded-full bg-foreground/30 ring-4 ring-sidebar"
+                  className="absolute top-1/2 -left-1 size-2 -translate-y-1/2 rounded-full bg-foreground/35 ring-4 ring-sidebar"
                 />
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                  <span className="font-label text-xs font-semibold tabular-nums text-muted-foreground">
                     {formatStepIndex(index)}
                   </span>
                   <span className="text-sm font-medium">{step.title}</span>
+                  {/* 点线引导把标题与右端状态连成一行，状态不再悬挂在标题下方。 */}
+                  <span
+                    aria-hidden="true"
+                    className="h-0 flex-1 self-center border-b border-dotted border-border"
+                  />
+                  <span className="font-mono text-xs tracking-wider text-muted-foreground">
+                    {step.status}
+                  </span>
                 </div>
-                <p className="mt-1 pl-8 font-mono text-xs tracking-wider text-muted-foreground">
-                  {step.status}
-                </p>
               </li>
             ))}
           </ol>
 
+          {/* 闭环的回落边：只说明不一致时从哪里回退，不新增第五步。 */}
+          <p className="mt-3 pl-6 font-mono text-xs tracking-wider text-muted-foreground">
+            ↺ 不一致时重放复现
+          </p>
+
           {/* 把系统红线放在登录页，提醒使用者系统只诊断与复验；紧随轨道，不钉在视口底部。 */}
-          <div className="mt-8">
-            <p className="border-l-2 border-foreground/20 pl-4 text-sm leading-6 xl:text-base">
+          <div className="mt-10">
+            <p className="font-title border-l-2 border-foreground/25 pl-4 text-base leading-7 xl:text-lg">
               系统只诊断与复验，不改代码。
             </p>
             {/* 版本信息在 md 窄栏里会换行，lg 起再显示。 */}
-            <p className="mt-6 hidden font-mono text-xs tracking-widest text-muted-foreground lg:block">
-              本地工作台 · 静态演示 · v{packageJson.version}
-            </p>
+            <div className="mt-8 hidden items-center justify-between gap-4 border-t border-border pt-4 lg:flex">
+              <p className="font-mono text-xs tracking-widest text-muted-foreground">
+                本地工作台 · 静态演示
+              </p>
+              <p className="font-mono text-xs tabular-nums tracking-widest text-muted-foreground">
+                v{packageJson.version}
+              </p>
+            </div>
           </div>
         </div>
       </div>
