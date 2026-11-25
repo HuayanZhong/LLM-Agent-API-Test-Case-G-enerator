@@ -1,10 +1,15 @@
 import type { Metadata } from "next"
 
+import { DEFAULT_LOCALE, messages } from "@workspace/i18n"
+
 import { LoginForm } from "../_components/login-form"
 
+// 静态导出的 metadata 只能是构建期常量；直接取默认语言词表，避免与文案包两处维护。
+const { meta } = messages[DEFAULT_LOCALE]
+
 export const metadata: Metadata = {
-  title: "登录 · 接口测试用例辅助生成系统",
-  description: "使用邮箱登录工作台，管理接口测试用例与复验。",
+  title: meta.loginTitle,
+  description: meta.loginDescription,
 }
 
 export default function LoginPage() {

@@ -23,7 +23,7 @@ pnpm --filter @workspace/i18n format
 ```text
 packages/i18n/
 ├── src/
-│   ├── config.ts          # LOCALES、DEFAULT_LOCALE、DEFAULT_TIME_ZONE、LOCALE_STORAGE_KEY、isLocale、resolveLocale
+│   ├── config.ts          # LOCALES、DEFAULT_LOCALE、DEFAULT_TIME_ZONE、LOCALE_META、LOCALE_STORAGE_KEY、isLocale、resolveLocale
 │   ├── messages/
 │   │   ├── zh-CN.json     # 键集合唯一事实来源
 │   │   ├── en-US.json     # satisfies 同一结构

@@ -21,6 +21,7 @@
 - 颜色用语义 token；不要在组件里写死 `bg-blue-500` 之类的原始颜色。
 - 字体分四个系统栈：`--font-sans` 正文、`--font-title` 中文题头（等线 Light）、`--font-label` 拉丁眉标与编号（Bahnschrift）、`--font-mono` 状态与版本（Cascadia Mono）；全部为系统字体，不引入 webfont。
 - 大屏统一用根字号缩放：`globals.css` 的 `--app-font-scale: clamp(16px, 1vw, 20px)` 设在 `html` 上，所有 rem 尺寸随之等比放大；不要在组件里逐档写 `3xl:` 或 `min-[...]` 手动放大。
+- CLI 组件里的固定 px 会丢缩放。已把 `checkbox.tsx` 的 `rounded-[4px]` 改成 `rounded-[calc(var(--radius)*0.4)]`（默认字号下仍是 4px，但会随根字号放大）；这是对 registry 的唯一尺寸类改动，升级组件时复查。`button.tsx` 的 `text-[0.8rem]` 已是 rem，`dropdown-menu.tsx` 的 `min-w-[96px]` 未被使用且属 registry 原样，暂不改。
 - Toast 用 shadcn `sonner` 组件：`Toaster` 由应用布局挂载，业务侧直接 `import { toast } from "sonner"`；组件保持 CLI 默认，类型由默认图标区分，不做图标、颜色条或 `richColors` 覆盖。
 - `cn` 来自 `cn` 包，不要再引入 `clsx` + `tailwind-merge`；`src/lib/utils.ts` 只做 re-export。
 - 不引入 `dist` / 构建脚本；Next 通过 `transpilePackages: ["@workspace/ui"]` 直接编译源码。

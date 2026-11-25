@@ -61,6 +61,9 @@
     }
   },
   "brand": {
+    "eyebrow": "VERIFY LOOP",
+    "range": "{from}—{to}",
+    "version": "v{version}",
     "steps": {
       "generate": {
         "title": "生成用例",
@@ -81,6 +84,7 @@
     },
     "titleLine1": "把接口测试做成",
     "titleLine2": "可复验的闭环",
+    "titleCompact": "把接口测试做成可复验的闭环",
     "description": "从接口生成用例，由 Agent 执行，与正常现场比对；不一致时重放复现，最后交付测试报告。",
     "loopNote": "↺ 不一致时重放复现",
     "quote": "系统只诊断与复验，不改代码。",

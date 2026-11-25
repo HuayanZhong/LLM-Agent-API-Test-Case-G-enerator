@@ -1,10 +1,15 @@
 import type { Metadata } from "next"
 
+import { DEFAULT_LOCALE, messages } from "@workspace/i18n"
+
 import { RegisterForm } from "../_components/register-form"
 
+// 静态导出的 metadata 只能是构建期常量；直接取默认语言词表，避免与文案包两处维护。
+const { meta } = messages[DEFAULT_LOCALE]
+
 export const metadata: Metadata = {
-  title: "注册 · 接口测试用例辅助生成系统",
-  description: "使用邮箱验证码创建账号。",
+  title: meta.registerTitle,
+  description: meta.registerDescription,
 }
 
 export default function RegisterPage() {

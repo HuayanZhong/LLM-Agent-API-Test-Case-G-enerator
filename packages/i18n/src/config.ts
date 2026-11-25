@@ -12,6 +12,15 @@ export const DEFAULT_TIME_ZONE = "Asia/Shanghai"
 /** 与“记住邮箱”共用命名空间，避免和其他本地数据冲突。 */
 export const LOCALE_STORAGE_KEY = "interface-test-agent:locale"
 
+/**
+ * 语言自身的显示名用母语写法，不随界面语言翻译：英文界面里也写“中文”。
+ * 它属于语言元数据而不是界面文案，所以留在 config，不进 messages。
+ */
+export const LOCALE_META = {
+  "zh-CN": { short: "中", name: "中文" },
+  "en-US": { short: "EN", name: "English" },
+} as const satisfies Record<Locale, { short: string; name: string }>
+
 /** 本地存储与用户输入都不可信，只接受预定义语言标签。 */
 export function isLocale(value: unknown): value is Locale {
   return typeof value === "string" && (LOCALES as readonly string[]).includes(value)

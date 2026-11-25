@@ -16,7 +16,7 @@
 
 ```
 .
-├── doc/                 # 业务架构、技术架构与数据模型图
+├── doc/                 # 业务架构、技术架构、数据模型图与界面样式规范（ui-design.md）
 ├── openspec/            # OpenSpec 规格与变更（specs / changes）
 ├── .agents/skills/      # OpenSpec 与第三方技能；.claude/skills/ 是同步副本
 ├── apps/                # desktop（Electron）、backend（5000）、bff（4000）、frontend（3000）

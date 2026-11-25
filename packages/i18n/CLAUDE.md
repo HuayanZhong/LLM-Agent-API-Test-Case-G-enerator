@@ -14,7 +14,7 @@
 
 ## 目录与入口
 
-- `src/config.ts`：`LOCALES`、`DEFAULT_LOCALE`、`DEFAULT_TIME_ZONE`、`LOCALE_STORAGE_KEY`、`isLocale`、`resolveLocale`。
+- `src/config.ts`：`LOCALES`、`DEFAULT_LOCALE`、`DEFAULT_TIME_ZONE`、`LOCALE_META`、`LOCALE_STORAGE_KEY`、`isLocale`、`resolveLocale`。
 - `src/messages/zh-CN.json`：键集合唯一事实来源；`en-US.json` 用 `satisfies Messages` 对齐结构。
 - `src/messages/index.ts`：聚合 `messages` 并导出 `Messages` 类型。
 - `src/index.ts`：包入口；`exports` 只指向它。
@@ -26,6 +26,7 @@
 - 新增文案键时先改 `zh-CN.json`，再补 `en-US.json`；`satisfies` 会在缺键或类型不一致时报错。
 - ICU 占位符必须两侧一致；`__tests__/messages.test.ts` 会逐键比较占位符。
 - 语言标签只允许 `LOCALES` 中的值；未知值必须回落 `DEFAULT_LOCALE`，不要在组件里各自写兜底。
+- 语言自身的显示名放 `LOCALE_META`（`short` / `name`），用母语写法，不随界面语言翻译；它属于语言元数据，不进 `messages` 词表。
 - 存储键固定 `interface-test-agent:locale`，与“记住邮箱”共用命名空间；不要改成其他前缀。
 - 包内不做业务校验、不放错误码；校验函数产出的错误键属于前端业务层。
 - 不引入构建产物；消费方是 Next / Vite 的 bundler，直接读 `.ts` 与 `.json`。

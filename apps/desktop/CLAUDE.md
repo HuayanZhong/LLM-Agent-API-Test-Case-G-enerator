@@ -38,7 +38,7 @@ pnpm --filter desktop format
 - `pnpm-workspace.yaml` 的 `nodeLinker: hoisted` 是 Forge 8 的硬性要求；不要改回 isolated，也不要用 `.npmrc` 的 `node-linker` 代替（pnpm 12 不读）。
 - 本包保持零运行时 `dependencies`；新增运行时依赖必须先评估 Forge 打包与 asar 体积，优先用 Vite 打进 main/preload。
 - `forge.config.ts` 的 `packagerConfig.ignore` 必须保留 `/.vite`、`/renderer` 与 `/package.json`；Vite 插件默认会丢掉 renderer。
-- 窗口初始 `1280×800`、最小 `1024×800`；默认应用菜单必须保持移除（`Menu.setApplicationMenu(null)`），不要加回自定义菜单。
+- 窗口初始 `1280×800`、最小 `800×600`；默认应用菜单必须保持移除（`Menu.setApplicationMenu(null)`），不要加回自定义菜单。
 - DevTools 只在未打包时通过 `F12` / `Ctrl+Shift+I` 切换；打包态不得注册快捷键或调用 `openDevTools`，也不要恢复默认菜单的调试入口。
 - 共享接口类型集中在 `src/types/index.ts`；`Window.desktop` 声明在 `src/types/global.d.ts`，不要在实现文件里重复定义。渲染进程可见的 `DesktopBridge` 来自 `@workspace/types`，只允许 `import type`，并放在 `devDependencies`；本包继续保持零运行时依赖。
 - 渲染进程：`sandbox: true`、`contextIsolation: true`、`nodeIntegration: false`；preload 不暴露通用 IPC 或文件系统入口。
@@ -60,5 +60,5 @@ pnpm --filter desktop format
 
 - `pnpm --filter frontend build` 后 `pnpm --filter desktop build`，确认 `apps/desktop/renderer/index.html` 与 `_next` 存在；删除 `apps/frontend/out` 后 build 应非零退出并提示先构建前端。
 - `pnpm --filter desktop test` 用例通过，行覆盖率 ≥ 95%；`check-types`、`lint`、`format` 退出码 0。
-- 开发态：frontend dev 运行后 `pnpm --filter desktop dev` 显示页面，窗口无应用菜单栏，按 `F12` / `Ctrl+Shift+I` 可打开或关闭 DevTools，拖拽不能缩到小于 1024×800；生产态：`pnpm --filter desktop package` 后运行未打包目录，断网仍能显示页面与 404，DevTools 未打开且快捷键不生效。
+- 开发态：frontend dev 运行后 `pnpm --filter desktop dev` 显示页面，窗口无应用菜单栏，按 `F12` / `Ctrl+Shift+I` 可打开或关闭 DevTools，拖拽不能缩到小于 800×600；生产态：`pnpm --filter desktop package` 后运行未打包目录，断网仍能显示页面与 404，DevTools 未打开且快捷键不生效。
 - `pnpm --filter desktop make` 生成 ZIP；生产包无 Next 进程、不监听 3000、不打开 DevTools。

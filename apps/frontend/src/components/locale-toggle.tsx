@@ -11,20 +11,9 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import { LOCALES, isLocale, type Locale } from "@workspace/i18n"
+import { LOCALES, LOCALE_META, isLocale } from "@workspace/i18n"
 
 import { useLocalePreference } from "./locale-provider"
-
-// 语言名称用母语写法，不随界面语言翻译：英文界面里也应能看到“中文”。
-const LOCALE_LABELS: Record<Locale, string> = {
-  "zh-CN": "中",
-  "en-US": "EN",
-}
-
-const LOCALE_NAMES: Record<Locale, string> = {
-  "zh-CN": "中文",
-  "en-US": "English",
-}
 
 /**
  * 语言切换入口：下拉菜单而不是分段按钮，方便后续增加语言或移入设置页。
@@ -42,11 +31,11 @@ function LocaleToggle() {
           type="button"
           variant="ghost"
           size="default"
-          aria-label={`${t("switchLanguage")}: ${LOCALE_NAMES[locale]}`}
+          aria-label={`${t("switchLanguage")}: ${LOCALE_META[locale].name}`}
           className="group h-8 gap-1 px-2 font-label text-xs tracking-wider text-foreground/80 hover:text-foreground"
         >
           <Globe className="size-4 text-muted-foreground" aria-hidden="true" />
-          <span>{LOCALE_LABELS[locale]}</span>
+          <span>{LOCALE_META[locale].short}</span>
           <ChevronDown
             className="size-3.5 text-muted-foreground transition-transform duration-150 group-data-[state=open]:rotate-180"
             aria-hidden="true"
@@ -69,7 +58,7 @@ function LocaleToggle() {
               value={value}
               className="py-2 data-[state=checked]:bg-accent/60 data-[state=checked]:font-medium"
             >
-              {LOCALE_NAMES[value]}
+              {LOCALE_META[value].name}
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>

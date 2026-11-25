@@ -24,6 +24,9 @@ function formatStepIndex(index: number) {
  */
 function LoginBrandPanel({ className }: { className?: string }) {
   const t = useTranslations("brand")
+  // 范围由步数与编号宽度推导，不把 01—04 写死；分隔符留给词表。
+  const rangeFrom = formatStepIndex(0)
+  const rangeTo = formatStepIndex(steps.length - 1)
 
   return (
     // md 起显示左栏；宽度由 (auth)/layout.tsx 的网格列控制，2xl 放大后仍保持可滚动。
@@ -45,19 +48,18 @@ function LoginBrandPanel({ className }: { className?: string }) {
         <div>
           {/* md 窄栏只保留一行主张给左栏一个焦点；完整定位文案仍留给 lg。 */}
           <p className="font-title mb-4 hidden text-xl leading-snug text-foreground md:block lg:hidden">
-            {t("titleLine1")}
-            {t("titleLine2")}
+            {t("titleCompact")}
           </p>
           {/* md 只保留标识与轨道，lg 起才展开完整定位文案，避免窄栏拥挤。 */}
           <div className="hidden lg:block">
             {/* 眉标一行给出观察范围（01–04）与右侧延伸线，像报告页的栏头。 */}
             <div className="flex items-center gap-3">
               <p className="font-label text-xs font-semibold tracking-widest text-muted-foreground">
-                VERIFY LOOP
+                {t("eyebrow")}
               </p>
               <span aria-hidden="true" className="h-px flex-1 bg-border" />
               <p className="font-label text-xs tabular-nums tracking-widest text-muted-foreground">
-                01—04
+                {t("range", { from: rangeFrom, to: rangeTo })}
               </p>
             </div>
             {/* 题头固定断成两行：第二行落在“可复验的闭环”上，让主张单独成句；用 p 而不是 h2，页面主标题留给登录表单。 */}
@@ -113,7 +115,7 @@ function LoginBrandPanel({ className }: { className?: string }) {
                 {t("footerNote")}
               </p>
               <p className="font-mono text-xs tabular-nums tracking-widest text-muted-foreground">
-                v{packageJson.version}
+                {t("version", { version: packageJson.version })}
               </p>
             </div>
           </div>

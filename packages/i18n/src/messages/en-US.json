@@ -61,6 +61,9 @@
     }
   },
   "brand": {
+    "eyebrow": "VERIFY LOOP",
+    "range": "{from}—{to}",
+    "version": "v{version}",
     "steps": {
       "generate": {
         "title": "Generate cases",
@@ -81,6 +84,7 @@
     },
     "titleLine1": "Make API testing",
     "titleLine2": "a verifiable loop",
+    "titleCompact": "Make API testing a verifiable loop",
     "description": "Generate cases from the API, run them with an Agent, and compare against the recorded baseline; replay mismatches to reproduce them, then deliver the test report.",
     "loopNote": "↺ Replay to reproduce mismatches",
     "quote": "The system diagnoses and verifies only; it never changes code.",

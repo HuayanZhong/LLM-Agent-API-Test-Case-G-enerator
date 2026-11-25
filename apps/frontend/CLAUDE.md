@@ -38,6 +38,7 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 - 登录 / 注册页是纯客户端 UI 演示：只做邮箱格式、密码长度、6 位验证码校验与 Toast 反馈；不接 Supabase / BFF / backend，不伪造认证结果，不创建真实账号；`/workspace` 工作台属于后续变更。
 - 认证专属组件、hook、纯函数分别放 `src/app/(auth)/_components`、`_hooks`、`_lib`；不要把这些塞回全局 `src/components` / `src/lib`。
 - 认证数值常量（密码长度、验证码长度、演示延时、验证码冷却、邮箱存储键、编号宽度）集中在 `src/app/(auth)/_lib/auth-constants.ts`；不要在组件里写裸数字或 `text-[10px]` 这类任意值类，尺寸优先用 Tailwind 的比例 / 间距 token。
+- 源码里不写 px：根字号靠 `--app-font-scale` 缩放，只有 rem 尺寸跟着放大。发丝线用 `h-px`；`__tests__/no-arbitrary-px.test.ts` 会扫描 `src/` 并拦截任意 px。
 - 记住邮箱只允许把邮箱写入 `interface-test-agent:last-email`，密码不得进入任何本地存储。
 - 主题切换只通过页面上的可见按钮（固定在认证布局右上角）；不要在 `ThemeProvider` 或全局监听里恢复键盘快捷键，避免与输入框和桌面快捷键冲突。
 - 表单级错误与成功提示用 `sonner` Toast；字段错误仍留在输入框下方，不要退回页面内 Alert 汇总。
@@ -50,7 +51,10 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 - `next-env.d.ts` 由 Next 生成，不要手改。
 - 环境变量：`apps/frontend/.env.development` / `.env.production` 由 Next 原生加载，放 `NEXT_PUBLIC_*`；变量声明见根 `.env.example`，不要提交真实值。
 - 测试配置继承 `@workspace/vitest-config/react`，用 `@vitejs/plugin-react` + Vite 8 原生 `resolve.tsconfigPaths`；`setupFiles` 指向 `__tests__/setup.ts`。
-- 用户可见文案只能来自 `@workspace/i18n`；组件、Toast、`aria-label` 与 metadata 不得再写中英文字面量。新增文案先在 `zh-CN.json` 定键，再补 `en-US.json`。
+- 用户可见文案只能来自 `@workspace/i18n`；组件、Toast、`aria-label` 与 metadata 不得再写中英文字面量。新增文案先在 `zh-CN.json` 定键，再补 `en-US.json`。眉标、范围、版本前缀这类结构性标签同样走 `t()`。
+- 页面 `metadata` 的标题与描述从 `messages[DEFAULT_LOCALE]` 取，不要在 `page.tsx` 里另写一份中文。
+- 语言自身的显示名（`LOCALE_META` 的 `short` / `name`）来自 `@workspace/i18n`，不要写回组件常量。
+- `__tests__/no-hardcoded-copy.test.ts` 会扫描 `src/` 并在注释外发现中文字面量时失败；新增页面不要绕过它。
 - 校验函数只返回错误键（`AuthErrorKey`），不得返回中文或英文句子；插值参数（`min`、`length`、`seconds`）由展示层传给 `t()`。
 - 语言切换是纯客户端行为：不启用 `[locale]` 路由、middleware 或 proxy，URL 与静态导出路径不变；偏好键固定 `interface-test-agent:locale`。
 - `LocaleProvider` 首帧必须固定 `defaultLocale`，用 `useSyncExternalStore` 对齐本地存储；不要在渲染期或挂载 effect 里同步 setState，否则会 hydration mismatch 或覆盖已保存偏好。
@@ -65,6 +69,7 @@ pnpm --filter frontend format  # oxfmt --check .，根配置
 ## 改动前读什么
 
 - 端口与全局命令：[../../README.md](../../README.md)
+- 样式规范（字体、色彩、布局、品牌区、组件）：[../../doc/ui-design.md](../../doc/ui-design.md)
 - shadcn 安装方式：[../../packages/ui/CLAUDE.md](../../packages/ui/CLAUDE.md)
 - 共享文案包与语言边界：[../../packages/i18n/CLAUDE.md](../../packages/i18n/CLAUDE.md)
 - 文档同步要求：[../../.claude/rules/doc-sync.md](../../.claude/rules/doc-sync.md)
