@@ -1,6 +1,6 @@
 {
   "name": "@workspace/config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "跨应用共享的环境变量解析与校验（运行时工具，无构建）",
