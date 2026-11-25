@@ -3,9 +3,9 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 /** 前端源码根目录；这两个扫描型测试只读文件，不参与覆盖率统计。 */
-export const SOURCE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../src")
+const SOURCE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../src")
 
-export function collectSources(dir: string): string[] {
+function collectSources(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) {
@@ -19,7 +19,7 @@ export function collectSources(dir: string): string[] {
  * 去掉注释后再检查：注释允许中文与 px 说明，业务代码里出现才算违规。
  * 用逐字符扫描而不是正则，避免把字符串里的 // 误判成行注释。
  */
-export function stripComments(source: string): string {
+function stripComments(source: string): string {
   let output = ""
   let state: "code" | "line" | "block" | "single" | "double" | "template" = "code"
 
