@@ -3,12 +3,14 @@
 import * as React from "react"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
 import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { Label } from "@workspace/ui/components/label"
 
+import { useAuthErrorMessage } from "../_hooks/use-auth-error-message"
 import { useRememberedEmail } from "../_hooks/use-remembered-email"
 import { SUBMIT_DELAY_MS } from "../_lib/auth-constants"
 import { validateLogin, type AuthErrors } from "../_lib/validate-auth"
@@ -19,6 +21,8 @@ import { PasswordField } from "./password-field"
 type SubmitStatus = "idle" | "submitting" | "success"
 
 function LoginForm() {
+  const t = useTranslations("auth.login")
+  const errorMessage = useAuthErrorMessage()
   // 密码只存在组件内存；邮箱与“记住邮箱”由 useRememberedEmail 管理。
   const [password, setPassword] = React.useState("")
   const [errors, setErrors] = React.useState<AuthErrors>({})
@@ -93,8 +97,8 @@ function LoginForm() {
       }
 
       // 表单级错误用 Toast 汇总；字段级错误仍留在输入框下方。
-      toast.error("请检查登录信息", {
-        description: "邮箱或密码未通过校验，请按提示修改。",
+      toast.error(t("errorSummary"), {
+        description: t("errorDescription"),
       })
       return
     }
@@ -111,8 +115,8 @@ function LoginForm() {
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null
       setStatus("success")
-      toast.success("表单校验通过", {
-        description: "认证服务尚未接入；接入后会进入工作台。",
+      toast.success(t("success"), {
+        description: t("successDescription"),
       })
     }, SUBMIT_DELAY_MS)
   }
@@ -121,13 +125,15 @@ function LoginForm() {
     <div className="w-full">
       {/* 主题切换按钮由 auth layout 固定在页面右上角，表单这里不再重复。 */}
       <div className="mb-8">
-        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">登录工作台</h1>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">使用邮箱登录。</p>
+        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">
+          {t("title")}
+        </h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       {/* noValidate 关闭浏览器原生校验，保持错误文案和焦点顺序由前端统一控制。 */}
       <form
-        aria-label="登录表单"
+        aria-label={t("formLabel")}
         noValidate
         onSubmit={handleSubmit}
         className="space-y-4 sm:space-y-5"
@@ -136,7 +142,7 @@ function LoginForm() {
           id="login-email"
           value={email}
           onChange={handleEmailChange}
-          error={errors.email}
+          error={errorMessage(errors.email)}
           inputRef={emailRef}
         />
 
@@ -144,7 +150,7 @@ function LoginForm() {
           id="login-password"
           value={password}
           onChange={handlePasswordChange}
-          error={errors.password}
+          error={errorMessage(errors.password)}
           inputRef={passwordRef}
         />
 
@@ -153,7 +159,7 @@ function LoginForm() {
           <div className="flex items-center gap-2">
             <Checkbox
               id="remember-email"
-              aria-label="记住邮箱"
+              aria-label={t("remember")}
               checked={remember}
               onCheckedChange={(checked) => {
                 const nextRemember = checked === true
@@ -166,16 +172,16 @@ function LoginForm() {
               }}
             />
             <Label htmlFor="remember-email" className="font-normal text-muted-foreground">
-              记住邮箱
+              {t("remember")}
             </Label>
           </div>
           <p className="text-sm text-muted-foreground">
-            还没有账号？{" "}
+            {t("noAccount")}{" "}
             <Link
               href="/register/"
               className="font-medium text-foreground underline underline-offset-4 hover:text-foreground/80"
             >
-              去注册
+              {t("goRegister")}
             </Link>
           </p>
         </div>
@@ -185,18 +191,16 @@ function LoginForm() {
           {status === "submitting" ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              正在登录…
+              {t("submitting")}
             </>
           ) : (
-            "登录"
+            t("submit")
           )}
         </Button>
       </form>
 
       {/* 常驻说明当前是演示模式，避免把前端校验误认为真实登录。 */}
-      <p className="mt-4 text-xs leading-5 text-muted-foreground">
-        演示模式：认证服务尚未接入，提交只做前端校验。
-      </p>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">{t("demoNote")}</p>
     </div>
   )
 }

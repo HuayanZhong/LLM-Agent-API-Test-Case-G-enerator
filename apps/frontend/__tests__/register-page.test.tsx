@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react"
+import { renderWithIntl } from "./test-utils"
+import { screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import RegisterPage from "@/app/(auth)/register/page"
 
@@ -9,7 +10,7 @@ vi.mock("sonner", () => ({
 
 describe("RegisterPage", () => {
   it("渲染注册表单与登录入口", () => {
-    render(<RegisterPage />)
+    renderWithIntl(<RegisterPage />)
 
     expect(screen.getByRole("heading", { name: "注册工作台" })).toBeInTheDocument()
     expect(screen.getByRole("form", { name: "注册表单" })).toBeInTheDocument()

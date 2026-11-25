@@ -1,8 +1,11 @@
-import { act, fireEvent, render, screen } from "@testing-library/react"
+import { act, fireEvent, screen } from "@testing-library/react"
 import { renderToString } from "react-dom/server"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { LoginForm } from "@/app/(auth)/_components/login-form"
 import { REMEMBERED_EMAIL_KEY, SUBMIT_DELAY_MS } from "@/app/(auth)/_lib/auth-constants"
+
+import { IntlTestProvider, renderWithIntl } from "./test-utils"
 
 // Toast 是 sonner 的副作用；测试只断言调用，不渲染真实 Toast 容器。
 const toast = vi.hoisted(() => ({
@@ -36,7 +39,7 @@ afterEach(() => {
 
 describe("LoginForm", () => {
   it("渲染邮箱、密码、登录按钮与注册入口", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
 
     expect(screen.getByLabelText("邮箱")).toBeInTheDocument()
     expect(screen.getByLabelText("密码")).toBeInTheDocument()
@@ -47,7 +50,7 @@ describe("LoginForm", () => {
   })
 
   it("空提交显示字段错误、Toast 汇总并聚焦邮箱", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
 
     fireEvent.submit(getForm())
 
@@ -63,7 +66,7 @@ describe("LoginForm", () => {
   })
 
   it("邮箱格式错误与短密码同时显示", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fill("tester", "12345")
 
     fireEvent.submit(getForm())
@@ -74,7 +77,7 @@ describe("LoginForm", () => {
   })
 
   it("首次提交后修改输入会重新校验", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fireEvent.submit(getForm())
     expect(screen.getByText("请输入邮箱")).toBeInTheDocument()
 
@@ -85,7 +88,7 @@ describe("LoginForm", () => {
   })
 
   it("只有密码错误时聚焦密码", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), {
       target: { value: "tester@example.com" },
     })
@@ -97,7 +100,7 @@ describe("LoginForm", () => {
   })
 
   it("切换密码显隐不改变输入值", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     const password = screen.getByLabelText("密码")
     fireEvent.change(password, { target: { value: "secret" } })
 
@@ -115,7 +118,7 @@ describe("LoginForm", () => {
   it("合法提交显示 loading、记住邮箱并弹出成功 Toast，不落盘密码也不跳转", () => {
     const pushState = vi.spyOn(window.history, "pushState")
     const replaceState = vi.spyOn(window.history, "replaceState")
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fill("tester@example.com", "123456")
     fireEvent.click(screen.getByRole("checkbox", { name: "记住邮箱" }))
 
@@ -149,7 +152,7 @@ describe("LoginForm", () => {
   })
 
   it("提交中重复点击不会产生第二个成功 Toast", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fill("tester@example.com", "123456")
     fireEvent.submit(getForm())
 
@@ -163,7 +166,7 @@ describe("LoginForm", () => {
   })
 
   it("成功后再次提交会重新校验并再次给出成功反馈", () => {
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
     fill("tester@example.com", "123456")
     fireEvent.submit(getForm())
 
@@ -182,7 +185,7 @@ describe("LoginForm", () => {
 
   it("未勾选时立即清除已保存邮箱，校验失败也不会写回", () => {
     window.localStorage.setItem(REMEMBERED_EMAIL_KEY, "saved@example.com")
-    render(<LoginForm />)
+    renderWithIntl(<LoginForm />)
 
     expect(screen.getByLabelText("邮箱")).toHaveValue("saved@example.com")
     const remember = screen.getByRole("checkbox", { name: "记住邮箱" })
@@ -209,7 +212,7 @@ describe("LoginForm", () => {
   })
 
   it("卸载时清理未完成的提交定时器", () => {
-    const { unmount } = render(<LoginForm />)
+    const { unmount } = renderWithIntl(<LoginForm />)
     fill("tester@example.com", "123456")
     fireEvent.submit(getForm())
 
@@ -222,7 +225,11 @@ describe("LoginForm", () => {
     window.localStorage.setItem(REMEMBERED_EMAIL_KEY, "server@example.com")
 
     // 静态导出的首屏必须稳定；如果服务端快照读 localStorage，会与客户端 HTML 不一致。
-    const html = renderToString(<LoginForm />)
+    const html = renderToString(
+      <IntlTestProvider>
+        <LoginForm />
+      </IntlTestProvider>,
+    )
 
     expect(html).toContain("登录工作台")
     expect(html).not.toContain("server@example.com")

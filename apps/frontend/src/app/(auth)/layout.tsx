@@ -2,10 +2,11 @@ import type { ReactNode } from "react"
 
 import { Toaster } from "@workspace/ui/components/sonner"
 
+import { LocaleToggle } from "@/components/locale-toggle"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 import { LoginBrandPanel } from "./_components/login-brand-panel"
-import { ProductMark } from "./_components/product-mark"
+import { ProductMasthead } from "./_components/product-masthead"
 
 /**
  * 认证路由组布局：/login 与 /register 共用品牌栏、移动端标识、主题按钮和 Toast 容器。
@@ -18,8 +19,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     <main className="grid min-h-svh grid-rows-1 md:grid-cols-[2fr_3fr] lg:grid-cols-2">
       <LoginBrandPanel className="xl:px-12 xl:py-12 2xl:px-16" />
 
-      {/* 主题按钮固定在页面右上角；表单内部不再重复放按钮。 */}
-      <div className="fixed top-4 right-4 z-50 sm:top-6 sm:right-6">
+      {/* 语言与主题入口固定在页面右上角；表单内部不再重复放按钮。 */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2 sm:top-6 sm:right-6">
+        <LocaleToggle />
         <ThemeToggle />
       </div>
 
@@ -27,17 +29,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         {/* 表单列单独限宽；xl 起只放宽一档，后续由根字号继续放大。 */}
         <div className="w-full max-w-sm xl:max-w-md">
           {/* 移动端产品标识：md 起由左栏承担，这里隐藏。 */}
-          <div className="mb-6 flex items-center gap-3 sm:mb-8 md:hidden">
-            <ProductMark className="size-8 sm:size-9" />
-            <div className="min-w-0">
-              <p className="text-sm leading-tight font-semibold tracking-tight">
-                接口测试用例辅助生成系统
-              </p>
-              <p className="mt-1 text-xs leading-none tracking-widest text-muted-foreground">
-                接口测试 · 智能体辅助
-              </p>
-            </div>
-          </div>
+          <ProductMasthead className="mb-6 sm:mb-8 md:hidden" markClassName="size-8 sm:size-9" />
           {children}
         </div>
       </section>

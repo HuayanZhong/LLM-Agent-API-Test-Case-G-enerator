@@ -1,10 +1,11 @@
 # AGENTS.md
 
-`apps/frontend` 是 Next.js 16 前端骨架，开发态监听 3000，构建为静态导出（`out/`）后由 `apps/desktop` 托管；UI 组件在 `packages/ui`。
+`apps/frontend` 是 Next.js 16 前端骨架，开发态监听 3000，构建为静态导出（`out/`）后由 `apps/desktop` 托管；UI 组件在 `packages/ui`，界面文案与语言配置在 `packages/i18n`。
 
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
 - 共享 UI 包：[../../packages/ui/AGENTS.md](../../packages/ui/AGENTS.md)
+- 共享文案包：[../../packages/i18n/AGENTS.md](../../packages/i18n/AGENTS.md)
 - Lint / 格式化：`pnpm --filter frontend lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 项目工作流：`openspec/`（OpenSpec 2.0）

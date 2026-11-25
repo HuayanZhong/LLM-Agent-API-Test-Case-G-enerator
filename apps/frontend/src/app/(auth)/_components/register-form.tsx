@@ -3,12 +3,18 @@
 import * as React from "react"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
 import { Button } from "@workspace/ui/components/button"
 
-import { CODE_RESEND_SECONDS, SUBMIT_DELAY_MS } from "../_lib/auth-constants"
+import {
+  CODE_RESEND_SECONDS,
+  SUBMIT_DELAY_MS,
+  VERIFICATION_CODE_LENGTH,
+} from "../_lib/auth-constants"
 import { validateEmail, validateRegister, type AuthErrors } from "../_lib/validate-auth"
+import { useAuthErrorMessage } from "../_hooks/use-auth-error-message"
 import { CodeField } from "./code-field"
 import { EmailField } from "./email-field"
 import { PasswordField } from "./password-field"
@@ -16,6 +22,9 @@ import { PasswordField } from "./password-field"
 type SubmitStatus = "idle" | "submitting" | "success"
 
 function RegisterForm() {
+  const t = useTranslations("auth.register")
+  const tFields = useTranslations("fields")
+  const errorMessage = useAuthErrorMessage()
   const [email, setEmail] = React.useState("")
   const [code, setCode] = React.useState("")
   const [password, setPassword] = React.useState("")
@@ -66,7 +75,7 @@ function RegisterForm() {
     // 格式错误优先：只有验证码已是合法 6 位数字、却还没点发送时，才提示“请先获取验证码”。
     // 否则输入 12345 也会看到前置条件提示，规格里的验证码格式错误场景就不可达。
     if (!nextCodeSent && !nextErrors.code) {
-      nextErrors.code = "请先获取验证码"
+      nextErrors.code = "codeNotSent"
     }
 
     return nextErrors
@@ -113,7 +122,7 @@ function RegisterForm() {
       setErrors((current) => ({ ...current, email: emailError }))
       setSubmitted(true)
       emailRef.current?.focus()
-      toast.error("请先填写有效邮箱", { description: emailError })
+      toast.error(t("invalidEmailToast"), { description: errorMessage(emailError) })
       return
     }
 
@@ -123,10 +132,10 @@ function RegisterForm() {
       ...current,
       email: undefined,
       // 发送成功后“请先获取验证码”已经失效；格式错误仍然有效，保留。
-      code: current.code === "请先获取验证码" ? undefined : current.code,
+      code: current.code === "codeNotSent" ? undefined : current.code,
     }))
-    toast.success("验证码已发送（演示）", {
-      description: "演示模式不会真正发送邮件，请输入任意 6 位数字继续。",
+    toast.success(t("codeSent"), {
+      description: t("codeSentDescription", { length: VERIFICATION_CODE_LENGTH }),
     })
   }
 
@@ -155,8 +164,8 @@ function RegisterForm() {
         codeRef.current?.focus()
       }
 
-      toast.error("请检查注册信息", {
-        description: "邮箱、验证码或密码未通过校验，请按提示修改。",
+      toast.error(t("errorSummary"), {
+        description: t("errorDescription"),
       })
       return
     }
@@ -165,23 +174,25 @@ function RegisterForm() {
     submitTimerRef.current = window.setTimeout(() => {
       submitTimerRef.current = null
       setStatus("success")
-      toast.success("注册演示完成", {
-        description: "Supabase 邮箱验证码流程尚未接入，不会创建真实账号。",
+      toast.success(t("success"), {
+        description: t("successDescription"),
       })
     }, SUBMIT_DELAY_MS)
   }
 
-  const sendLabel = resendIn > 0 ? `${resendIn}s 后重发` : "发送验证码"
+  const sendLabel = resendIn > 0 ? tFields("resendIn", { seconds: resendIn }) : tFields("sendCode")
 
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">注册工作台</h1>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">使用邮箱验证码创建账号。</p>
+        <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">
+          {t("title")}
+        </h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <form
-        aria-label="注册表单"
+        aria-label={t("formLabel")}
         noValidate
         onSubmit={handleSubmit}
         className="space-y-4 sm:space-y-5"
@@ -190,17 +201,17 @@ function RegisterForm() {
           id="register-email"
           value={email}
           onChange={handleEmailChange}
-          error={errors.email}
+          error={errorMessage(errors.email)}
           inputRef={emailRef}
         />
 
         <PasswordField
           id="register-password"
           name="new-password"
-          label="设置密码"
+          label={tFields("setPassword")}
           value={password}
           onChange={handlePasswordChange}
-          error={errors.password}
+          error={errorMessage(errors.password)}
           autoComplete="new-password"
           inputRef={passwordRef}
         />
@@ -209,7 +220,7 @@ function RegisterForm() {
           id="register-code"
           value={code}
           onChange={handleCodeChange}
-          error={errors.code}
+          error={errorMessage(errors.code)}
           onSend={handleSendCode}
           sendLabel={sendLabel}
           sendDisabled={resendIn > 0 || status === "submitting"}
@@ -220,28 +231,26 @@ function RegisterForm() {
           {status === "submitting" ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              正在注册…
+              {t("submitting")}
             </>
           ) : (
-            "注册"
+            t("submit")
           )}
         </Button>
       </form>
 
       <p className="mt-5 text-sm text-muted-foreground">
-        已有账号？{" "}
+        {t("haveAccount")}{" "}
         <Link
           href="/login/"
           className="font-medium text-foreground underline underline-offset-4 hover:text-foreground/80"
         >
-          返回登录
+          {t("backToLogin")}
         </Link>
       </p>
 
       {/* 常驻说明当前是演示模式，避免把前端校验误认为真实注册。 */}
-      <p className="mt-4 text-xs leading-5 text-muted-foreground">
-        演示模式：不会真正发送邮件，也不会创建账号。
-      </p>
+      <p className="mt-4 text-xs leading-5 text-muted-foreground">{t("demoNote")}</p>
     </div>
   )
 }

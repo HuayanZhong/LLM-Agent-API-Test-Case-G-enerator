@@ -1,3 +1,6 @@
+"use client"
+
+import { useTranslations } from "next-intl"
 import type { Ref } from "react"
 
 import { Input } from "@workspace/ui/components/input"
@@ -14,16 +17,18 @@ interface EmailFieldProps {
 
 /** 邮箱输入：浏览器密码管理器可识别；错误通过 aria-describedby 关联到输入框。 */
 function EmailField({ id = "email", value, onChange, error, disabled, inputRef }: EmailFieldProps) {
+  const t = useTranslations("fields")
+
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>邮箱</Label>
+      <Label htmlFor={id}>{t("email")}</Label>
       <Input
         ref={inputRef}
         id={id}
         name="email"
         type="email"
         autoComplete="email"
-        placeholder="请输入邮箱"
+        placeholder={t("emailPlaceholder")}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}

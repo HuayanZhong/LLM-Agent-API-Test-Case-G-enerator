@@ -4,7 +4,20 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 type AuthField = "email" | "password" | "code"
 
-export type AuthErrors = Partial<Record<AuthField, string>>
+/**
+ * 校验只产出错误键：文案在展示层按当前语言解析，英文与中文共享同一组语义。
+ * 插值参数（密码长度、验证码位数）由展示层传入，不写进键本身。
+ */
+export type AuthErrorKey =
+  | "emailRequired"
+  | "emailInvalid"
+  | "passwordRequired"
+  | "passwordMin"
+  | "codeRequired"
+  | "codeFormat"
+  | "codeNotSent"
+
+export type AuthErrors = Partial<Record<AuthField, AuthErrorKey>>
 
 interface LoginInput {
   email: string
@@ -18,35 +31,35 @@ interface RegisterInput {
 }
 
 /** 邮箱只做格式检查，不判断是否已注册；真实认证接入后再由服务端返回结果。 */
-export function validateEmail(email: string): string | undefined {
+export function validateEmail(email: string): AuthErrorKey | undefined {
   const trimmed = email.trim()
   if (!trimmed) {
-    return "请输入邮箱"
+    return "emailRequired"
   }
   if (!EMAIL_PATTERN.test(trimmed)) {
-    return "请输入有效邮箱"
+    return "emailInvalid"
   }
   return undefined
 }
 
 /** 纯空白密码视为未填写；长度按原值计算，保留密码中间的空格。 */
-function validatePasswordField(password: string): string | undefined {
+function validatePasswordField(password: string): AuthErrorKey | undefined {
   if (!password.trim()) {
-    return "请输入密码"
+    return "passwordRequired"
   }
   if (password.length < MIN_PASSWORD_LENGTH) {
-    return `密码至少 ${MIN_PASSWORD_LENGTH} 位`
+    return "passwordMin"
   }
   return undefined
 }
 
 /** 验证码必须是固定长度的纯数字；演示阶段不校验服务端是否已发送。 */
-function validateCodeField(code: string): string | undefined {
+function validateCodeField(code: string): AuthErrorKey | undefined {
   if (!code.trim()) {
-    return "请输入验证码"
+    return "codeRequired"
   }
   if (code.length !== VERIFICATION_CODE_LENGTH || !/^\d+$/.test(code)) {
-    return `请输入 ${VERIFICATION_CODE_LENGTH} 位数字验证码`
+    return "codeFormat"
   }
   return undefined
 }

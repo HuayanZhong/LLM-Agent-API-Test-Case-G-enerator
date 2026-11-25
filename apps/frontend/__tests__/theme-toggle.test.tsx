@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react"
+import { renderWithIntl } from "./test-utils"
+import { fireEvent, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -18,7 +19,7 @@ beforeEach(() => {
 
 describe("ThemeToggle", () => {
   it("亮色下切换到暗色", () => {
-    render(<ThemeToggle />)
+    renderWithIntl(<ThemeToggle />)
 
     fireEvent.click(screen.getByRole("button", { name: "切换主题" }))
 
@@ -27,7 +28,7 @@ describe("ThemeToggle", () => {
 
   it("暗色下切换到亮色", () => {
     theme.resolvedTheme = "dark"
-    render(<ThemeToggle />)
+    renderWithIntl(<ThemeToggle />)
 
     fireEvent.click(screen.getByRole("button", { name: "切换主题" }))
 

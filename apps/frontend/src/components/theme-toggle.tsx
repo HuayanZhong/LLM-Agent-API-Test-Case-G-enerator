@@ -1,6 +1,7 @@
 "use client"
 
 import { Moon, Sun } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 
 import { Button } from "@workspace/ui/components/button"
@@ -10,6 +11,7 @@ import { Button } from "@workspace/ui/components/button"
  * 图标由 CSS 的 dark 变体切换，不依赖 mounted 状态，避免 hydration 前后不一致。
  */
 function ThemeToggle() {
+  const t = useTranslations("common")
   const { resolvedTheme, setTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
 
@@ -18,7 +20,7 @@ function ThemeToggle() {
       type="button"
       variant="ghost"
       size="icon"
-      aria-label="切换主题"
+      aria-label={t("switchTheme")}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       <Moon className="size-4 dark:hidden" aria-hidden="true" />

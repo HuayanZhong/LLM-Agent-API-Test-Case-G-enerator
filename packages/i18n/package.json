@@ -1,0 +1,30 @@
+{
+  "name": "@workspace/i18n",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "共享界面文案目录与语言配置（纯数据与类型，无构建）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=26.12.1"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "lint": "oxlint . --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint . --fix --no-error-on-unmatched-pattern",
+    "format": "oxfmt --check .",
+    "format:fix": "oxfmt ."
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "catalog:testing",
+    "@workspace/typescript-config": "workspace:*",
+    "@workspace/vitest-config": "workspace:*",
+    "typescript": "catalog:tooling",
+    "vitest": "catalog:testing"
+  }
+}

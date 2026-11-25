@@ -16,7 +16,13 @@ export default defineConfig({
       include: ["src/**/*.ts", "src/**/*.tsx"],
       // click-spark / scanner 是 CLI 拉入的第三方动效实现(canvas / WebGL 渲染,jsdom 不可测),
       // 交互行为由 apps/frontend 的适配层与页面测试覆盖,这里只排除组件内部实现。
-      exclude: ["src/components/click-spark.tsx", "src/components/scanner.tsx"],
+      exclude: [
+        "src/components/click-spark.tsx",
+        "src/components/scanner.tsx",
+        // dropdown-menu 是 CLI 拉入的 Radix 组合原语,本包只做 re-export;
+        // 实际用到的 Trigger / RadioGroup / RadioItem 由 apps/frontend 的语言切换测试覆盖。
+        "src/components/dropdown-menu.tsx",
+      ],
     },
   },
 })

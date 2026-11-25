@@ -41,7 +41,7 @@
 
 - 配置：`vitest.config.ts` 继承 `@workspace/vitest-config/react`，`plugins: [react()]`，路径别名用 Vite 8 原生 `resolve.tsconfigPaths`。
 - 目录：`__tests__/**/*.test.{ts,tsx}`；纯逻辑用 `.test.ts`，组件渲染用 `.test.tsx`；setup 在 `__tests__/setup.ts`（引入 jest-dom 并显式 `afterEach(cleanup)`）。
-- 覆盖率：只卡行覆盖率 95%，`coverage.include` 覆盖 `src` 下全部 ts/tsx；报告在 `coverage/`。例外：`src/components/click-spark.tsx` 与 `src/components/scanner.tsx`（CLI 拉入的第三方 canvas / WebGL 动效实现，jsdom 不可测）已在 `coverage.exclude` 中排除，交互行为由 `apps/frontend` 的适配层测试覆盖。
+- 覆盖率：只卡行覆盖率 95%，`coverage.include` 覆盖 `src` 下全部 ts/tsx；报告在 `coverage/`。例外：`src/components/click-spark.tsx`、`src/components/scanner.tsx`（CLI 拉入的第三方 canvas / WebGL 动效实现，jsdom 不可测）与 `src/components/dropdown-menu.tsx`（CLI 拉入的 Radix 组合原语，实际使用的 Trigger / RadioGroup / RadioItem 由 `apps/frontend` 的语言切换测试覆盖）已在 `coverage.exclude` 中排除。
 - 组件测试直接 import `@workspace/ui/components/*`，走包 `exports` 或 tsconfig paths，不要复制组件到测试目录。
 
 ## 改动前读什么

@@ -1,0 +1,96 @@
+{
+  "common": {
+    "productName": "API Test Case Assistant",
+    "productTagline": "API testing · Agent-assisted",
+    "switchTheme": "Toggle theme",
+    "switchLanguage": "Switch language"
+  },
+  "fields": {
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "setPassword": "Set password",
+    "code": "Verification code",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "sendCode": "Send code",
+    "resendIn": "Resend in {seconds}s"
+  },
+  "auth": {
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least {min} characters",
+      "codeRequired": "Verification code is required",
+      "codeFormat": "Enter the {length}-digit verification code",
+      "codeNotSent": "Request a verification code first"
+    },
+    "login": {
+      "title": "Sign in to the workspace",
+      "subtitle": "Sign in with your email.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "formLabel": "Sign-in form",
+      "remember": "Remember email",
+      "noAccount": "No account yet?",
+      "goRegister": "Create one",
+      "errorSummary": "Check your sign-in details",
+      "errorDescription": "Email or password failed validation. Follow the field hints.",
+      "success": "Validation passed",
+      "successDescription": "Authentication is not connected yet; you will enter the workspace once it is.",
+      "demoNote": "Demo mode: no authentication service yet; submission only runs front-end validation."
+    },
+    "register": {
+      "title": "Create your workspace account",
+      "subtitle": "Create an account with an email verification code.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "formLabel": "Registration form",
+      "haveAccount": "Already have an account?",
+      "backToLogin": "Back to sign in",
+      "demoNote": "Demo mode: no email is sent and no account is created.",
+      "invalidEmailToast": "Enter a valid email first",
+      "codeSent": "Verification code sent (demo)",
+      "codeSentDescription": "Demo mode sends no email; enter any {length}-digit number to continue.",
+      "errorSummary": "Check your registration details",
+      "errorDescription": "Email, code, or password failed validation. Follow the field hints.",
+      "success": "Registration demo complete",
+      "successDescription": "The Supabase email-code flow is not connected; no real account is created."
+    }
+  },
+  "brand": {
+    "steps": {
+      "generate": {
+        "title": "Generate cases",
+        "status": "Awaiting input"
+      },
+      "execute": {
+        "title": "Run tests",
+        "status": "Agent"
+      },
+      "compare": {
+        "title": "Compare baseline",
+        "status": "GraphRAG"
+      },
+      "report": {
+        "title": "Deliver report",
+        "status": "Human review"
+      }
+    },
+    "titleLine1": "Make API testing",
+    "titleLine2": "a verifiable loop",
+    "description": "Generate cases from the API, run them with an Agent, and compare against the recorded baseline; replay mismatches to reproduce them, then deliver the test report.",
+    "loopNote": "↺ Replay to reproduce mismatches",
+    "quote": "The system diagnoses and verifies only; it never changes code.",
+    "footerNote": "Local workspace · Static demo"
+  },
+  "meta": {
+    "productDescription": "API Test Case Assistant: generate, run, compare, and report.",
+    "loginTitle": "Sign in · API Test Case Assistant",
+    "loginDescription": "Sign in with your email to manage API test cases and verification.",
+    "registerTitle": "Create account · API Test Case Assistant",
+    "registerDescription": "Create an account with an email verification code."
+  }
+}

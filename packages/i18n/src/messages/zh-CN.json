@@ -1,0 +1,96 @@
+{
+  "common": {
+    "productName": "接口测试用例辅助生成系统",
+    "productTagline": "接口测试 · 智能体辅助",
+    "switchTheme": "切换主题",
+    "switchLanguage": "切换语言"
+  },
+  "fields": {
+    "email": "邮箱",
+    "emailPlaceholder": "请输入邮箱",
+    "password": "密码",
+    "passwordPlaceholder": "请输入密码",
+    "setPassword": "设置密码",
+    "code": "验证码",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码",
+    "sendCode": "发送验证码",
+    "resendIn": "{seconds}s 后重发"
+  },
+  "auth": {
+    "errors": {
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "请输入有效邮箱",
+      "passwordRequired": "请输入密码",
+      "passwordMin": "密码至少 {min} 位",
+      "codeRequired": "请输入验证码",
+      "codeFormat": "请输入 {length} 位数字验证码",
+      "codeNotSent": "请先获取验证码"
+    },
+    "login": {
+      "title": "登录工作台",
+      "subtitle": "使用邮箱登录。",
+      "submit": "登录",
+      "submitting": "正在登录…",
+      "formLabel": "登录表单",
+      "remember": "记住邮箱",
+      "noAccount": "还没有账号？",
+      "goRegister": "去注册",
+      "errorSummary": "请检查登录信息",
+      "errorDescription": "邮箱或密码未通过校验，请按提示修改。",
+      "success": "表单校验通过",
+      "successDescription": "认证服务尚未接入；接入后会进入工作台。",
+      "demoNote": "演示模式：认证服务尚未接入，提交只做前端校验。"
+    },
+    "register": {
+      "title": "注册工作台",
+      "subtitle": "使用邮箱验证码创建账号。",
+      "submit": "注册",
+      "submitting": "正在注册…",
+      "formLabel": "注册表单",
+      "haveAccount": "已有账号？",
+      "backToLogin": "返回登录",
+      "demoNote": "演示模式：不会真正发送邮件，也不会创建账号。",
+      "invalidEmailToast": "请先填写有效邮箱",
+      "codeSent": "验证码已发送（演示）",
+      "codeSentDescription": "演示模式不会真正发送邮件，请输入任意 {length} 位数字继续。",
+      "errorSummary": "请检查注册信息",
+      "errorDescription": "邮箱、验证码或密码未通过校验，请按提示修改。",
+      "success": "注册演示完成",
+      "successDescription": "Supabase 邮箱验证码流程尚未接入，不会创建真实账号。"
+    }
+  },
+  "brand": {
+    "steps": {
+      "generate": {
+        "title": "生成用例",
+        "status": "待输入"
+      },
+      "execute": {
+        "title": "执行测试",
+        "status": "Agent"
+      },
+      "compare": {
+        "title": "比对现场",
+        "status": "GraphRAG"
+      },
+      "report": {
+        "title": "输出报告",
+        "status": "人工确认"
+      }
+    },
+    "titleLine1": "把接口测试做成",
+    "titleLine2": "可复验的闭环",
+    "description": "从接口生成用例，由 Agent 执行，与正常现场比对；不一致时重放复现，最后交付测试报告。",
+    "loopNote": "↺ 不一致时重放复现",
+    "quote": "系统只诊断与复验，不改代码。",
+    "footerNote": "本地工作台 · 静态演示"
+  },
+  "meta": {
+    "productDescription": "接口测试用例辅助生成系统：生成、执行、比对与报告。",
+    "loginTitle": "登录 · 接口测试用例辅助生成系统",
+    "loginDescription": "使用邮箱登录工作台，管理接口测试用例与复验。",
+    "registerTitle": "注册 · 接口测试用例辅助生成系统",
+    "registerDescription": "使用邮箱验证码创建账号。"
+  }
+}

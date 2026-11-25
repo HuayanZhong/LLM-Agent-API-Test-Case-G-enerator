@@ -1,4 +1,7 @@
+"use client"
+
 import { Fragment, type Ref } from "react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -38,9 +41,11 @@ function CodeField({
   disabled,
   inputRef,
 }: CodeFieldProps) {
+  const t = useTranslations("fields")
+
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>验证码</Label>
+      <Label htmlFor={id}>{t("code")}</Label>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <InputOTP
           id={id}
@@ -51,7 +56,7 @@ function CodeField({
           value={value}
           onChange={onChange}
           disabled={disabled}
-          aria-label="验证码"
+          aria-label={t("code")}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
           containerClassName={

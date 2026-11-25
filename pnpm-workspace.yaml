@@ -35,6 +35,7 @@ catalogs:
   # 前端：Next.js、React、Tailwind、shadcn 组件依赖
   frontend:
     next: ^16.4.6
+    next-intl: ^4.15.3
     react: ^19.3.1
     react-dom: ^19.3.1
     next-themes: ^0.4.6
@@ -102,6 +103,8 @@ allowBuilds:
   esbuild: true
   # Electron 45 在 require 时按需下载二进制；保留 allowBuilds 以兼容未来带 install 脚本的版本。
   electron: true
+  "@parcel/watcher": false
+  "@swc/core": false
 
 # pnpm 供应链策略：新版本发布后至少等待 1 天才可安装，降低投毒风险。
 # 显式写出官方默认值，避免不同 pnpm 版本默认值漂移。

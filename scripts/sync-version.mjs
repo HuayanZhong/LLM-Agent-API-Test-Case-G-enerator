@@ -8,6 +8,8 @@ const packages = [
   "apps/desktop",
   "apps/frontend",
   "packages/config",
+  "packages/i18n",
+  "packages/request",
   "packages/types",
   "packages/typescript-config",
   "packages/ui",

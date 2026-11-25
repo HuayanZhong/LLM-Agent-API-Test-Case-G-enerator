@@ -3,6 +3,7 @@
 import * as React from "react"
 import type { Ref } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
@@ -24,7 +25,7 @@ interface PasswordFieldProps {
 function PasswordField({
   id = "password",
   name = "password",
-  label = "密码",
+  label: labelProp,
   value,
   onChange,
   error,
@@ -32,7 +33,10 @@ function PasswordField({
   autoComplete = "current-password",
   inputRef,
 }: PasswordFieldProps) {
+  const t = useTranslations("fields")
   const [visible, setVisible] = React.useState(false)
+  // 注册页用“设置密码”，登录页用默认“密码”；由调用方决定，组件不猜。
+  const label = labelProp ?? t("password")
 
   return (
     <div className="space-y-2">
@@ -44,7 +48,7 @@ function PasswordField({
           name={name}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
-          placeholder="请输入密码"
+          placeholder={t("passwordPlaceholder")}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           disabled={disabled}
@@ -58,7 +62,7 @@ function PasswordField({
           variant="ghost"
           size="icon"
           className="absolute top-0 right-0 size-8 text-muted-foreground hover:text-foreground"
-          aria-label={visible ? "隐藏密码" : "显示密码"}
+          aria-label={visible ? t("hidePassword") : t("showPassword")}
           aria-pressed={visible}
           disabled={disabled}
           onClick={() => setVisible((current) => !current)}

@@ -20,9 +20,11 @@
     "format:fix": "oxfmt ."
   },
   "dependencies": {
+    "@workspace/i18n": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "catalog:frontend",
     "next": "catalog:frontend",
+    "next-intl": "catalog:frontend",
     "next-themes": "catalog:frontend",
     "react": "catalog:frontend",
     "react-dom": "catalog:frontend",

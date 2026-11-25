@@ -27,7 +27,7 @@ packages/ui/
 |   +-- label.stories.tsx
 |   +-- sonner.stories.tsx
 +-- src/
-|   +-- components/        # button.tsx、card.tsx、input.tsx、input-otp.tsx、label.tsx、checkbox.tsx、alert.tsx、sonner.tsx、scanner.tsx 等
+|   +-- components/        # button.tsx、card.tsx、input.tsx、input-otp.tsx、label.tsx、checkbox.tsx、alert.tsx、sonner.tsx、dropdown-menu.tsx、scanner.tsx 等
 |   +-- lib/utils.ts       # cn()，re-export 自 cn 包
 |   +-- hooks/             # 按需创建；exports 已预留
 |   +-- styles/globals.css # Tailwind v4 入口、主题变量、@source

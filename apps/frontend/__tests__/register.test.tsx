@@ -1,7 +1,10 @@
-import { act, fireEvent, render, screen } from "@testing-library/react"
+import { act, fireEvent, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { RegisterForm } from "@/app/(auth)/_components/register-form"
 import { CODE_RESEND_SECONDS, SUBMIT_DELAY_MS } from "@/app/(auth)/_lib/auth-constants"
+
+import { renderWithIntl } from "./test-utils"
 
 // Toast 是 sonner 的副作用；测试只断言调用，不渲染真实 Toast 容器。
 const toast = vi.hoisted(() => ({
@@ -35,7 +38,7 @@ afterEach(() => {
 
 describe("RegisterForm", () => {
   it("渲染邮箱、密码、验证码、发送按钮与登录入口", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
 
     expect(screen.getByLabelText("邮箱")).toBeInTheDocument()
     expect(screen.getByLabelText("设置密码")).toBeInTheDocument()
@@ -48,7 +51,7 @@ describe("RegisterForm", () => {
   })
 
   it("空提交显示字段错误、Toast 汇总并聚焦邮箱", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
 
     fireEvent.submit(getForm())
 
@@ -63,7 +66,7 @@ describe("RegisterForm", () => {
   })
 
   it("邮箱无效时不能发送验证码", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester" } })
 
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
@@ -75,7 +78,7 @@ describe("RegisterForm", () => {
   })
 
   it("验证码格式错误优先于“未发送”提示", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
     fireEvent.change(screen.getByLabelText("设置密码"), { target: { value: "123456" } })
     fireEvent.change(screen.getByLabelText("验证码"), { target: { value: "12345" } })
@@ -93,7 +96,7 @@ describe("RegisterForm", () => {
   })
 
   it("发送验证码成功后清除已失效的“请先获取验证码”", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fill("tester@example.com", "123456", "123456")
     fireEvent.submit(getForm())
     expect(screen.getByText("请先获取验证码")).toBeInTheDocument()
@@ -106,7 +109,7 @@ describe("RegisterForm", () => {
   })
 
   it("发送验证码后进入冷却倒计时，归零后恢复可点击", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
 
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
@@ -140,7 +143,7 @@ describe("RegisterForm", () => {
   })
 
   it("验证码格式错误时聚焦验证码", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fireEvent.change(screen.getByLabelText("设置密码"), { target: { value: "123456" } })
@@ -154,7 +157,7 @@ describe("RegisterForm", () => {
   })
 
   it("提交时邮箱格式错误会聚焦邮箱", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fill("tester", "123456", "123456")
 
     fireEvent.submit(getForm())
@@ -167,7 +170,7 @@ describe("RegisterForm", () => {
   })
 
   it("密码过短时聚焦密码", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fireEvent.change(screen.getByLabelText("设置密码"), { target: { value: "12345" } })
@@ -182,7 +185,7 @@ describe("RegisterForm", () => {
 
   it("合法提交显示 loading 并弹出注册成功 Toast，不落盘也不发请求", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch")
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fill("tester@example.com", "123456", "123456")
@@ -205,7 +208,7 @@ describe("RegisterForm", () => {
   })
 
   it("首次提交后修改输入会重新校验", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.submit(getForm())
     expect(screen.getByText("请输入邮箱")).toBeInTheDocument()
 
@@ -221,7 +224,7 @@ describe("RegisterForm", () => {
   })
 
   it("提交中重复提交只产生一次注册成功反馈，成功后再次提交可重新触发", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), {
       target: { value: "tester@example.com" },
     })
@@ -249,7 +252,7 @@ describe("RegisterForm", () => {
   })
 
   it("修改邮箱会清空已发送的验证码状态", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "first@example.com" } })
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fireEvent.change(screen.getByLabelText("验证码"), { target: { value: "123456" } })
@@ -261,7 +264,7 @@ describe("RegisterForm", () => {
   })
 
   it("改邮箱后用空验证码重新校验，不复用旧验证码", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fill("tester@example.com", "12345", "123456")
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fireEvent.submit(getForm())
@@ -277,7 +280,7 @@ describe("RegisterForm", () => {
   })
 
   it("密码与验证码同时错误时，焦点按视觉顺序先到密码", () => {
-    render(<RegisterForm />)
+    renderWithIntl(<RegisterForm />)
     fill("tester@example.com", "12345", "12345")
 
     fireEvent.submit(getForm())
@@ -286,7 +289,7 @@ describe("RegisterForm", () => {
   })
 
   it("卸载时清理提交定时器与倒计时", () => {
-    const { unmount } = render(<RegisterForm />)
+    const { unmount } = renderWithIntl(<RegisterForm />)
     fireEvent.change(screen.getByLabelText("邮箱"), { target: { value: "tester@example.com" } })
     fireEvent.click(screen.getByRole("button", { name: "发送验证码" }))
     fill("tester@example.com", "123456", "123456")
