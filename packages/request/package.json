@@ -1,6 +1,6 @@
 {
   "name": "@workspace/request",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "跨端共享的 HTTP 请求基础设施（ky 实例工厂与浏览器 preset，无构建）",
