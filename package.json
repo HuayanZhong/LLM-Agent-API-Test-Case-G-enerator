@@ -1,6 +1,6 @@
 {
   "name": "LLM-Agent-API-Test-Case-G-enerator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "基于大模型智能体的接口测试用例辅助生成系统的设计与实现 (Design and Implementation of an LLM-Agent-Assisted API Test Case Generation System)",
   "keywords": [
