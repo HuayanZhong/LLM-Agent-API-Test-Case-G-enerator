@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { LOCALE_STORAGE_KEY } from "@workspace/i18n"
 
-import { LoginForm } from "@/app/(auth)/_components/login-form"
-import { LocaleProvider } from "@/components/locale-provider"
-import { LocaleToggle } from "@/components/locale-toggle"
+import { LoginForm } from "@/app/(auth)/_components/forms/login-form"
+import { LocaleProvider } from "@/components/layout/locale-provider"
+import { LocaleToggle } from "@/components/controls/locale-toggle"
 
 import { chooseLocale } from "./test-utils"
 

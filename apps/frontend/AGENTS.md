@@ -4,6 +4,7 @@
 
 - 本包说明：[README.md](README.md)
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
+- 组件分层：`src/components/layout`（布局级 Provider 与全局标题栏）、`src/components/controls`（切换控件）；认证私有在 `src/app/(auth)/_components/{brand,forms,fields}`，详见 [CLAUDE.md](CLAUDE.md)
 - 共享 UI 包：[../../packages/ui/AGENTS.md](../../packages/ui/AGENTS.md)
 - 共享文案包：[../../packages/i18n/AGENTS.md](../../packages/i18n/AGENTS.md)
 - Lint / 格式化：`pnpm --filter frontend lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`

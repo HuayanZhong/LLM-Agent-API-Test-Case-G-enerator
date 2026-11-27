@@ -17,6 +17,8 @@ const electron = vi.hoisted(() => {
 
   class MockBrowserWindow {
     static getAllWindows = () => windows
+    static fromWebContents = (webContents: unknown) =>
+      windows.find((win) => win.webContents === webContents) ?? null
     options: Record<string, unknown>
     webContents = {
       setWindowOpenHandler:
@@ -53,8 +55,22 @@ const electron = vi.hoisted(() => {
   }
   const shell = { openExternal: vi.fn<(url: string) => Promise<void>>(async () => {}) }
   const Menu = { setApplicationMenu: vi.fn<(menu: unknown) => void>() }
+  const nativeTheme = { shouldUseDarkColors: false }
+  const ipcMain = {
+    on: vi.fn<(channel: string, listener: (event: unknown, ...args: unknown[]) => void) => void>(),
+  }
 
-  return { app, protocol, session, shell, Menu, BrowserWindow: MockBrowserWindow, windows }
+  return {
+    app,
+    protocol,
+    session,
+    shell,
+    Menu,
+    nativeTheme,
+    ipcMain,
+    BrowserWindow: MockBrowserWindow,
+    windows,
+  }
 })
 
 vi.mock("electron", () => ({
@@ -64,6 +80,8 @@ vi.mock("electron", () => ({
   session: electron.session,
   shell: electron.shell,
   Menu: electron.Menu,
+  nativeTheme: electron.nativeTheme,
+  ipcMain: electron.ipcMain,
 }))
 
 import {
@@ -83,6 +101,7 @@ beforeEach(() => {
   electron.app.isPackaged = false
   electron.app.requestSingleInstanceLock.mockReturnValue(true)
   electron.app.whenReady.mockResolvedValue(undefined)
+  electron.nativeTheme.shouldUseDarkColors = false
   delete process.env.ELECTRON_RENDERER_URL
 })
 
@@ -158,6 +177,28 @@ describe("getWindowOptions", () => {
       },
     })
   })
+
+  it("Windows 下启用隐藏标题栏与透明覆盖层", () => {
+    const options = getWindowOptions("C:/tmp/preload.cjs", "win32")
+    expect(options.titleBarStyle).toBe("hidden")
+    expect(options.titleBarOverlay).toEqual({
+      color: "rgba(0, 0, 0, 0)",
+      symbolColor: "#0a0a0a",
+      height: 40,
+    })
+  })
+
+  it("Windows 深色系统主题使用浅色符号", () => {
+    electron.nativeTheme.shouldUseDarkColors = true
+    const options = getWindowOptions("C:/tmp/preload.cjs", "win32")
+    expect(options.titleBarOverlay).toMatchObject({ symbolColor: "#fafafa" })
+  })
+
+  it("非 Windows 保持平台默认窗口头部", () => {
+    const options = getWindowOptions("C:/tmp/preload.cjs", "darwin")
+    expect(options.titleBarStyle).toBeUndefined()
+    expect(options.titleBarOverlay).toBeUndefined()
+  })
 })
 
 describe("bootstrap", () => {
@@ -196,6 +237,11 @@ describe("bootstrap", () => {
   it("移除默认应用菜单", async () => {
     await bootstrap({ waitForServer: async () => true })
     expect(electron.Menu.setApplicationMenu).toHaveBeenCalledWith(null)
+  })
+
+  it("注册标题栏主题通道", async () => {
+    await bootstrap({ waitForServer: async () => true })
+    expect(electron.ipcMain.on).toHaveBeenCalledWith("titlebar:set-theme", expect.any(Function))
   })
 
   it("开发态注册 DevTools 快捷键且不自动打开", async () => {

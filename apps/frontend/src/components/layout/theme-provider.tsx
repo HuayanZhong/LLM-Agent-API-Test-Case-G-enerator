@@ -5,7 +5,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes"
 
 /**
  * 全局主题上下文：只负责 class 策略、系统默认值与主题切换后的持久化。
- * 切换入口是页面上的可见按钮（当前为登录页右上角），不再注册全局键盘快捷键。
+ * 切换入口是全局窗口标题栏里的可见按钮，不再注册全局键盘快捷键。
  */
 function ThemeProvider({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) {
   return (

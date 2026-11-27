@@ -2,15 +2,12 @@ import type { ReactNode } from "react"
 
 import { Toaster } from "@workspace/ui/components/sonner"
 
-import { LocaleToggle } from "@/components/locale-toggle"
-import { ThemeToggle } from "@/components/theme-toggle"
-
-import { LoginBrandPanel } from "./_components/login-brand-panel"
-import { ProductMasthead } from "./_components/product-masthead"
+import { LoginBrandPanel } from "./_components/brand/login-brand-panel"
+import { ProductMasthead } from "./_components/brand/product-masthead"
 
 /**
- * 认证路由组布局：/login 与 /register 共用品牌栏、移动端标识、主题按钮和 Toast 容器。
- * 路由组目录名带括号，不会进入 URL。
+ * 认证路由组布局：/login 与 /register 共用品牌栏、移动端标识与 Toast 容器。
+ * 语言与主题入口由全局窗口标题栏提供，认证布局不再重复绘制。
  */
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -18,12 +15,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     // grid-rows-1 让唯一一行撑满 min-h-svh，避免大屏底部出现面板背景以外的空白带。
     <main className="grid min-h-svh grid-rows-1 md:grid-cols-[2fr_3fr] lg:grid-cols-2">
       <LoginBrandPanel className="xl:px-12 xl:py-12 2xl:px-16" />
-
-      {/* 语言与主题入口固定在页面右上角；表单内部不再重复放按钮。 */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2 sm:top-6 sm:right-6">
-        <LocaleToggle />
-        <ThemeToggle />
-      </div>
 
       <section className="flex min-w-0 items-center justify-center bg-background px-6 py-8 sm:px-10 sm:py-10 md:px-8 xl:px-16">
         {/* 表单列单独限宽；xl 起只放宽一档，后续由根字号继续放大。 */}
@@ -34,8 +25,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
       </section>
 
-      {/* sonner 组件保持 shadcn CLI 默认；类型由默认图标区分，不做颜色或图标覆盖。 */}
-      <Toaster position="top-center" />
+      {/* 标题栏固定在窗口顶部；Toast 向下偏移，避免被拖拽区盖住。 */}
+      <Toaster
+        position="top-center"
+        offset={{ top: "calc(var(--app-titlebar-height) + 0.5rem)" }}
+      />
     </main>
   )
 }

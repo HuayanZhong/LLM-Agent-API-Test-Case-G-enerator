@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { LOCALE_STORAGE_KEY } from "@workspace/i18n"
 
-import { LocaleProvider } from "@/components/locale-provider"
-import { LocaleToggle } from "@/components/locale-toggle"
+import { LocaleProvider } from "@/components/layout/locale-provider"
+import { LocaleToggle } from "@/components/controls/locale-toggle"
 
 import { chooseLocale } from "./test-utils"
 

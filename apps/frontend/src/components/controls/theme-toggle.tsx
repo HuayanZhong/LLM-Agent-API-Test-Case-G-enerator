@@ -20,6 +20,8 @@ function ThemeToggle() {
       type="button"
       variant="ghost"
       size="icon"
+      // WCO 标题栏内的按钮必须自己声明 no-drag；尺寸固定为 OS chrome 的 32px，避免根字号放大后贴顶。
+      className="h-(--app-titlebar-control-size) w-(--app-titlebar-control-size) [-webkit-app-region:no-drag]"
       aria-label={t("switchTheme")}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >

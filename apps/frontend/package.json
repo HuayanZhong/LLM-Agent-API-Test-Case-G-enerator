@@ -39,6 +39,7 @@
     "@types/react-dom": "catalog:frontend",
     "@vitejs/plugin-react": "catalog:testing",
     "@vitest/coverage-v8": "catalog:testing",
+    "@workspace/types": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "@workspace/vitest-config": "workspace:*",
     "jsdom": "catalog:testing",

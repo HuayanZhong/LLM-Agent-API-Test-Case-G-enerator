@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { LOCALE_STORAGE_KEY } from "@workspace/i18n"
 
-import { LocaleProvider } from "@/components/locale-provider"
+import { LocaleProvider } from "@/components/layout/locale-provider"
 
 const route = vi.hoisted(() => ({ pathname: "/login/" }))
 

@@ -13,7 +13,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { LOCALES, LOCALE_META, isLocale } from "@workspace/i18n"
 
-import { useLocalePreference } from "./locale-provider"
+import { useLocalePreference } from "@/components/layout/locale-provider"
 
 /**
  * 语言切换入口：下拉菜单而不是分段按钮，方便后续增加语言或移入设置页。
@@ -32,7 +32,7 @@ function LocaleToggle() {
           variant="ghost"
           size="default"
           aria-label={`${t("switchLanguage")}: ${LOCALE_META[locale].name}`}
-          className="group h-8 gap-1 px-2 font-label text-xs tracking-wider text-foreground/80 hover:text-foreground"
+          className="group h-(--app-titlebar-control-size) gap-1 px-2 font-label text-xs tracking-wider text-foreground/80 hover:text-foreground [-webkit-app-region:no-drag]"
         >
           <Globe className="size-4 text-muted-foreground" aria-hidden="true" />
           <span>{LOCALE_META[locale].short}</span>

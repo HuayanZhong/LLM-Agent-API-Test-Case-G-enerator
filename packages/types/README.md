@@ -37,7 +37,7 @@ packages/types/
 │   │   └── health.ts   # HealthResponse
 │   └── bridge/         # preload 与渲染进程之间的契约
 │       ├── index.ts    # 层内收口
-│       └── desktop.ts  # DesktopPlatform、DesktopBridge
+│       └── desktop.ts  # DesktopPlatform、TitleBarTheme、DesktopBridge
 ├── package.json        # exports 指向 ./src/index.ts，无 build
 ├── tsconfig.json       继承 @workspace/typescript-config/base.json
 ├── README.md

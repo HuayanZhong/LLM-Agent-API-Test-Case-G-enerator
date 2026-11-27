@@ -12,12 +12,12 @@ import {
   CODE_RESEND_SECONDS,
   SUBMIT_DELAY_MS,
   VERIFICATION_CODE_LENGTH,
-} from "../_lib/auth-constants"
-import { validateEmail, validateRegister, type AuthErrors } from "../_lib/validate-auth"
-import { useAuthErrorMessage } from "../_hooks/use-auth-error-message"
-import { CodeField } from "./code-field"
-import { EmailField } from "./email-field"
-import { PasswordField } from "./password-field"
+} from "../../_lib/auth-constants"
+import { validateEmail, validateRegister, type AuthErrors } from "../../_lib/validate-auth"
+import { useAuthErrorMessage } from "../../_hooks/use-auth-error-message"
+import { CodeField } from "../fields/code-field"
+import { EmailField } from "../fields/email-field"
+import { PasswordField } from "../fields/password-field"
 
 type SubmitStatus = "idle" | "submitting" | "success"
 

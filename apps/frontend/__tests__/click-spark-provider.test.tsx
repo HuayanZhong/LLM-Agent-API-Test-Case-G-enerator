@@ -1,6 +1,6 @@
 import { act, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { ClickSparkProvider } from "@/components/click-spark-provider"
+import { ClickSparkProvider } from "@/components/layout/click-spark-provider"
 
 const sparkColorMock = vi.hoisted(() => vi.fn<() => string | undefined>(() => undefined))
 

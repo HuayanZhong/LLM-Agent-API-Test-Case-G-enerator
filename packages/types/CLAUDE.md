@@ -17,14 +17,14 @@
 
 - `src/index.ts`：分层汇总，只 `export type *`，不放具体定义。
 - `src/api/`：跨进程 HTTP / SSE 的只读形状（当前 `HealthResponse`）；`src/api/index.ts` 层内收口。
-- `src/bridge/`：preload 暴露给渲染进程的契约（当前 `DesktopPlatform`、`DesktopBridge`）；`src/bridge/index.ts` 层内收口。
+- `src/bridge/`：preload 暴露给渲染进程的契约（当前 `DesktopPlatform`、`TitleBarTheme`、`DesktopBridge`）；`src/bridge/index.ts` 层内收口。
 - `package.json` 的 `exports` 指向 `./src/index.ts`，消费方靠 `import type` 在编译期取用。
 
 ## 本包约束
 
 - 只收跨进程、被另一个应用消费的只读数据形状；应用内部契约留在各自包里。
 - controller 入参 DTO、装饰器与校验规则不进本包；控制器只能标注输出形状，值仍在应用内构造。
-- Electron 主进程内部类型（窗口、协议、测试注入）不进本包；只有渲染进程可见的桥接对象可以进。
+- Electron 主进程内部类型（窗口、协议、测试注入）不进本包；只有渲染进程可见的桥接对象可以进。标题栏主题只以 `light | dark` 枚举上移，颜色与原生窗口配置留在桌面壳。
 - 不写常量、函数、类或任何运行时值；也不引入第三方运行时依赖。出现运行时 schema 需求时另开变更。
 - 按层存放：`api/` 与 `bridge/` 各自收口，层与层之间不互相 import；新增运行时代码就说明边界选错了。
 - 顶层 `index.ts` 只做分层汇总；不要把它变成堆放所有类型的单文件。

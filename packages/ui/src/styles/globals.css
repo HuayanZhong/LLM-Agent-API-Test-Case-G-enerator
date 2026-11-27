@@ -65,6 +65,10 @@
 :root {
   /* 大屏全局缩放：≤1600px 保持 16px，1600–2000px 按 1vw 增长，≥2000px 封顶 20px；所有 rem 尺寸等比放大。 */
   --app-font-scale: clamp(16px, 1vw, 20px);
+  /* 窗口标题栏与 WCO 覆盖层同高；这是 OS chrome，不能跟随根字号缩放。 */
+  --app-titlebar-height: 40px;
+  /* 标题栏控件固定 32px；根字号放大时仍与系统按钮保持上下留白。 */
+  --app-titlebar-control-size: 32px;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

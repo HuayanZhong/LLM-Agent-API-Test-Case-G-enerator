@@ -616,6 +616,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: catalog:testing
         version: 5.1.1(vitest@5.1.1)
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

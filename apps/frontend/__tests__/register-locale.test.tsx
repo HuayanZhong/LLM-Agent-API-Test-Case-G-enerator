@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { RegisterForm } from "@/app/(auth)/_components/register-form"
+import { RegisterForm } from "@/app/(auth)/_components/forms/register-form"
 import { CODE_RESEND_SECONDS } from "@/app/(auth)/_lib/auth-constants"
-import { LocaleProvider } from "@/components/locale-provider"
-import { LocaleToggle } from "@/components/locale-toggle"
+import { LocaleProvider } from "@/components/layout/locale-provider"
+import { LocaleToggle } from "@/components/controls/locale-toggle"
 
 import { LOCALE_STORAGE_KEY } from "@workspace/i18n"
 

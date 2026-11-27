@@ -1,7 +1,7 @@
 import { act, fireEvent, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { RegisterForm } from "@/app/(auth)/_components/register-form"
+import { RegisterForm } from "@/app/(auth)/_components/forms/register-form"
 import { CODE_RESEND_SECONDS, SUBMIT_DELAY_MS } from "@/app/(auth)/_lib/auth-constants"
 
 import { renderWithIntl } from "./test-utils"

@@ -1,7 +1,7 @@
 import { renderWithIntl } from "./test-utils"
 import { screen } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { LoginBrandPanel } from "@/app/(auth)/_components/login-brand-panel"
+import { LoginBrandPanel } from "@/app/(auth)/_components/brand/login-brand-panel"
 
 // 左栏是纯展示组件：断言四步轨道与红线文案；断点布局由浏览器实测覆盖。
 describe("LoginBrandPanel", () => {

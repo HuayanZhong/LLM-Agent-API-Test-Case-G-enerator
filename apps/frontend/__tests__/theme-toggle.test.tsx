@@ -1,7 +1,7 @@
 import { renderWithIntl } from "./test-utils"
 import { fireEvent, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { ThemeToggle } from "@/components/controls/theme-toggle"
 
 const theme = vi.hoisted(() => ({
   resolvedTheme: "light" as string | undefined,

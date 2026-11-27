@@ -6,7 +6,7 @@
 - 本包 AI 规则：[CLAUDE.md](CLAUDE.md)
 - 根规则：[../../AGENTS.md](../../AGENTS.md)、[../../CLAUDE.md](../../CLAUDE.md)
 - 行为规格：`shared-types` 能力，归档后位于 `openspec/specs/shared-types/spec.md`；索引见 [openspec/specs/](../../openspec/specs/)
-- 消费方：`apps/desktop`、`apps/bff`、`apps/backend`；frontend 首次消费时再加
+- 消费方：`apps/desktop`、`apps/bff`、`apps/backend`、`apps/frontend`
 - Lint / 格式化：`pnpm --filter @workspace/types lint` / `format`；根配置 `.oxlintrc.json` / `.oxfmtrc.json`
 - 项目工作流：`openspec/`（OpenSpec 2.0）
 

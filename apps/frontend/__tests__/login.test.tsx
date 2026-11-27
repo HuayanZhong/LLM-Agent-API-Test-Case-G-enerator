@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from "@testing-library/react"
 import { renderToString } from "react-dom/server"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { LoginForm } from "@/app/(auth)/_components/login-form"
+import { LoginForm } from "@/app/(auth)/_components/forms/login-form"
 import { REMEMBERED_EMAIL_KEY, SUBMIT_DELAY_MS } from "@/app/(auth)/_lib/auth-constants"
 
 import { IntlTestProvider, renderWithIntl } from "./test-utils"

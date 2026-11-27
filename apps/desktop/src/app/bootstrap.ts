@@ -1,16 +1,20 @@
-import { BrowserWindow, Menu, app, protocol, session, shell } from "electron"
+import { BrowserWindow, Menu, app, nativeTheme, protocol, session, shell } from "electron"
 import type { BrowserWindowConstructorOptions } from "electron"
 import path from "node:path"
 import { APP_URL, getAllowedOrigins, getRendererUrl } from "./config"
 import { configureDevToolsShortcuts } from "./devtools"
 import { configureNavigation } from "./navigation"
+import { getTitleBarOverlay, registerTitleBarIpc } from "./titlebar"
 import { APP_SCHEME, createProtocolHandler } from "../protocol/protocol"
 import type { BootstrapOptions, WaitForServerOptions } from "../types"
 
 const WINDOW_TITLE = "接口测试用例辅助生成系统"
 
-export function getWindowOptions(preloadPath: string): BrowserWindowConstructorOptions {
-  return {
+export function getWindowOptions(
+  preloadPath: string,
+  platform: NodeJS.Platform = process.platform,
+): BrowserWindowConstructorOptions {
+  const options: BrowserWindowConstructorOptions = {
     width: 1280,
     height: 800,
     // 低于 800×600 时前端布局会被挤压到不可操作，窗口拖拽到此为止。
@@ -25,6 +29,17 @@ export function getWindowOptions(preloadPath: string): BrowserWindowConstructorO
       nodeIntegration: false,
       webSecurity: true,
     },
+  }
+
+  if (platform !== "win32") {
+    return options
+  }
+
+  // Windows 11 WCO：系统按钮保留，覆盖层透明让页面背景直接透出；初始配色跟随系统主题。
+  return {
+    ...options,
+    titleBarStyle: "hidden",
+    titleBarOverlay: getTitleBarOverlay(nativeTheme.shouldUseDarkColors ? "dark" : "light"),
   }
 }
 
@@ -97,6 +112,9 @@ export async function bootstrap(options: BootstrapOptions = {}): Promise<void> {
 
   // 默认菜单带调试快捷键；打包态不能留入口，开发态改由 before-input-event 切换。
   Menu.setApplicationMenu(null)
+
+  // 标题栏主题通道只同步系统按钮符号色；非 Windows 下监听器自身会忽略消息。
+  registerTitleBarIpc()
 
   let devServerReady = true
   if (isPackaged) {

@@ -12,6 +12,9 @@ export type DesktopPlatform =
   | "cygwin"
   | "netbsd"
 
+/** 标题栏系统按钮符号色只接受这两个枚举；主进程负责映射到具体颜色。 */
+export type TitleBarTheme = "light" | "dark"
+
 /** preload 暴露给渲染进程的唯一桥接对象；新增字段必须先评估安全边界。 */
 export interface DesktopBridge {
   platform: DesktopPlatform
@@ -20,4 +23,5 @@ export interface DesktopBridge {
     chrome: string
     node: string
   }
+  setTitleBarTheme: (theme: TitleBarTheme) => void
 }

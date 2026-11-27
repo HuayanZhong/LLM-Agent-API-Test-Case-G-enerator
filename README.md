@@ -101,7 +101,7 @@ hook 只做本地提前检查，全量 `lint` / `format` / `check-types` / `test
 
 两个 Nest 服务都是 NestJS 12 + ESM，依赖统一通过 `catalog:backend` 引用；当前只有健康检查，没有业务模块；测试与 lint / format 已接入，只有一个 `health` 冒烟用例。
 
-前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。前端使用 `output: "export"`，`pnpm --filter frontend build` 产出 `apps/frontend/out/`；`next start` 已移除。当前 `/` 通过客户端跳转进入 `/login/`；`/login/` 与 `/register/` 共用认证布局，只做邮箱、密码、验证码的前端校验与 Toast 反馈，不调用 Supabase / BFF / backend，也不创建真实账号。新增组件时必须让 CLI 以 app 工作区为目标：
+前端是 Next.js 16 + React 19 + Tailwind v4，应用代码在 `apps/frontend/src`；shadcn 组件、`cn()` 与全局样式在 `packages/ui`，通过 `@workspace/ui` 引用。前端使用 `output: "export"`，`pnpm --filter frontend build` 产出 `apps/frontend/out/`；`next start` 已移除。当前 `/` 通过客户端跳转进入 `/login/`；`/login/` 与 `/register/` 共用认证布局，只做邮箱、密码、验证码的前端校验与 Toast 反馈，不调用 Supabase / BFF / backend，也不创建真实账号。语言与主题入口位于全局窗口标题栏，排在系统窗口按钮左侧。新增组件时必须让 CLI 以 app 工作区为目标：
 
 ```bash
 pnpm dlx shadcn@latest add <component> -c apps/frontend
@@ -109,13 +109,13 @@ pnpm dlx shadcn@latest add <component> -c apps/frontend
 
 UI 组件会落到 `packages/ui/src/components`，app 级 block 落到 `apps/frontend/src/components`。
 
-桌面壳在 `apps/desktop`，使用 Electron Forge 8 + Electron 45：开发态加载 `http://localhost:3000`，生产态通过 `app://bundle/` 托管 `apps/frontend/out`，不启动 Next 服务。`pnpm build` 先完成前端静态导出，再由 Turbo 的 `desktop#build` 复制到 `apps/desktop/renderer`；`pnpm --filter desktop make` 生成 Windows x64 ZIP。BFF / backend / MCP 的进程托管不在本期范围。
+桌面壳在 `apps/desktop`，使用 Electron Forge 8 + Electron 45：开发态加载 `http://localhost:3000`，生产态通过 `app://bundle/` 托管 `apps/frontend/out`，不启动 Next 服务。Windows 下窗口头部使用 WCO：隐藏原生标题栏、保留系统最小化/最大化/关闭，覆盖层透明并让页面背景直接透出；系统按钮符号色随应用深浅色主题同步。`pnpm build` 先完成前端静态导出，再由 Turbo 的 `desktop#build` 复制到 `apps/desktop/renderer`；`pnpm --filter desktop make` 生成 Windows x64 ZIP。BFF / backend / MCP 的进程托管不在本期范围。
 
 `packages/ui` 的 Storybook 在 6006 提供组件预览与 MCP 端点 `http://127.0.0.1:6006/mcp`；MCP 只在 Storybook dev 运行时可用，当前为 docs + development 工具集。
 
 前端、NestJS 与 UI 包的 TypeScript 配置统一继承 `packages/typescript-config` 的 profile（`nextjs` / `react-library` / `nestjs`；desktop 直接继承 `base` 并改 `moduleResolution: Bundler`），类型检查用 `pnpm check-types`；profile 分工见 [packages/typescript-config/README.md](packages/typescript-config/README.md)。
 
-四个 app 之间不直接 import；跨应用共享的类型契约放在 `packages/types`（`@workspace/types`），只发类型、没有运行时产物，消费方用 `import type`。controller 入参 DTO 与桌面壳主进程内部契约留在各自包内，见 [packages/types/README.md](packages/types/README.md)。
+四个 app 之间不直接 import；跨应用共享的类型契约放在 `packages/types`（`@workspace/types`），只发类型、没有运行时产物，消费方用 `import type`。桌面壳 preload 只暴露平台、版本与标题栏主题同步方法；controller 入参 DTO 与桌面壳主进程内部契约留在各自包内，见 [packages/types/README.md](packages/types/README.md)。
 
 环境变量由 `packages/config`（`@workspace/config`）提供解析与校验：各应用在自己的 `src/config.ts` 定义 schema，启动时非法值直接失败；`.env` 仍由根脚本加载。见 [packages/config/README.md](packages/config/README.md)。
 

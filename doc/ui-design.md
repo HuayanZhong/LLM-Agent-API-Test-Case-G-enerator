@@ -71,7 +71,7 @@ lg (1024+)    ：grid-cols-2           完整品牌栏 + 表单
 - 根容器 `min-h-svh grid-rows-1`，唯一一行撑满高度，避免大屏底部出现背景空白带。
 - 品牌栏 `overflow-y-auto`，内容列 `max-w-md xl:max-w-lg`，水平居中、垂直居中；引语紧随轨道，不钉在视口底部。
 - 表单列 `max-w-sm xl:max-w-md`，整体居中；不随视口变宽无限拉伸。
-- 右上角固定一个工具区：语言 → 主题，`fixed top-4 right-4`，`sm:top-6 sm:right-6`；宽屏时贴视口右上角，作为全局工具入口。
+- 全局标题栏固定一个工具区：语言 → 主题，位于窗口顶部右侧、系统窗口按钮左侧；标题栏透明、无标题与图标，高度 `--app-titlebar-height`（40px，与 WCO 对齐），控件高度固定 `--app-titlebar-control-size`（32px），不随根字号缩放；浏览器预览时退化为视口右上角区域。
 - 桌面宽度下不要求页面滚动；表单控件不被裁切，也不出现横向溢出。
 
 ## 5. 品牌区
@@ -145,8 +145,8 @@ lg (1024+)    ：grid-cols-2           完整品牌栏 + 表单
 ### 7.3 主题与 Toast
 
 - 主题：`next-themes` 的 class 策略，默认跟随系统；切换时禁用 CSS 过渡，避免整页渐变闪烁。
-- 唯一入口：右上角可见按钮；不注册全局快捷键。
-- Toast：`sonner` 组件保持 CLI 默认，`top-center`；类型由默认图标区分，不做颜色或图标覆盖。桌面宽度下与右上工具区不重叠。
+- 唯一入口：窗口标题栏里的可见按钮；不注册全局快捷键。深浅色切换时通过 `window.desktop.setTitleBarTheme` 同步系统按钮符号色。
+- Toast：`sonner` 组件保持 CLI 默认，`top-center`，顶部偏移让出标题栏高度；类型由默认图标区分，不做颜色或图标覆盖。桌面宽度下与标题栏工具区不重叠。
 
 ### 7.4 图标
 
@@ -170,7 +170,7 @@ lg (1024+)    ：grid-cols-2           完整品牌栏 + 表单
 - 颜色只用语义 token；不写原始色值。
 - 尺寸优先用 Tailwind 比例与间距 token；禁止 `text-[10px]` 这类任意值。
 - 源码里不要写 px：根字号靠 `--app-font-scale` 缩放，只有 rem 尺寸会一起放大，任意 px 会把该处钉死。发丝线用 `h-px`，其余一律用 Tailwind 令牌；`__tests__/no-arbitrary-px.test.ts` 会扫描 `src/` 并拦截。
-- 唯一允许 px 的位置是 `globals.css` 的 `--app-font-scale: clamp(16px, 1vw, 20px)`——它是缩放的锚点。
+- 唯一允许 px 的位置是 `globals.css` 的 `--app-font-scale: clamp(16px, 1vw, 20px)`、`--app-titlebar-height: 40px` 与 `--app-titlebar-control-size: 32px`——前者是缩放锚点，后两者是必须与 OS 窗口 chrome 对齐的固定尺寸。
 - 不使用 `next/font/google` 或任何 webfont。
 - 不手工新建 shadcn 组件；组件由 CLI 拉入 `packages/ui`，本包只保留适配层。
 - 不改 registry 组件内部逻辑，只做必要的严格模式修复。
@@ -182,22 +182,24 @@ lg (1024+)    ：grid-cols-2           完整品牌栏 + 表单
 | 文件 | 职责 |
 |---|---|
 | `packages/ui/src/styles/globals.css` | 字体栈、色彩 token、圆角、全局字号缩放 |
-| `apps/frontend/src/app/layout.tsx` | 根布局、ThemeProvider、LocaleProvider、点击火花 |
-| `apps/frontend/src/app/(auth)/layout.tsx` | 认证双栏、右上工具区、Toaster |
-| `apps/frontend/src/app/(auth)/_components/login-brand-panel.tsx` | 品牌栏、台账轨道、引语与页脚 |
-| `apps/frontend/src/app/(auth)/_components/product-mark.tsx` | 产品几何标记 |
-| `apps/frontend/src/app/(auth)/_components/product-masthead.tsx` | 产品名与副标题锁定 |
-| `apps/frontend/src/app/(auth)/_components/scanner-backdrop.tsx` | 扫描线背景适配 |
-| `apps/frontend/src/components/locale-toggle.tsx` | 语言下拉 |
-| `apps/frontend/src/components/locale-provider.tsx` | 语言偏好、lang / 标题 / 描述同步 |
-| `apps/frontend/src/components/theme-provider.tsx` | 主题上下文与持久化 |
-| `apps/frontend/src/components/theme-toggle.tsx` | 主题切换 |
-| `apps/frontend/src/components/click-spark-provider.tsx` | 点击火花适配 |
+| `apps/frontend/src/app/layout.tsx` | 根布局、Provider、全局标题栏、点击火花 |
+| `apps/frontend/src/app/(auth)/layout.tsx` | 认证双栏、Toaster（含标题栏偏移） |
+| `apps/frontend/src/app/(auth)/_components/brand/login-brand-panel.tsx` | 品牌栏、台账轨道、引语与页脚 |
+| `apps/frontend/src/app/(auth)/_components/brand/product-mark.tsx` | 产品几何标记 |
+| `apps/frontend/src/app/(auth)/_components/brand/product-masthead.tsx` | 产品名与副标题锁定 |
+| `apps/frontend/src/app/(auth)/_components/brand/scanner-backdrop.tsx` | 扫描线背景适配 |
+| `apps/frontend/src/components/layout/app-titlebar.tsx` | 全局标题栏、拖拽区与工具入口 |
+| `apps/frontend/src/components/controls/locale-toggle.tsx` | 语言下拉 |
+| `apps/frontend/src/components/layout/locale-provider.tsx` | 语言偏好、lang / 标题 / 描述同步 |
+| `apps/frontend/src/components/layout/theme-provider.tsx` | 主题上下文与持久化 |
+| `apps/frontend/src/components/controls/theme-toggle.tsx` | 主题切换 |
+| `apps/frontend/src/components/layout/click-spark-provider.tsx` | 点击火花适配 |
 | `apps/frontend/src/lib/spark-color.ts` | 主题令牌 → 火花色值 |
 
 ## 11. 验证清单
 
-- 1280×900 与 2560×1200 下：无横向溢出，双栏比例正确，右上工具区不重叠。
+- 1280×900 与 2560×1200 下：无横向溢出，双栏比例正确，标题栏工具区不与系统按钮重叠。
+- 桌面壳中：标题栏透明、双栏背景无接缝，无标题文字与图标；拖拽与双击最大化可用；切换深浅色后系统按钮符号色同步。
 - 浅色与深色：文字、边框、焦点、禁用态均可读；错误色只出现在错误位置。
 - 中文与英文：题头、字段、按钮、Toast、倒计时、标题与描述全部随语言切换；表单已填值不丢失。
 - 语言切换后刷新：偏好保留；清空偏好后回落中文。

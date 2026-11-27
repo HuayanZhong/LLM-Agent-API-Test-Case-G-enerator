@@ -4,9 +4,9 @@ import { useTranslations } from "next-intl"
 
 import { cn } from "@workspace/ui/lib/utils"
 
-import packageJson from "../../../../package.json"
+import packageJson from "../../../../../package.json"
 
-import { STEP_INDEX_WIDTH } from "../_lib/auth-constants"
+import { STEP_INDEX_WIDTH } from "../../_lib/auth-constants"
 import { ProductMasthead } from "./product-masthead"
 import { ScannerBackdrop } from "./scanner-backdrop"
 

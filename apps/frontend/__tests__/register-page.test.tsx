@@ -3,7 +3,7 @@ import { screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 import RegisterPage from "@/app/(auth)/register/page"
 
-// 注册路由只负责渲染表单；品牌栏与主题按钮由 auth layout 组合。
+// 注册路由只负责渲染表单；品牌栏与全局标题栏入口由布局组合。
 vi.mock("sonner", () => ({
   toast: { error: vi.fn<() => void>(), success: vi.fn<() => void>() },
 }))

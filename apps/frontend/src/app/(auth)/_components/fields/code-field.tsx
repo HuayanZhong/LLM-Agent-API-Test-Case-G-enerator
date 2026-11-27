@@ -12,7 +12,7 @@ import {
 } from "@workspace/ui/components/input-otp"
 import { Label } from "@workspace/ui/components/label"
 
-import { VERIFICATION_CODE_LENGTH } from "../_lib/auth-constants"
+import { VERIFICATION_CODE_LENGTH } from "../../_lib/auth-constants"
 
 const OTP_GROUP_COUNT = 3
 const OTP_GROUP_SIZE = VERIFICATION_CODE_LENGTH / OTP_GROUP_COUNT

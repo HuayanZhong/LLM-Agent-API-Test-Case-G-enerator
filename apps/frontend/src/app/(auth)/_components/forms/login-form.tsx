@@ -10,12 +10,12 @@ import { Button } from "@workspace/ui/components/button"
 import { Checkbox } from "@workspace/ui/components/checkbox"
 import { Label } from "@workspace/ui/components/label"
 
-import { useAuthErrorMessage } from "../_hooks/use-auth-error-message"
-import { useRememberedEmail } from "../_hooks/use-remembered-email"
-import { SUBMIT_DELAY_MS } from "../_lib/auth-constants"
-import { validateLogin, type AuthErrors } from "../_lib/validate-auth"
-import { EmailField } from "./email-field"
-import { PasswordField } from "./password-field"
+import { useAuthErrorMessage } from "../../_hooks/use-auth-error-message"
+import { useRememberedEmail } from "../../_hooks/use-remembered-email"
+import { SUBMIT_DELAY_MS } from "../../_lib/auth-constants"
+import { validateLogin, type AuthErrors } from "../../_lib/validate-auth"
+import { EmailField } from "../fields/email-field"
+import { PasswordField } from "../fields/password-field"
 
 // 提交态只有三档：idle 可提交、submitting 锁按钮、success 已完成演示提交。
 type SubmitStatus = "idle" | "submitting" | "success"
@@ -123,7 +123,7 @@ function LoginForm() {
 
   return (
     <div className="w-full">
-      {/* 主题切换按钮由 auth layout 固定在页面右上角，表单这里不再重复。 */}
+      {/* 主题与语言入口由全局窗口标题栏提供，表单这里不再重复。 */}
       <div className="mb-8">
         <h1 className="font-title text-2xl leading-tight tracking-tight sm:text-3xl">
           {t("title")}
