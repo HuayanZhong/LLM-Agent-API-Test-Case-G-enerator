@@ -1,6 +1,6 @@
 {
   "name": "@workspace/i18n",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "共享界面文案目录与语言配置（纯数据与类型，无构建）",
